@@ -9,6 +9,8 @@ import (
 	_ "github.com/go-sql-driver/mysql" // need to initialize mysql before making a connection
 )
 
+var ActiveRegistries map[string]Registry
+
 // Registry contains all identifying information for communicating with a registry
 type Registry struct {
 	Name    string
@@ -47,6 +49,8 @@ func TestRegistryStatus(registryURI string) error {
 			"HTTP Response": response,
 			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
 		}).Fatal("Get request to registry timed out/failed! Is the URL correct, and is the registry active?")
+
+		return err
 	} else if response.StatusCode != 200 {
 		// Notify of error
 		log.WithFields(log.Fields{
@@ -54,13 +58,18 @@ func TestRegistryStatus(registryURI string) error {
 			"HTTP Response": response.StatusCode,
 			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
 		}).Fatal("Get request to registry failed! Is the URL correct, and is the registry active?")
+
+		return err
 	}
 
 	// Notify of success
 	log.WithFields(log.Fields{
 		"Registry Information": registry,
 		"Registry URI":         registry.GetURI(),
-	}).Info("Successfully connected to registry!")
+	}).Info("Successfully connected to registry and added to list of active registries!")
+
+	// Add the registry to the map of active registries
+	ActiveRegistries[registry.Name] = registry
 
 	return err
 }
