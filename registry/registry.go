@@ -9,7 +9,13 @@ import (
 	_ "github.com/go-sql-driver/mysql" // need to initialize mysql before making a connection
 )
 
+// ActiveRegistries contains a map of all active registries identified by their name
 var ActiveRegistries map[string]Registry
+
+func init() {
+	// Create the active registries map
+	ActiveRegistries = make(map[string]Registry, 0)
+}
 
 // Registry contains all identifying information for communicating with a registry
 type Registry struct {
@@ -58,8 +64,6 @@ func TestRegistryStatus(registryURI string) error {
 			"HTTP Response": response.StatusCode,
 			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
 		}).Fatal("Get request to registry failed! Is the URL correct, and is the registry active?")
-
-		return err
 	}
 
 	// Notify of success
