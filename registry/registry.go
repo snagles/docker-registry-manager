@@ -31,12 +31,12 @@ func (r *Registry) GetURI() string {
 	return r.Scheme + "://" + r.Name + ":" + r.Port + "/v2"
 }
 
-// TestRegistryStatus takes in a registry URL and checks for communication errors
+// GetRegistryStatus takes in a registry URL and checks for communication errors
 //
 // Create and execute basic GET request to test if each registry can be reached
 // To determine registry status we test the base registry route of /v2/ and check
 // the HTTP response code for a 200 response (200 is a successful request)
-func TestRegistryStatus(registryURI string) error {
+func GetRegistryStatus(registryURI string) error {
 
 	// Parse the registry string into our Registry type
 	registry := ParseRegistry(registryURI)
