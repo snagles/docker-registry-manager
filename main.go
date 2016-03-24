@@ -58,7 +58,7 @@ func main() {
 
 	// Loop through the slice of passed registries and test their status
 	for _, regString := range registryFlags {
-		if err := registry.TestRegistryStatus(regString); err != nil {
+		if err := registry.GetRegistryStatus(regString); err != nil {
 			// Notify of success
 			log.WithFields(log.Fields{
 				"Error": err,

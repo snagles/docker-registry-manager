@@ -39,7 +39,10 @@ func (r *Registry) GetURI() string {
 func GetRegistryStatus(registryURI string) error {
 
 	// Parse the registry string into our Registry type
-	registry := ParseRegistry(registryURI)
+	registry, err := ParseRegistry(registryURI)
+	if err != nil {
+		return err
+	}
 	// Notify of initial attempt
 	log.WithFields(log.Fields{
 		"Registry URI": registryURI,
@@ -79,38 +82,48 @@ func GetRegistryStatus(registryURI string) error {
 }
 
 // ParseRegistry takes in a registry URI string and converts it into a registry object
-func ParseRegistry(registryURI string) Registry {
+func ParseRegistry(registryURI string) (Registry, error) {
+
+	// Create an empty Registry
+	r := Registry{
+		Version: "v2",
+	}
 
 	// Parse the URL and get the scheme
 	// e.g https, http, etc.
 	u, err := url.Parse(registryURI)
 	if err != nil {
 		log.Error(err)
+		return r, err
 	}
+
+	// Set scheme
+	r.Scheme = u.Scheme
 
 	// Get the host and port
 	// e.g test.domain.com and 5000, etc.
 	host, port, err := net.SplitHostPort(u.Host)
 	if err != nil {
 		log.Error(err)
+		return r, err
 	}
+
+	// Set name and port
+	r.Name = host
+	r.Port = port
 
 	// Lookup the ip for the passed host
 	// Using the host name try looking up the IP for informational purposes
 	ip, err := net.LookupHost(host)
 	if err != nil {
 		log.Error(err)
+		// We do not need to return an error since we don't "need" the IP of the host
 	}
-
-	// Create a new registry type using all of the information queried above
-	r := Registry{
-		Name:    host,
-		Port:    port,
-		IP:      ip[0],
-		Scheme:  u.Scheme,
-		Version: "v2",
+	// Set IP if we have it
+	if ip != nil {
+		r.IP = ip[0]
 	}
 
 	// Return the newly created registry type
-	return r
+	return r, err
 }
