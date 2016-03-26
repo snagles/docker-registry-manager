@@ -9,10 +9,10 @@ import (
 // TestParseRegistry passes the ParseRegistry function a valid and invalid string
 func TestParseRegistry(t *testing.T) {
 
-	validRegistryURI := "https://google.com:5000"
+	validRegistryURI := "https://host.domain.com:5000"
 	// Create a registy type that contains the expected output from ParseRegistry
 	expectedRegistryResponse := Registry{
-		Name:   "google.com",
+		Name:   "host.domain",
 		Scheme: "https",
 		Port:   "5000",
 	}
