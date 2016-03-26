@@ -14,8 +14,8 @@ type Repositories struct {
 	Repositories []string
 }
 
-// GetRepositoriesByRegistry returns a slice of repositories for this registry name
-func GetRepositoriesByRegistry(registryName string) (Repositories, error) {
+// GetRepositories returns a slice of repositories for this registry name
+func GetRepositories(registryName string) (Repositories, error) {
 
 	// Check if the registry is listed as active
 	if _, ok := ActiveRegistries[registryName]; !ok {
