@@ -6,7 +6,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-// TestGetRepositories passes the ParseRegistry function a valid and invalid string
+// TestGetRepositories passes the GetRepositories a registry name and expects a slice of repositories
 func TestGetRepositories(t *testing.T) {
 
 	// Create a new registry
