@@ -34,6 +34,16 @@ func GetRepositories(registryName string) (Repositories, error) {
 		}).Error("Get request to registry failed for the /_catalog endpoint! Is your registry active?")
 	}
 
+	// Check Status code
+	if response.StatusCode != 200 {
+		log.WithFields(log.Fields{
+			"Error":       err,
+			"Status Code": response.StatusCode,
+			"Response":    response,
+		}).Error("Did not receive an ok status code!")
+		return Repositories{}, err
+	}
+
 	// Close connection
 	defer response.Body.Close()
 

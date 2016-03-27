@@ -36,6 +36,16 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 		return Tags{}, err
 	}
 
+	// Check Status code
+	if response.StatusCode != 200 {
+		log.WithFields(log.Fields{
+			"Error":       err,
+			"Status Code": response.StatusCode,
+			"Response":    response,
+		}).Error("Did not receive an ok status code!")
+		return Tags{}, err
+	}
+
 	// Close connection
 	defer response.Body.Close()
 
