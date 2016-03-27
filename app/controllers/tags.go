@@ -5,18 +5,19 @@ import (
 	"github.com/stefannaglee/docker-registry-manager/app/models/registry"
 )
 
-type RepositoriesController struct {
+type TagsController struct {
 	beego.Controller
 }
 
 // Get returns the template for the registries page
-func (c *RepositoriesController) GetRepositories() {
+func (c *TagsController) GetTags() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
+	repositoryName := c.Ctx.Input.Param(":repositoryName")
 
-	repositories, _ := registry.GetRepositories(registryName)
-	c.Data["registryName"] = registryName
-	c.Data["repositories"] = repositories.Repositories
+	tags, _ := registry.GetTags(registryName, repositoryName)
+	c.Data["tags"] = tags.Tags
+
 	// Index template
-	c.TplName = "repositories.tpl"
+	c.TplName = "tags.tpl"
 }

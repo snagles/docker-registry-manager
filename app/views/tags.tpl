@@ -8,7 +8,8 @@
       <ol class="breadcrumb">
         <li><a href="/">Home</a></li>
         <li><a href="/registries">Registries</a></li>
-        <li class="active">Brigade</li>
+        <li><a href="/registries/">Repository</a></li>
+        <li class="active">Tags</li>
       </ol>
     </div>
     <div class="content-block white-bg">
@@ -20,13 +21,13 @@
         <table class="table">
           <thead>
             <th>ID:</th>
-            <th>Repository Name:</th>
+            <th>Tags:</th>
           </thead>
           <tbody>
-            {{range $key, $repository := .repositories}}
+            {{range $key, $tag := .tags}}
             <tr>
               <td>{{$key}}</td>
-              <td><a href="/registries/{{$.registryName}}/repositories/{{$repository}}/tags">{{$repository}}</span></td>
+              <td>{{$tag}}</td>
             </tr>
             {{end}}
           </tbody>
