@@ -1,0 +1,147 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  background-color: #f3f5f6;
+  color: #212121;
+  font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight: 300;
+}
+ul
+{
+    list-style-type: none;
+}
+
+/*
+ * Navigation
+ */
+.left-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    background-color:#009688;
+    color: #FFF;
+    z-index: 101;
+    padding-bottom: 50px;
+}
+.left-nav > .nav-header{
+  background-color: #00796B;
+  height:50px;
+}
+.left-nav > .nav-header > a{
+  color: #FFF
+}
+
+.nav-menu {
+  margin-top: 40px;
+}
+
+.nav-menu > hr {
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 0px;
+}
+
+.nav-menu > h5 {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.nav-menu > ul {
+  padding-left: 0px;
+}
+
+.nav-menu > ul >li:hover {
+  background-color: #00796B;
+  border-left: 5px solid #FF5722;
+}
+.nav-menu > ul >li >a {
+  padding-left: 25px;
+  color: #FFF;
+  display: block;
+  line-height: 40px;
+  transition: all .2s;
+  font-size: 15px;
+  text-decoration: none;
+  position: relative;
+}
+.nav-menu > ul > li > span {
+  padding-left: 5px;
+}
+.nav-menu > ul > li > a > i {
+  margin-right:10px;
+}
+
+/*
+ * Header
+ */
+.header{
+  height: 50px;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+  padding: 0 27px;
+  position: fixed;
+  top: 0px;
+  left: 200px;
+  z-index: 101;
+  transition: left .0001s .48s;
+  width: calc(100vw - 200px);
+}
+
+/*
+ * Content
+ */
+.right-content-container{
+  position: relative;
+  margin-left: 200px;
+  background-color: #f1f4f8;
+  min-height: 100vh;
+  padding-top: 50px;
+  z-index: 90;
+  transition: -webkit-transform .5s;
+  transition: transform .5s;
+}
+.content-block {
+  border-radius: 3px 3px 0 0;
+  border: 1px solid #E7E9ED;
+  border-bottom: 0;
+  padding: 35px 40px;
+  margin-left: 25px;
+  margin-right: 25px;
+  counter-reset: section;
+  transition: color .5s .3s;
+}
+
+.content-block-empty {
+  padding: 35px 40px;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.box {
+  margin-bottom: 40px;
+  min-height:300px;
+}
+
+.box-header{
+  height:50px;
+  border-bottom: 1px solid #B6B6B6;
+}
+
+.grey-bg{
+  background: transparent;
+}
+.white-bg{
+  background-color: #FFF;
+}
+
+.breadcrumb {
+  background-color: #FFF;
+  margin-top: 10px;
+  width: 300px;
+}
+
+.badge {
+  background-color:#FF5722;
+}
