@@ -7,4 +7,9 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.RegistriesController{})
+
+	// Routers for registries
+	beego.Router("/registries", &controllers.RegistriesController{})
+	beego.Router("/registries/", &controllers.RegistriesController{})
+	beego.Router("/registries/:registryName/repositories/", &controllers.RepositoriesController{}, "get:GetRepositories")
 }
