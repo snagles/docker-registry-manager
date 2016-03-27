@@ -8,8 +8,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
+	"github.com/stefannaglee/docker-registry-manager/app/models/registry"
 	_ "github.com/stefannaglee/docker-registry-manager/app/routers"
-	"github.com/stefannaglee/docker-registry-manager/registry"
 )
 
 // DuplicateFlags slice contains a list of registries to use.
