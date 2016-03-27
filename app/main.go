@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/astaxie/beego"
+	_ "github.com/stefannaglee/docker-registry-manager/app/routers"
 	"github.com/stefannaglee/docker-registry-manager/registry"
 )
 
@@ -68,5 +70,7 @@ func main() {
 			os.Exit(1)
 		}
 	}
+
+	beego.Run()
 
 }
