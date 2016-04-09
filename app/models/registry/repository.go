@@ -5,21 +5,41 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	log "github.com/Sirupsen/logrus"
 )
 
-// Repositories contains a slice of all repositories
-type Repositories struct {
+// RepositoriesList contains a slice of all repositories
+type RepositoriesList struct {
 	Repositories []string
 }
 
-// GetRepositories returns a slice of repositories for this registry name
-func GetRepositories(registryName string) (Repositories, error) {
+// Repository contains information on the name and encoded name
+type Repository struct {
+	Name       string
+	EncodedURI string
+}
+
+// GetRepositories returns a slice of repositories with their names and encoded names
+func GetRepositories(registryName string) []Repository {
+	cleanedRepos := []Repository{}
+	repos, _ := GetRepositoriesFromRegistry(registryName)
+	for _, value := range repos.Repositories {
+		r := Repository{}
+		r.EncodedURI = url.QueryEscape(value)
+		r.Name = value
+		cleanedRepos = append(cleanedRepos, r)
+	}
+	return cleanedRepos
+}
+
+// GetRepositoriesFromRegistry returns a slice of repositories for this registry name
+func GetRepositoriesFromRegistry(registryName string) (RepositoriesList, error) {
 
 	// Check if the registry is listed as active
 	if _, ok := ActiveRegistries[registryName]; !ok {
-		return Repositories{}, errors.New(registryName + " was not found within the active list of registries.")
+		return RepositoriesList{}, errors.New(registryName + " was not found within the active list of registries.")
 	}
 	r := ActiveRegistries[registryName]
 
@@ -41,7 +61,7 @@ func GetRepositories(registryName string) (Repositories, error) {
 			"Status Code": response.StatusCode,
 			"Response":    response,
 		}).Error("Did not receive an ok status code!")
-		return Repositories{}, err
+		return RepositoriesList{}, err
 	}
 
 	// Close connection
@@ -56,7 +76,7 @@ func GetRepositories(registryName string) (Repositories, error) {
 		}).Error("Unable to read response into body!")
 	}
 
-	rs := Repositories{}
+	rs := RepositoriesList{}
 	// Unmarshal JSON into the catalog struct containing a slice of repositories
 	if err := json.Unmarshal(body, &rs); err != nil {
 		log.WithFields(log.Fields{
