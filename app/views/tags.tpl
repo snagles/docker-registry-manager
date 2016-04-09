@@ -8,13 +8,14 @@
       <ol class="breadcrumb">
         <li><a href="/">Home</a></li>
         <li><a href="/registries">Registries</a></li>
-        <li><a href="/registries/">Repository</a></li>
+        <li><a href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
+        <li><a href="/registries/{{.registryName}}/repositories/{{.repository.EncodedURI}}">{{.repositoryName}}</a></li>
         <li class="active">Tags</li>
       </ol>
     </div>
     <div class="content-block white-bg">
       <div class="row">
-        <h1>Registry</h1>
+        <h1>{{.repositoryName}}</h1>
         <hr>
       </div>
       <div class="row">
