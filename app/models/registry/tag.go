@@ -6,8 +6,12 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"sort"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/pivotal-golang/bytefmt"
+	"github.com/stefannaglee/docker-registry-manager/app/utilities"
 )
 
 // Tags contains a slice of tags for the given repository
@@ -15,6 +19,77 @@ import (
 type Tags struct {
 	Name string
 	Tags []string
+}
+
+type TagForView struct {
+	ID          string
+	Name        string
+	CreatedTime time.Time
+	TimeAgo     string
+	Layers      int
+	Size        string
+}
+
+// TagsForView contains a slice of TagsForView with the methods required to sort
+type TagsForView []TagForView
+
+func (slice TagsForView) Len() int {
+	return len(slice)
+}
+
+func (slice TagsForView) Less(i, j int) bool {
+	return slice[i].Name < slice[j].Name
+}
+
+func (slice TagsForView) Swap(i, j int) {
+	slice[i], slice[j] = slice[j], slice[i]
+}
+
+// GetTagsForView returns the sanitized tag structs with the required information for the tags template
+func GetTagsForView(registryName string, repositoryName string) (TagsForView, error) {
+	tagObj, err := GetTags(registryName, repositoryName)
+	tags := TagsForView{}
+
+	// Loop through each tag to build the TagForView type
+	for _, tagName := range tagObj.Tags {
+
+		// Created a new tag for view type to fill
+		t := TagForView{}
+		var tempSize int64
+		var maxTime time.Time
+
+		// Get the image information for each tag
+		img, _ := GetImage(registryName, repositoryName, tagName)
+
+		for _, layer := range img.FsLayers {
+			// Check if the registry is listed as active
+			r := ActiveRegistries[registryName]
+			// Create and execute Get request
+			response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
+			if err != nil {
+				log.Error(err)
+			}
+			tempSize += response.ContentLength
+		}
+		// Get the latest creation time and total the size for the tag image
+		for _, history := range img.History {
+			if history.V1Compatibility.Created.After(maxTime) {
+				maxTime = history.V1Compatibility.Created
+			}
+		}
+
+		// Set the fields
+		t.Size = bytefmt.ByteSize(uint64(tempSize))
+		t.CreatedTime = maxTime
+		t.Layers = len(img.History)
+		t.Name = tagName
+		t.TimeAgo = utils.TimeAgo(maxTime)
+
+		// Append to the tags list that will be passed to the template
+		tags = append(tags, t)
+	}
+	sort.Sort(sort.Reverse(tags))
+	return tags, err
 }
 
 // GetTags returns a slice of tags for a given repository and registry

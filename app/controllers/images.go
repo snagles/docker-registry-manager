@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/url"
+
 	"github.com/astaxie/beego"
 	"github.com/stefannaglee/docker-registry-manager/app/models/registry"
 )
@@ -13,14 +15,16 @@ type ImagesController struct {
 func (c *ImagesController) GetImages() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
-	repositoryName := c.Ctx.Input.Param(":splat")
+	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
 	tagName := c.Ctx.Input.Param(":tagName")
+	repositoryNameEncode := url.QueryEscape(repositoryName)
 
 	img, _ := registry.GetImage(registryName, repositoryName, tagName)
 
 	c.Data["history"] = img.History
 	c.Data["registryName"] = registryName
 	c.Data["repositoryName"] = repositoryName
+	c.Data["repositoryNameEncode"] = repositoryNameEncode
 	c.Data["tagName"] = tagName
 
 	// Index template

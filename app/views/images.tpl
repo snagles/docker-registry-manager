@@ -10,26 +10,28 @@
         <li><a href="/registries">Registries</a></li>
         <li><a href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
         <li><a href="/registries/{{.registryName}}/repositories/{{.repository.EncodedURI}}">{{.repositoryName}}</a></li>
-        <li><a href="/registries/{{.registryName}}/repositories/{{.repository.EncodedURI}}/{{.tagName}}">{{.tagName}}</a></li>
+        <li><a href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags/{{.tagName}}">{{.tagName}}</a></li>
         <li class="active">Images</li>
       </ol>
     </div>
     <div class="content-block white-bg">
       <div class="row">
-        <h1>{{.repositoryName}}</h1>
+        <h3>{{.repositoryName}}:{{.tagName}}</h3>
         <hr>
       </div>
       <div class="row">
         <table class="table">
           <thead>
-            <th>ID:</th>
-            <th>Image:</th>
+            <th>Intermediate Image ID:</th>
+            <th>Command:</th>
+            <th>Size:</th>
           </thead>
           <tbody>
-            {{range $key, $history := .history}}
+            {{range $key, $img := .history}}
             <tr>
-              <td>{{$key}}</td>
-              <td>{{$history}}</td>
+              <td>{{$img.V1Compatibility.ID}}</td>
+              <td>{{$img.V1Compatibility.ContainerConfig.Cmd}}</td>
+              <td>{{$img.V1Compatibility.Size}}bytes</td>
             </tr>
             {{end}}
           </tbody>

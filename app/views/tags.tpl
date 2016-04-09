@@ -21,14 +21,19 @@
       <div class="row">
         <table class="table">
           <thead>
-            <th>ID:</th>
             <th>Tags:</th>
+            <th>Created:</th>
+            <th>Size:</th>
+            <th>Layers:</th>
+            <th>Delete:</th>
           </thead>
           <tbody>
             {{range $key, $tag := .tags}}
             <tr>
-              <td>{{$key}}</td>
-              <td><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$tag}}/images>{{$tag}}</span></td>
+              <td><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$tag.Name}}/images>{{$tag.Name}}</span></td>
+              <td>{{$tag.TimeAgo}}</td>
+              <td>{{$tag.Size}}</td>
+              <td>{{$tag.Layers}}</td>
             </tr>
             {{end}}
           </tbody>
