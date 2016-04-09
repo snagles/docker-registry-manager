@@ -25,7 +25,7 @@ func TestGetRepositories(t *testing.T) {
 		So(ActiveRegistries, ShouldContainKey, "host.domain")
 	})
 
-	repos, err := GetRepositories(r.Name)
+	repos := GetRepositories(r.Name)
 	Convey("When we get the repositories for this registry there should be no errors and there should be a slice of repositories", t, func() {
 		So(err, ShouldBeNil)
 		So(repos, ShouldNotBeEmpty)
