@@ -9,11 +9,11 @@ type TagsController struct {
 	beego.Controller
 }
 
-// Get returns the template for the registries page
+// GetTags returns the template for the registries page
 func (c *TagsController) GetTags() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
-	repositoryName := c.Ctx.Input.Param(":repositoryName")
+	repositoryName := c.Ctx.Input.Param(":splat")
 
 	tags, _ := registry.GetTags(registryName, repositoryName)
 	c.Data["tags"] = tags.Tags

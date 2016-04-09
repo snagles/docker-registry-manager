@@ -12,5 +12,5 @@ func init() {
 	beego.Router("/registries", &controllers.RegistriesController{})
 	beego.Router("/registries/", &controllers.RegistriesController{})
 	beego.Router("/registries/:registryName/repositories/", &controllers.RepositoriesController{}, "get:GetRepositories")
-	beego.Router("/registries/:registryName/repositories/:repositoryName/tags", &controllers.TagsController{}, "get:GetTags")
+	beego.Router("/registries/:registryName/repositories/*/tags", &controllers.TagsController{}, "get:GetTags")
 }

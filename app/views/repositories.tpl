@@ -26,7 +26,7 @@
             {{range $key, $repository := .repositories}}
             <tr>
               <td>{{$key}}</td>
-              <td><a href="/registries/{{$.registryName}}/repositories/{{$repository}}/tags">{{$repository}}</span></td>
+              <td><a href=/registries/{{$.registryName}}/repositories/{{$repository.EncodedURI}}/tags>{{$repository.Name}}</span></td>
             </tr>
             {{end}}
           </tbody>

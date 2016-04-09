@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -18,6 +19,8 @@ type Tags struct {
 
 // GetTags returns a slice of tags for a given repository and registry
 func GetTags(registryName string, repositoryName string) (Tags, error) {
+
+	repositoryName, _ = url.QueryUnescape(repositoryName)
 
 	// Check if the registry is listed as active
 	if _, ok := ActiveRegistries[registryName]; !ok {
