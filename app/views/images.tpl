@@ -10,7 +10,8 @@
         <li><a href="/registries">Registries</a></li>
         <li><a href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
         <li><a href="/registries/{{.registryName}}/repositories/{{.repository.EncodedURI}}">{{.repositoryName}}</a></li>
-        <li class="active">Tags</li>
+        <li><a href="/registries/{{.registryName}}/repositories/{{.repository.EncodedURI}}/{{.tagName}}">{{.repositoryName}}</a></li>
+        <li class="active">Images</li>
       </ol>
     </div>
     <div class="content-block white-bg">
@@ -22,13 +23,13 @@
         <table class="table">
           <thead>
             <th>ID:</th>
-            <th>Tags:</th>
+            <th>Image:</th>
           </thead>
           <tbody>
-            {{range $key, $tag := .tags}}
+            {{range $key, $history := .history}}
             <tr>
               <td>{{$key}}</td>
-              <td><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$tag}}/images>{{$tag}}</span></td>
+              <td>{{$history}}</td>
             </tr>
             {{end}}
           </tbody>
