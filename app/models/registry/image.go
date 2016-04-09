@@ -20,11 +20,13 @@ type Image struct {
 	History       []History `json:"history"`
 }
 
+// History contains the v1 compatibility string and marshaled json
 type History struct {
 	V1CompatibilityStr string `json:"V1Compatibility"`
 	V1Compatibility    V1Compatibility
 }
 
+// V1Compatibility contains all information grabbed from the V1Compatibility field from registry v1
 type V1Compatibility struct {
 	ID              string    `json:"id"`
 	Parent          string    `json:"parent"`
