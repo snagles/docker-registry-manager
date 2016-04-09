@@ -17,6 +17,8 @@ func (c *TagsController) GetTags() {
 
 	tags, _ := registry.GetTags(registryName, repositoryName)
 	c.Data["tags"] = tags.Tags
+	c.Data["registryName"] = registryName
+	c.Data["repositoryName"] = repositoryName
 
 	// Index template
 	c.TplName = "tags.tpl"
