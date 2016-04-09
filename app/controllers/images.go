@@ -1,28 +1,28 @@
 package controllers
 
 import (
-	"net/url"
-
 	"github.com/astaxie/beego"
 	"github.com/stefannaglee/docker-registry-manager/app/models/registry"
 )
 
-type TagsController struct {
+type ImagesController struct {
 	beego.Controller
 }
 
-// GetTags returns the template for the registries page
-func (c *TagsController) GetTags() {
+// GetImages returns the template for the images page
+func (c *ImagesController) GetImages() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
 	repositoryName := c.Ctx.Input.Param(":splat")
-	repositoryName = url.QueryEscape(repositoryName)
+	tagName := c.Ctx.Input.Param(":tagName")
 
-	tags, _ := registry.GetTags(registryName, repositoryName)
-	c.Data["tags"] = tags.Tags
+	img, _ := registry.GetImage(registryName, repositoryName, tagName)
+
+	c.Data["history"] = img.History
 	c.Data["registryName"] = registryName
 	c.Data["repositoryName"] = repositoryName
+	c.Data["tagName"] = tagName
 
 	// Index template
-	c.TplName = "tags.tpl"
+	c.TplName = "images.tpl"
 }
