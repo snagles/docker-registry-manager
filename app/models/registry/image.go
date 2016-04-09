@@ -18,6 +18,9 @@ type Image struct {
 	Architecture  string
 	TagID         uint
 	History       []History `json:"history"`
+	FsLayers      []struct {
+		BlobSum string `json:"blobSum"`
+	} `json:"fsLayers"`
 }
 
 // History contains the v1 compatibility string and marshaled json
@@ -146,7 +149,10 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 	// V1 compatibility is an escape string, so convert it to JSON and then update the key
 	for index, v1 := range img.History {
 		v1JSON := V1Compatibility{}
-		_ = json.Unmarshal([]byte(v1.V1CompatibilityStr), &v1JSON)
+		err = json.Unmarshal([]byte(v1.V1CompatibilityStr), &v1JSON)
+		if err != nil {
+			log.Error(err)
+		}
 		img.History[index].V1Compatibility = v1JSON
 	}
 

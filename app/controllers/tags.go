@@ -15,12 +15,14 @@ type TagsController struct {
 func (c *TagsController) GetTags() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
-	repositoryName := c.Ctx.Input.Param(":splat")
-	repositoryName = url.QueryEscape(repositoryName)
+	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
+	repositoryNameEncode := url.QueryEscape(repositoryName)
 
-	tags, _ := registry.GetTags(registryName, repositoryName)
-	c.Data["tags"] = tags.Tags
+	tags, _ := registry.GetTagsForView(registryName, repositoryName)
+
+	c.Data["tags"] = tags
 	c.Data["registryName"] = registryName
+	c.Data["repositoryNameEncode"] = repositoryNameEncode
 	c.Data["repositoryName"] = repositoryName
 
 	// Index template
