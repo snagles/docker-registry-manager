@@ -8,12 +8,12 @@
       <ol class="breadcrumb">
         <li><a href="/">Home</a></li>
         <li><a href="/registries">Registries</a></li>
-        <li class="active">Brigade</li>
+        <li class="active">{{.registryName}}</li>
       </ol>
     </div>
     <div class="content-block white-bg">
       <div class="row">
-        <h1>Registry</h1>
+        <h1>{{.registryName}}</h1>
         <hr>
       </div>
       <div class="row">
