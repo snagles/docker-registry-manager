@@ -10,7 +10,7 @@
         <li><a href="/registries">Registries</a></li>
         <li><a href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
         <li><a href="/registries/{{.registryName}}/repositories/{{.repository.EncodedURI}}">{{.repositoryName}}</a></li>
-        <li><a href="/registries/{{.registryName}}/repositories/{{.repository.EncodedURI}}/{{.tagName}}">{{.repositoryName}}</a></li>
+        <li><a href="/registries/{{.registryName}}/repositories/{{.repository.EncodedURI}}/{{.tagName}}">{{.tagName}}</a></li>
         <li class="active">Images</li>
       </ol>
     </div>
