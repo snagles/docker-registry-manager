@@ -54,7 +54,6 @@ func init() {
 	case logLevel == 6:
 		utils.Log.Level = logrus.DebugLevel
 	}
-	utils.Log.Error("Hi")
 }
 
 func main() {
