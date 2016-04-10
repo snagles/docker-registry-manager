@@ -18,6 +18,8 @@
       <div class="row">
         <h3>{{.repositoryName}}:{{.tagName}}</h3>
         <hr>
+        <h5>{{.os}}</h5>
+        <h5>{{.arch}}</h5>
       </div>
       <div class="row">
         <table class="table">
@@ -31,7 +33,7 @@
             <tr>
               <td>{{$img.V1Compatibility.ID}}</td>
               <td>{{$img.V1Compatibility.ContainerConfig.Cmd}}</td>
-              <td>{{$img.V1Compatibility.Size}}bytes</td>
+              <td>{{$img.V1Compatibility.SizeStr}}</td>
             </tr>
             {{end}}
           </tbody>
