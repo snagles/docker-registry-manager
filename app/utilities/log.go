@@ -12,6 +12,8 @@ func init() {
 	Log.Formatter = &logrus.JSONFormatter{}
 	Log.Hooks.Add(lfshook.NewHook(lfshook.PathMap{
 		logrus.ErrorLevel: "./logs/error.log",
-		logrus.InfoLevel:  "./app/logs/info.log",
+		logrus.InfoLevel:  "./logs/info.log",
+		logrus.WarnLevel:  "./logs/warn.log",
+		logrus.FatalLevel: "./logs/fatal.log",
 	}))
 }
