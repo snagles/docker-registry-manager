@@ -25,7 +25,6 @@
             <th>Created:</th>
             <th>Size:</th>
             <th>Layers:</th>
-            <th>Delete:</th>
           </thead>
           <tbody>
             {{range $key, $tag := .tags}}
