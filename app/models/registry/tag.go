@@ -9,7 +9,7 @@ import (
 	"sort"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	"github.com/pivotal-golang/bytefmt"
 	"github.com/stefannaglee/docker-registry-manager/app/utilities"
 )
@@ -67,7 +67,7 @@ func GetTagsForView(registryName string, repositoryName string) (TagsForView, er
 			// Create and execute Get request
 			response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
 			if err != nil {
-				log.Error(err)
+				utils.Log.Error(err)
 			}
 			tempSize += response.ContentLength
 		}
@@ -106,7 +106,7 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 	// Create and execute Get request
 	response, err := http.Get(r.GetURI() + "/" + repositoryName + "/tags/list")
 	if err != nil {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Registry URL": string(r.GetURI()),
 			"Error":        err,
 			"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
@@ -116,7 +116,7 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 
 	// Check Status code
 	if response.StatusCode != 200 {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error":       err,
 			"Status Code": response.StatusCode,
 			"Response":    response,
@@ -130,7 +130,7 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 	// Read response into byte body
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error": err,
 			"Body":  body,
 		}).Error("Unable to read response into body!")
@@ -139,7 +139,7 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 	ts := Tags{}
 	// Unmarshal JSON into the tag response struct containing an array of tags
 	if err := json.Unmarshal(body, &ts); err != nil {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error":         err,
 			"Response Body": string(body),
 		}).Error("Unable to unmarshal JSON!")
