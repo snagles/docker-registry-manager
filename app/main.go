@@ -6,10 +6,11 @@ import (
 	"os"
 	"strings"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
 	"github.com/stefannaglee/docker-registry-manager/app/models/registry"
 	_ "github.com/stefannaglee/docker-registry-manager/app/routers"
+	"github.com/stefannaglee/docker-registry-manager/app/utilities"
 )
 
 // DuplicateFlags slice contains a list of registries to use.
@@ -41,19 +42,19 @@ func init() {
 	// Set the log level of the program
 	switch {
 	case logLevel == 1:
-		log.SetLevel(log.PanicLevel)
+		utils.Log.Level = logrus.PanicLevel
 	case logLevel == 2:
-		log.SetLevel(log.FatalLevel)
+		utils.Log.Level = logrus.FatalLevel
 	case logLevel == 3:
-		log.SetLevel(log.ErrorLevel)
+		utils.Log.Level = logrus.ErrorLevel
 	case logLevel == 4:
-		log.SetLevel(log.WarnLevel)
+		utils.Log.Level = logrus.WarnLevel
 	case logLevel == 5:
-		log.SetLevel(log.InfoLevel)
+		utils.Log.Level = logrus.InfoLevel
 	case logLevel == 6:
-		log.SetLevel(log.DebugLevel)
+		utils.Log.Level = logrus.DebugLevel
 	}
-
+	utils.Log.Error("Hi")
 }
 
 func main() {
@@ -62,7 +63,7 @@ func main() {
 	for _, regString := range registryFlags {
 		if err := registry.GetRegistryStatus(regString); err != nil {
 			// Notify of success
-			log.WithFields(log.Fields{
+			utils.Log.WithFields(logrus.Fields{
 				"Error": err,
 			}).Fatal("We are unable to make a connection to the registry!")
 
