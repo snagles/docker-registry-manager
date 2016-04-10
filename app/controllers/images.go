@@ -21,6 +21,8 @@ func (c *ImagesController) GetImages() {
 
 	img, _ := registry.GetImage(registryName, repositoryName, tagName)
 
+	c.Data["os"] = img.History[0].V1Compatibility.Os
+	c.Data["arch"] = img.History[0].V1Compatibility.Architecture
 	c.Data["history"] = img.History
 	c.Data["registryName"] = registryName
 	c.Data["repositoryName"] = repositoryName

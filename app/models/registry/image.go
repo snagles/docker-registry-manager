@@ -8,6 +8,7 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/pivotal-golang/bytefmt"
 )
 
 // Image contains all information related to the image
@@ -89,6 +90,7 @@ type V1Compatibility struct {
 	Architecture string `json:"architecture"`
 	Os           string `json:"os"`
 	Size         int    `json:"Size"`
+	SizeStr      string `json:"-"`
 }
 
 // GetImage returns the image information for a given tag
@@ -153,6 +155,7 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 		if err != nil {
 			log.Error(err)
 		}
+		v1JSON.SizeStr = bytefmt.ByteSize(uint64(v1JSON.Size))
 		img.History[index].V1Compatibility = v1JSON
 	}
 
