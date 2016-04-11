@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"net/url"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	_ "github.com/go-sql-driver/mysql" // need to initialize mysql before making a connection
+	"github.com/stefannaglee/docker-registry-manager/app/utilities"
 )
 
 // ActiveRegistries contains a map of all active registries identified by their name
@@ -44,7 +45,7 @@ func GetRegistryStatus(registryURI string) error {
 		return err
 	}
 	// Notify of initial attempt
-	log.WithFields(log.Fields{
+	utils.Log.WithFields(logrus.Fields{
 		"Registry URI": registryURI,
 	}).Info("Connecting to registry...")
 
@@ -52,7 +53,7 @@ func GetRegistryStatus(registryURI string) error {
 	response, err := http.Get(registry.GetURI())
 	if err != nil {
 		// Notify of error
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Registry URLs": registry,
 			"Error":         err,
 			"HTTP Response": response,
@@ -62,7 +63,7 @@ func GetRegistryStatus(registryURI string) error {
 		return err
 	} else if response.StatusCode != 200 {
 		// Notify of error
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Registry URLs": registry,
 			"HTTP Response": response.StatusCode,
 			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
@@ -70,7 +71,7 @@ func GetRegistryStatus(registryURI string) error {
 	}
 
 	// Notify of success
-	log.WithFields(log.Fields{
+	utils.Log.WithFields(logrus.Fields{
 		"Registry Information": registry,
 		"Registry URI":         registry.GetURI(),
 	}).Info("Successfully connected to registry and added to list of active registries!")
@@ -93,7 +94,7 @@ func ParseRegistry(registryURI string) (Registry, error) {
 	// e.g https, http, etc.
 	u, err := url.Parse(registryURI)
 	if err != nil {
-		log.Error(err)
+		utils.Log.Error(err)
 		return r, err
 	}
 
@@ -104,7 +105,7 @@ func ParseRegistry(registryURI string) (Registry, error) {
 	// e.g test.domain.com and 5000, etc.
 	host, port, err := net.SplitHostPort(u.Host)
 	if err != nil {
-		log.Error(err)
+		utils.Log.Error(err)
 		return r, err
 	}
 
@@ -116,7 +117,7 @@ func ParseRegistry(registryURI string) (Registry, error) {
 	// Using the host name try looking up the IP for informational purposes
 	ip, err := net.LookupHost(host)
 	if err != nil {
-		log.Error(err)
+		utils.Log.Error(err)
 		// We do not need to return an error since we don't "need" the IP of the host
 	}
 	// Set IP if we have it
