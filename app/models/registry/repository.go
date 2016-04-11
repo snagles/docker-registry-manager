@@ -7,7 +7,8 @@ import (
 	"net/http"
 	"net/url"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
+	"github.com/stefannaglee/docker-registry-manager/app/utilities"
 )
 
 // RepositoriesList contains a slice of all repositories
@@ -47,7 +48,7 @@ func GetRepositoriesFromRegistry(registryName string) (RepositoriesList, error) 
 	// https://github.com/docker/distribution/blob/master/docs/spec/api.md#catalog
 	response, err := http.Get(r.GetURI() + "/_catalog")
 	if err != nil {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Registry URL": string(r.GetURI()),
 			"Error":        err,
 			"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
@@ -56,7 +57,7 @@ func GetRepositoriesFromRegistry(registryName string) (RepositoriesList, error) 
 
 	// Check Status code
 	if response.StatusCode != 200 {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error":       err,
 			"Status Code": response.StatusCode,
 			"Response":    response,
@@ -70,7 +71,7 @@ func GetRepositoriesFromRegistry(registryName string) (RepositoriesList, error) 
 	// Read response into byte body
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error": err,
 			"Body":  body,
 		}).Error("Unable to read response into body!")
@@ -79,7 +80,7 @@ func GetRepositoriesFromRegistry(registryName string) (RepositoriesList, error) 
 	rs := RepositoriesList{}
 	// Unmarshal JSON into the catalog struct containing a slice of repositories
 	if err := json.Unmarshal(body, &rs); err != nil {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error":         err,
 			"Response Body": string(body),
 		}).Error("Unable to unmarshal JSON!")

@@ -7,8 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	"github.com/pivotal-golang/bytefmt"
+	"github.com/stefannaglee/docker-registry-manager/app/utilities"
 )
 
 // Image contains all information related to the image
@@ -120,7 +121,7 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 	response, err := http.Get(r.GetURI() + "/" + repositoryName + "/manifests/" + tagName)
 
 	if response.StatusCode != 200 {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error":       err,
 			"Status Code": response.StatusCode,
 			"Response":    response,
@@ -134,7 +135,7 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 	// Read response into byte body
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error": err,
 			"Body":  body,
 		}).Error("Unable to read response into body!")
@@ -142,7 +143,7 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 	}
 	img := Image{}
 	if err := json.Unmarshal(body, &img); err != nil {
-		log.WithFields(log.Fields{
+		utils.Log.WithFields(logrus.Fields{
 			"Error": err,
 		}).Error("Unable to unmarshal JSON!")
 		return Image{}, err
@@ -153,7 +154,7 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 		v1JSON := V1Compatibility{}
 		err = json.Unmarshal([]byte(v1.V1CompatibilityStr), &v1JSON)
 		if err != nil {
-			log.Error(err)
+			utils.Log.Error(err)
 		}
 		v1JSON.SizeStr = bytefmt.ByteSize(uint64(v1JSON.Size))
 		img.History[index].V1Compatibility = v1JSON
