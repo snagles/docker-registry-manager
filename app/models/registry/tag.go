@@ -163,3 +163,24 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 	}
 	return ts, nil
 }
+
+func DeleteTag(registryName string, repositoryName string, tag string) (bool, error) {
+
+	// Check if the registry is listed as active
+	if _, ok := ActiveRegistries[registryName]; !ok {
+		return false, errors.New(registryName + " was not found within the active list of registries.")
+	}
+	r := ActiveRegistries[registryName]
+
+	// Create and execute Get request
+	resp, err := http.Head(r.GetURI() + "/" + repositoryName + "/manifests/" + tag)
+	if err != nil || resp.StatusCode != 200 {
+		utils.Log.WithFields(logrus.Fields{
+			"Error":    err,
+			"Tag":      tag,
+			"Response": resp,
+		}).Error("Could not delete tag!")
+	}
+
+	return true, err
+}

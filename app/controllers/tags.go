@@ -28,3 +28,14 @@ func (c *TagsController) GetTags() {
 	// Index template
 	c.TplName = "tags.tpl"
 }
+
+func (c *TagsController) DeleteTags() {
+	registryName := c.Ctx.Input.Param(":registryName")
+	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
+	tag := c.Ctx.Input.Param(":tagName")
+
+	registry.DeleteTag(registryName, repositoryName, tag)
+
+	c.CustomAbort(200, "Success")
+
+}
