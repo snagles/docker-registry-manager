@@ -45,51 +45,66 @@ func (slice TagsForView) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
 
+var TagInformation TagsForView
+
 // GetTagsForView returns the sanitized tag structs with the required information for the tags template
 func GetTagsForView(registryName string, repositoryName string) (TagsForView, error) {
 	tagObj, err := GetTags(registryName, repositoryName)
 	tags := TagsForView{}
 
+	tagChan := make(chan TagForView)
+
 	// Loop through each tag to build the TagForView type
 	for _, tagName := range tagObj.Tags {
 
-		// Created a new tag for view type to fill
-		t := TagForView{}
-		var tempSize int64
-		var maxTime time.Time
+		go func(tagName string) {
+			// Created a new tag for view type to fill
+			t := TagForView{}
+			var tempSize int64
+			var maxTime time.Time
 
-		// Get the image information for each tag
-		img, _ := GetImage(registryName, repositoryName, tagName)
+			// Get the image information for each tag
+			img, _ := GetImage(registryName, repositoryName, tagName)
 
-		for _, layer := range img.FsLayers {
-			// Check if the registry is listed as active
-			r := ActiveRegistries[registryName]
-			// Create and execute Get request
-			response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
-			if err != nil {
-				utils.Log.Error(err)
+			for _, layer := range img.FsLayers {
+
+				// Check if the registry is listed as active
+				r := ActiveRegistries[registryName]
+				// Create and execute Get request
+				response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
+				if err != nil {
+					utils.Log.Error(err)
+				}
+				tempSize += response.ContentLength
 			}
-			tempSize += response.ContentLength
-		}
-		// Get the latest creation time and total the size for the tag image
-		for _, history := range img.History {
-			if history.V1Compatibility.Created.After(maxTime) {
-				maxTime = history.V1Compatibility.Created
+			// Get the latest creation time and total the size for the tag image
+			for _, history := range img.History {
+				if history.V1Compatibility.Created.After(maxTime) {
+					maxTime = history.V1Compatibility.Created
+				}
 			}
-		}
 
-		// Set the fields
-		t.Size = bytefmt.ByteSize(uint64(tempSize))
-		t.CreatedTime = maxTime
-		t.Layers = len(img.History)
-		t.Name = tagName
-		t.TimeAgo = utils.TimeAgo(maxTime)
+			// Set the fields
+			t.Size = bytefmt.ByteSize(uint64(tempSize))
+			t.CreatedTime = maxTime
+			t.Layers = len(img.History)
+			t.Name = tagName
+			t.TimeAgo = utils.TimeAgo(maxTime)
 
-		// Append to the tags list that will be passed to the template
-		tags = append(tags, t)
+			// Append to the tags list that will be passed to the template
+			tagChan <- t
+
+		}(tagName)
+
+	}
+
+	// Wait for each of the requests and append to the returned tag information
+	for i := 0; i < len(tagObj.Tags); i++ {
+		tag := <-tagChan
+		TagInformation = append(TagInformation, tag)
 	}
 	sort.Sort(sort.Reverse(tags))
-	return tags, err
+	return TagInformation, err
 }
 
 // GetTags returns a slice of tags for a given repository and registry
