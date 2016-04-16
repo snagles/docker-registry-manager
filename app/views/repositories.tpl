@@ -17,16 +17,23 @@
         <hr>
       </div>
       <div class="row">
-        <table class="table">
+        <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
           <thead>
             <th>ID:</th>
             <th>Repository Name:</th>
+            <th>Tags</th>
           </thead>
+          <tfoot>
+            <th>ID:</th>
+            <th>Repository Name:</th>
+            <th>Tags</th>
+          </tfoot>
           <tbody>
             {{range $key, $repository := .repositories}}
             <tr>
               <td>{{$key}}</td>
               <td><a href=/registries/{{$.registryName}}/repositories/{{$repository.EncodedURI}}/tags>{{$repository.Name}}</span></td>
+              <td>{{$repository.TagCount}}</td>
             </tr>
             {{end}}
           </tbody>
@@ -35,4 +42,15 @@
     </div>
   </div>
 
+  <script>
+  $(document).ready(function() {
+      $('#datatable').DataTable( {
+          "order": [[ 1, "asc" ]],
+          "pageLength": 25
+      } );
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip({container: 'body'})
+      })
+  });
+  </script>
 {{end}}

@@ -45,8 +45,6 @@ func (slice TagsForView) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
 
-var TagInformation TagsForView
-
 // GetTagsForView returns the sanitized tag structs with the required information for the tags template
 func GetTagsForView(registryName string, repositoryName string) (TagsForView, error) {
 	tagObj, err := GetTags(registryName, repositoryName)
@@ -98,12 +96,15 @@ func GetTagsForView(registryName string, repositoryName string) (TagsForView, er
 
 	}
 
+	var TagInformation TagsForView
 	// Wait for each of the requests and append to the returned tag information
 	for i := 0; i < len(tagObj.Tags); i++ {
 		tag := <-tagChan
 		TagInformation = append(TagInformation, tag)
 	}
+	close(tagChan)
 	sort.Sort(sort.Reverse(tags))
+
 	return TagInformation, err
 }
 

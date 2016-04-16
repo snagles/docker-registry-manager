@@ -19,13 +19,21 @@
         <hr>
       </div>
       <div class="row">
-        <table class="table">
+        <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
           <thead>
             <th>Tags:</th>
             <th>Created:</th>
             <th>Size:</th>
             <th>Layers:</th>
           </thead>
+          <tfoot>
+              <tr>
+                  <th>Tag:</th>
+                  <th>Created:</th>
+                  <th>Size:</th>
+                  <th>Layers:</th>
+              </tr>
+          </tfoot>
           <tbody>
             {{range $key, $tag := .tags}}
             <tr>
@@ -40,5 +48,17 @@
       </div>
     </div>
   </div>
+
+  <script>
+  $(document).ready(function() {
+      $('#datatable').DataTable( {
+          "order": [[ 1, "asc" ]],
+          "pageLength": 25
+      } );
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip({container: 'body'})
+      })
+  });
+  </script>
 
 {{end}}
