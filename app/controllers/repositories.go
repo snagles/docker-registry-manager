@@ -15,6 +15,11 @@ func (c *RepositoriesController) GetRepositories() {
 	registryName := c.Ctx.Input.Param(":registryName")
 
 	repositories := registry.GetRepositories(registryName)
+
+	for index, repo := range repositories {
+		tags, _ := registry.GetTags(registryName, repo.Name)
+		repositories[index].TagCount = len(tags.Tags)
+	}
 	c.Data["registryName"] = registryName
 	c.Data["repositories"] = repositories
 	// Index template
