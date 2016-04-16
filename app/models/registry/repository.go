@@ -20,6 +20,7 @@ type RepositoriesList struct {
 type Repository struct {
 	Name       string
 	EncodedURI string
+	TagCount   int
 }
 
 // GetRepositories returns a slice of repositories with their names and encoded names

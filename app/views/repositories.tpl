@@ -21,12 +21,14 @@
           <thead>
             <th>ID:</th>
             <th>Repository Name:</th>
+            <th>Tags</th>
           </thead>
           <tbody>
             {{range $key, $repository := .repositories}}
             <tr>
               <td>{{$key}}</td>
               <td><a href=/registries/{{$.registryName}}/repositories/{{$repository.EncodedURI}}/tags>{{$repository.Name}}</span></td>
+              <td>{{$repository.TagCount}}</td>
             </tr>
             {{end}}
           </tbody>
