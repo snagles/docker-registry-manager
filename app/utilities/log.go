@@ -3,7 +3,6 @@ package utils
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -46,7 +45,7 @@ func ParseLogFile() []LogEntry {
 		e := LogEntry{}
 		err := json.Unmarshal([]byte(scanner.Text()), &e)
 		if err != nil {
-			fmt.Println(err.Error)
+			Log.Error(err)
 		}
 		es = append(es, e)
 	}
