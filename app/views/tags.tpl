@@ -25,7 +25,7 @@
                 <tr>
                   <th><input name="select_all" value="1" type="checkbox"></th>
                   <th>Tags:</th>
-                  <th>Created:</th>
+                  <th>Updated:</th>
                   <th>Size:</th>
                   <th>Layers:</th>
                 </tr>
@@ -34,7 +34,7 @@
                 <tr>
                   <th></th>
                   <th>Tags:</th>
-                  <th>Created:</th>
+                  <th>Updated:</th>
                   <th>Size:</th>
                   <th>Layers:</th>
                 </tr>
@@ -44,7 +44,7 @@
               <tr data-tag-name="{{$tag.Name}}">
                 <td></td>
                 <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$tag.Name}}/images>{{$tag.Name}}</span></td>
-                <td data-order="{{$tag.CreatedTimeUnix}}">{{$tag.TimeAgo}}</td>
+                <td data-order="{{$tag.UpdatedTimeUnix}}">{{$tag.TimeAgo}}</td>
                 <td>{{$tag.Size}}</td>
                 <td>{{$tag.Layers}}</td>
               </tr>
@@ -105,7 +105,7 @@
                return '<input type="checkbox">';
            }
         }],
-        'order': [1, 'asc'],
+        'order': [2, 'desc'],
         'rowCallback': function(row, data, dataIndex){
            // Get row ID
            var rowId = data[0];

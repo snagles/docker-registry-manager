@@ -24,8 +24,8 @@ type Tags struct {
 type TagForView struct {
 	ID              string
 	Name            string
-	CreatedTime     time.Time
-	CreatedTimeUnix int64
+	UpdatedTime     time.Time
+	UpdatedTimeUnix int64
 	TimeAgo         string
 	Layers          int
 	Size            string
@@ -85,8 +85,8 @@ func GetTagsForView(registryName string, repositoryName string) (TagsForView, er
 
 			// Set the fields
 			t.Size = bytefmt.ByteSize(uint64(tempSize))
-			t.CreatedTime = maxTime
-			t.CreatedTimeUnix = maxTime.Unix()
+			t.UpdatedTime = maxTime
+			t.UpdatedTimeUnix = maxTime.Unix()
 			t.Layers = len(img.History)
 			t.Name = tagName
 			t.TimeAgo = utils.TimeAgo(maxTime)
