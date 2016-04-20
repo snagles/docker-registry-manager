@@ -44,7 +44,7 @@
               <tr data-tag-name="{{$tag.Name}}">
                 <td></td>
                 <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$tag.Name}}/images>{{$tag.Name}}</span></td>
-                <td>{{$tag.TimeAgo}}</td>
+                <td data-order="{{$tag.CreatedTimeUnix}}">{{$tag.TimeAgo}}</td>
                 <td>{{$tag.Size}}</td>
                 <td>{{$tag.Layers}}</td>
               </tr>
