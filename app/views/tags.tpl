@@ -51,7 +51,7 @@
               {{end}}
             </tbody>
         </table>
-        <p><button>Submit</button></p>
+        <p><button class="btn btn-danger">Delete</button></p>
 
 </form>
       </div>
