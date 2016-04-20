@@ -22,12 +22,13 @@ type Tags struct {
 }
 
 type TagForView struct {
-	ID          string
-	Name        string
-	CreatedTime time.Time
-	TimeAgo     string
-	Layers      int
-	Size        string
+	ID              string
+	Name            string
+	CreatedTime     time.Time
+	CreatedTimeUnix int64
+	TimeAgo         string
+	Layers          int
+	Size            string
 }
 
 // TagsForView contains a slice of TagsForView with the methods required to sort
@@ -85,6 +86,7 @@ func GetTagsForView(registryName string, repositoryName string) (TagsForView, er
 			// Set the fields
 			t.Size = bytefmt.ByteSize(uint64(tempSize))
 			t.CreatedTime = maxTime
+			t.CreatedTimeUnix = maxTime.Unix()
 			t.Layers = len(img.History)
 			t.Name = tagName
 			t.TimeAgo = utils.TimeAgo(maxTime)
