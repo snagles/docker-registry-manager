@@ -164,7 +164,14 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 	return ts, nil
 }
 
+// DeleteTag deletes the tag by first getting its docker-content-digest, and then using
+// the digest received the function deletes the manifest
+//
+// Documentation:
+// DELETE	/v2/<name>/manifests/<reference>	Manifest	Delete the manifest identified by name and reference. Note that a manifest can only be deleted by digest.
 func DeleteTag(registryName string, repositoryName string, tag string) (bool, error) {
+
+	repositoryName, _ = url.QueryUnescape(repositoryName)
 
 	// Check if the registry is listed as active
 	if _, ok := ActiveRegistries[registryName]; !ok {
@@ -172,15 +179,54 @@ func DeleteTag(registryName string, repositoryName string, tag string) (bool, er
 	}
 	r := ActiveRegistries[registryName]
 
-	// Create and execute Get request
-	resp, err := http.Head(r.GetURI() + "/" + repositoryName + "/manifests/" + tag)
-	if err != nil || resp.StatusCode != 200 {
+	// Check if the tag exists. If it does not we cannot get the digest from it
+	client := &http.Client{}
+	req, _ := http.NewRequest("HEAD", r.GetURI()+"/"+repositoryName+"/manifests/"+tag, nil)
+
+	// Note When deleting a manifest from a registry version 2.3 or later, the following header must be used when HEAD or GET-ing the manifest to obtain the correct digest to delete:
+	// Accept: application/vnd.docker.distribution.manifest.v2+json
+	req.Header.Set("Accept", "application/vnd.docker.distribution.manifest.v2+json")
+
+	// Execute the request
+	resp, existsErr := client.Do(req)
+	if existsErr != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"Error":    err,
+			"Request":  resp.Request,
+			"Error":    existsErr,
+			"Tag":      tag,
+			"Response": resp,
+		}).Error("Could not delete tag! Could not head the tag.")
+		return false, existsErr
+	}
+
+	// Make sure the digest exists in the header. If it does, attempt the deletion
+	if _, ok := resp.Header["Docker-Content-Digest"]; ok {
+
+		if len(resp.Header["Docker-Content-Digest"]) > 0 {
+			// Create and execute DELETE request
+			digest := resp.Header["Docker-Content-Digest"][0]
+			client := &http.Client{}
+			req, _ := http.NewRequest("DELETE", r.GetURI()+"/"+repositoryName+"/manifests/"+digest, nil)
+			req.Header.Set("Accept", "application/vnd.docker.distribution.manifest.v2+json")
+			resp, err := client.Do(req)
+			if err != nil || resp.StatusCode != 200 {
+				utils.Log.WithFields(logrus.Fields{
+					"Error":    err,
+					"Tag":      tag,
+					"Response": resp,
+				}).Error("Could not delete tag!")
+				return false, err
+			}
+		}
+
+		// Error if there was nothing in the Docker-Content-Digest field
+		utils.Log.WithFields(logrus.Fields{
+			"Error":    errors.New("No digest gotten from response header"),
 			"Tag":      tag,
 			"Response": resp,
 		}).Error("Could not delete tag!")
+		return false, errors.New("No digest gotten from response header")
 	}
 
-	return true, err
+	return true, nil
 }
