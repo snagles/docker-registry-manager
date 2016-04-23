@@ -5,12 +5,13 @@
       <ol class="breadcrumb">
         <li><a href="/">Home</a></li>
         <li><a href="/registries">Registries</a></li>
-        <li class="active">{{.registryName}}</li>
+        <li><a class="registry-name" href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
+        <li class="active">Repositories</li>
       </ol>
     </div>
     <div class="content-block white-bg">
       <div class="row">
-        <h1>{{.registryName}}</h1>
+        <h1>Repositories</h1>
         <hr>
       </div>
       <div class="row">
