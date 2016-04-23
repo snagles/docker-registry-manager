@@ -19,6 +19,18 @@ func (c *RegistriesController) Get() {
 	c.TplName = "registries.tpl"
 }
 
+func (c *RegistriesController) GetRegistryCount() {
+	c.Data["registries"] = registry.ActiveRegistries
+
+	registryCount := struct {
+		Count int
+	}{
+		len(registry.ActiveRegistries),
+	}
+	c.Data["json"] = &registryCount
+	c.ServeJSON()
+}
+
 // ListRegistries returns all registries
 func (c *RegistriesController) ListRegistries() {
 }

@@ -25,3 +25,21 @@ func (c *RepositoriesController) GetRepositories() {
 	// Index template
 	c.TplName = "repositories.tpl"
 }
+
+func (c *RepositoriesController) GetAllRepositoryCount() {
+	c.Data["registries"] = registry.ActiveRegistries
+
+	var count int
+	for _, reg := range registry.ActiveRegistries {
+		repositories := registry.GetRepositories(reg.Name)
+		count += len(repositories)
+	}
+	repositoryCount := struct {
+		Count int
+	}{
+		count,
+	}
+
+	c.Data["json"] = &repositoryCount
+	c.ServeJSON()
+}
