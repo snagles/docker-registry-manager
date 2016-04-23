@@ -5,7 +5,7 @@
       <ol class="breadcrumb">
         <li><a href="/">Home</a></li>
         <li><a href="/registries">Registries</a></li>
-        <li class="active">All</li>
+        <li class="active">Repositories</li>
       </ol>
     </div>
     <div class="content-block white-bg">
@@ -16,14 +16,14 @@
       <div class="row">
         <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
           <thead>
-            <th>Repository</th>
-            <th>Registry</th>
-            <th>Tags</th>
+            <th>Repository:</th>
+            <th>Registry:</th>
+            <th>Tags:</th>
           </thead>
           <tfoot>
-            <th>Repository Name:</th>
+            <th>Repository:</th>
             <th>Registry:</th>
-            <th>Tags</th>
+            <th>Tags:</th>
           </tfoot>
           <tbody>
             {{range $key, $repository := .repositories}}
