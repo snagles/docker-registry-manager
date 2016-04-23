@@ -19,6 +19,7 @@ type RepositoriesList struct {
 // Repository contains information on the name and encoded name
 type Repository struct {
 	Name       string
+	Registry   string
 	EncodedURI string
 	TagCount   int
 }
@@ -31,6 +32,7 @@ func GetRepositories(registryName string) []Repository {
 		r := Repository{}
 		r.EncodedURI = url.QueryEscape(value)
 		r.Name = value
+		r.Registry = registryName
 		cleanedRepos = append(cleanedRepos, r)
 	}
 	return cleanedRepos
