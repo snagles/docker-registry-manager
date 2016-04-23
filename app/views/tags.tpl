@@ -1,7 +1,4 @@
 {{template "base/base.html" .}}
-
-{{template "base/nav.html" .}}
-
 {{define "body"}}
   <div class="right-content-container">
     <div class="header">

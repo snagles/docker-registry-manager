@@ -1,6 +1,5 @@
 <div class = "left-nav">
-  <div class="nav-header">
-  </div>
+  <div class="nav-header"> </div>
   <div class="nav-menu-container">
     <div class="nav-menu">
       <ul>
@@ -10,18 +9,18 @@
             <span>Dashboard</span>
           </a>
         </li>
-        <li>
+        <li id="registries">
           <a href="/registries">
             <i class="fa fa-th-large"></i>
             <span>Registries</span>
-            <span class="badge">4</span>
+            <span class="badge" id="registry-count"></span>
           </a>
         </li>
-        <li>
-          <a href="/images">
+        <li id="repositories">
+          <a href="/repositories">
             <i class="fa fa-cubes"></i>
             <span>Repositories</span>
-            <span class="badge">22</span>
+            <div class="badge" id="repository-count"></div>
           </a>
         </li>
         <li>
@@ -59,3 +58,26 @@
   <div class="nav-footer">
   </div>
 </div> <!-- end .left-nav -->
+
+<script>
+$(document).ready(function() {
+
+  // Get the badge count information
+  $.ajax({
+      url: '/registries/all/count',
+      dataType: 'json',
+      success: function(data) {
+          $('#registry-count').text(data.Count);
+          console.log(data.Count);
+      }
+  });
+  $.ajax({
+      url: '/registries/all/repositories/count',
+      dataType: 'json',
+      success: function(data) {
+          $('#repository-count').text(data.Count);
+          console.log(data.Count);
+      }
+  });
+});
+</script>
