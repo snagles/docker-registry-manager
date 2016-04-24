@@ -34,11 +34,16 @@
             <h5>{{.tagInfo.Size}}</h5>
             <h5>{{.tagInfo.TimeAgo}}</h5>
             <h5>{{.tagInfo.UpdatedTime}}</h5>
+            <h5>{{.registry.Name}}</h5>
+            <h5>{{.registry.IP}}</h5>
+            <h5>{{.registry.Scheme}}</h5>
+            <h5>{{.registry.Port}}</h5>
+            <h5>{{.registry.Version}}</h5>
           </div>
           <div role="tabpanel" class="tab-pane" id="stages">
             <table class="table">
               <thead>
-                <th>Intermediate Image ID:</th>
+                <th>Image ID:</th>
                 <th>Command:</th>
                 {{if $.containsV1Size}}
                 <th>Size:</th>
@@ -58,7 +63,14 @@
             </table>
           </div>
           <div role="tabpanel" class="tab-pane" id="activity"></div>
-          <div role="tabpanel" class="tab-pane" id="push"></div>
+          <div role="tabpanel" class="tab-pane" id="push">
+            <div>Push to {{.registry.Name}}:</div>
+            <ol>
+              <li><code>cd $PROJECTNAME</code></li>
+              <li><code>docker build --rm -t {{.registry.Name}}:{{.registry.Port}}/{{.repositoryName}}:{{.tagInfo.Name}} .</code></li>
+              <li><code>docker push {{.registry.Name}}:{{.registry.Port}}/{{.repositoryName}} .</code></li>
+            </ol>
+          </div>
         </div>
       </div>
     </div>

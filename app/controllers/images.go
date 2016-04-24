@@ -23,6 +23,12 @@ func (c *ImagesController) GetImages() {
 
 	tagInfo, _ := registry.GetTag(registryName, repositoryName, tagName)
 
+	activeRegistries := registry.ActiveRegistries
+	if _, ok := activeRegistries[registryName]; ok {
+		registry := activeRegistries[registryName]
+		c.Data["registry"] = registry
+	}
+
 	c.Data["containsV1Size"] = img.ContainsV1Size
 	c.Data["os"] = img.History[0].V1Compatibility.Os
 	c.Data["arch"] = img.History[0].V1Compatibility.Architecture
