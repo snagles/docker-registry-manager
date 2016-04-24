@@ -48,7 +48,7 @@
                 {{range $key, $img := .history}}
                 <tr>
                   <td>{{$img.V1Compatibility.IDShort}}</td>
-                  <td>{{$img.V1Compatibility.ContainerConfig.Cmd}}</td>
+                  <td>{{$img.V1Compatibility.ContainerConfig.CmdClean}}</td>
                   {{if $.containsV1Size}}
                   <td>{{$img.V1Compatibility.SizeStr}}</td>
                   {{end}}

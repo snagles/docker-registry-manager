@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -53,6 +54,7 @@ type V1Compatibility struct {
 		StdinOnce       bool          `json:"StdinOnce"`
 		Env             []string      `json:"Env"`
 		Cmd             []string      `json:"Cmd"`
+		CmdClean        string        `json:"-"`
 		Image           string        `json:"Image"`
 		Volumes         interface{}   `json:"Volumes"`
 		VolumeDriver    string        `json:"VolumeDriver"`
@@ -167,6 +169,9 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 
 		// Get first 8 characters for the short ID
 		v1JSON.IDShort = v1JSON.ID[0:7]
+
+		// Remove shell command
+		v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.Cmd[0], "/bin/sh -c #(nop)", "", -1)
 
 		img.History[index].V1Compatibility = v1JSON
 	}
