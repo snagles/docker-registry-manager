@@ -21,13 +21,16 @@ func (c *ImagesController) GetImages() {
 
 	img, _ := registry.GetImage(registryName, repositoryName, tagName)
 
+	tagInfo, _ := registry.GetTag(registryName, repositoryName, tagName)
+
+	c.Data["containsV1Size"] = img.ContainsV1Size
 	c.Data["os"] = img.History[0].V1Compatibility.Os
 	c.Data["arch"] = img.History[0].V1Compatibility.Architecture
 	c.Data["history"] = img.History
 	c.Data["registryName"] = registryName
 	c.Data["repositoryName"] = repositoryName
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
-	c.Data["tagName"] = tagName
+	c.Data["tagInfo"] = tagInfo
 
 	// Index template
 	c.TplName = "images.tpl"

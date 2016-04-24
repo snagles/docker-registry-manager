@@ -232,3 +232,45 @@ func DeleteTag(registryName string, repositoryName string, tag string) (bool, er
 
 	return true, nil
 }
+
+// Get tag returns a TagForView based on the passed tag name
+func GetTag(registryName string, repositoryName string, tagName string) (TagForView, error) {
+
+	// Created a new tag for view type to fill
+	t := TagForView{}
+	var tempSize int64
+	var maxTime time.Time
+
+	// Get the image information for each tag
+	img, _ := GetImage(registryName, repositoryName, tagName)
+
+	for _, layer := range img.FsLayers {
+
+		// Check if the registry is listed as active
+		r := ActiveRegistries[registryName]
+		// Create and execute Get request
+		response, err := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
+		if err != nil {
+			utils.Log.Error(err)
+			return t, err
+		}
+		tempSize += response.ContentLength
+	}
+	// Get the latest creation time and total the size for the tag image
+	for _, history := range img.History {
+		if history.V1Compatibility.Created.After(maxTime) {
+			maxTime = history.V1Compatibility.Created
+		}
+	}
+
+	// Set the fields
+	t.Size = bytefmt.ByteSize(uint64(tempSize))
+	t.UpdatedTime = maxTime
+	t.UpdatedTimeUnix = maxTime.Unix()
+	t.Layers = len(img.History)
+	t.Name = tagName
+	t.TimeAgo = utils.TimeAgo(maxTime)
+
+	return t, nil
+
+}

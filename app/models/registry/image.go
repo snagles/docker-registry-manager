@@ -14,13 +14,14 @@ import (
 
 // Image contains all information related to the image
 type Image struct {
-	Name          string
-	Tag           string
-	SchemaVersion int
-	Architecture  string
-	TagID         uint
-	History       []History `json:"history"`
-	FsLayers      []struct {
+	Name           string
+	Tag            string
+	SchemaVersion  int
+	Architecture   string
+	TagID          uint
+	ContainsV1Size bool
+	History        []History `json:"history"`
+	FsLayers       []struct {
 		BlobSum string `json:"blobSum"`
 	} `json:"fsLayers"`
 }
@@ -34,6 +35,7 @@ type History struct {
 // V1Compatibility contains all information grabbed from the V1Compatibility field from registry v1
 type V1Compatibility struct {
 	ID              string    `json:"id"`
+	IDShort         string    `json:"-"`
 	Parent          string    `json:"parent"`
 	Created         time.Time `json:"created"`
 	Container       string    `json:"container"`
@@ -157,6 +159,15 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 			utils.Log.Error(err)
 		}
 		v1JSON.SizeStr = bytefmt.ByteSize(uint64(v1JSON.Size))
+
+		// Update the image if we have any size information from the v1 compatibility
+		if v1JSON.Size != 0 {
+			img.ContainsV1Size = true
+		}
+
+		// Get first 8 characters for the short ID
+		v1JSON.IDShort = v1JSON.ID[0:7]
+
 		img.History[index].V1Compatibility = v1JSON
 	}
 
