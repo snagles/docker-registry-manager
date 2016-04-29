@@ -24,6 +24,8 @@ type Image struct {
 	History        []History `json:"history"`
 	FsLayers       []struct {
 		BlobSum string `json:"blobSum"`
+		Size    int64  `json:"-"`
+		SizeStr string `json:"-"`
 	} `json:"fsLayers"`
 }
 
@@ -174,6 +176,20 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 		v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.Cmd[0], "/bin/sh -c #(nop)", "", -1)
 
 		img.History[index].V1Compatibility = v1JSON
+	}
+
+	// Update each FsLayer size
+	for index, layer := range img.FsLayers {
+
+		// Check if the registry is listed as active
+		r := ActiveRegistries[registryName]
+		// Create and execute Get request
+		response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
+		if err != nil {
+			utils.Log.Error(err)
+		}
+		img.FsLayers[index].Size = response.ContentLength
+		img.FsLayers[index].SizeStr = bytefmt.ByteSize(uint64(response.ContentLength))
 	}
 
 	return img, nil

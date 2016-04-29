@@ -1,5 +1,6 @@
 {{template "base/base.html" .}}
 {{define "body"}}
+{{template "modal.tpl" .}}
   <div class="right-content-container">
     <div class="header">
       <ol class="breadcrumb">
@@ -15,30 +16,49 @@
     </div>
     <div class="content-block white-bg">
       <div class="row">
-        <h3>{{.repositoryName}}:{{.tagInfo.Name}}</h3>
-        <hr>
-
-      </div>
-      <div class="row">
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
           <li role="presentation"><a href="#stages" aria-controls="stages" role="tab" data-toggle="tab">Dockerfile</a></li>
           <li role="presentation"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
-          <li role="presentation"><a href="#push" aria-controls="push" role="tab" data-toggle="tab">Push</a></li>
+          <li role="presentation"><a href="#interact" aria-controls="interact" role="tab" data-toggle="tab">Interact</a></li>
+          <li role="presentation"><a href="#layers" aria-controls="layers" role="tab" data-toggle="tab">Layers</a></li>
         </ul>
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="overview">
-            <h5>{{.os}}</h5>
-            <h5>{{.arch}}</h5>
-            <h5>{{.tagInfo.Layers}}</h5>
-            <h5>{{.tagInfo.Size}}</h5>
-            <h5>{{.tagInfo.TimeAgo}}</h5>
-            <h5>{{.tagInfo.UpdatedTime}}</h5>
-            <h5>{{.registry.Name}}</h5>
-            <h5>{{.registry.IP}}</h5>
-            <h5>{{.registry.Scheme}}</h5>
-            <h5>{{.registry.Port}}</h5>
-            <h5>{{.registry.Version}}</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="col-md-12">
+                  <h4>Image</h4>
+                  <ul>
+                    <li>Operating System: {{.os}}</li>
+                    <li>Architecture: {{.arch}}</li>
+                    <li>Layers: {{.tagInfo.Layers}}</li>
+                    <li>Size: {{.tagInfo.Size}}</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="col-md-12">
+                  <h4>Registry Host</h4>
+                  <ul>
+                    <li>Name: {{.registry.Name}}</li>
+                    <li>IP: {{.registry.IP}}</li>
+                    <li>Port: {{.registry.Port}}</li>
+                    <li>Version: {{.registry.Version}}</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="col-md-12">
+                  <h4>Metadata</h4>
+                  <ul>
+                    <li>Language: </li>
+                    <li>Last Updated: {{.tagInfo.TimeAgo}}</li>
+
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
           <div role="tabpanel" class="tab-pane" id="stages">
             <table class="table">
@@ -62,8 +82,28 @@
               </tbody>
             </table>
           </div>
+          <div role="tabpanel" class="tab-pane" id="layers">
+            <table class="table">
+              <thead>
+                <th>ID:</th>
+                <th>Digest:</th>
+                <th>Size:</th>
+                <th>Push/Pull:</th>
+              </thead>
+              <tbody>
+                {{range $index, $layer := .layers}}
+                <tr>
+                  <td>{{$index}}</td>
+                  <td>{{$layer.BlobSum}}</td>
+                  <td>{{$layer.SizeStr}}</td>
+                  <td><button type="button" data-toggle="modal" data-target="#push-modal"><i class="fa fa-upload"></i></button><button type="button" data-toggle="modal" data-target="#pull-modal"><i class="fa fa-download"></i></button></td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
           <div role="tabpanel" class="tab-pane" id="activity"></div>
-          <div role="tabpanel" class="tab-pane" id="push">
+          <div role="tabpanel" class="tab-pane" id="interact">
             <div>Push to {{.registry.Name}}:</div>
             <ol>
               <li><code>cd $PROJECTNAME</code></li>
@@ -74,6 +114,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
   <script>

@@ -37,6 +37,7 @@ func (c *ImagesController) GetImages() {
 	c.Data["repositoryName"] = repositoryName
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
 	c.Data["tagInfo"] = tagInfo
+	c.Data["layers"] = img.FsLayers
 
 	// Index template
 	c.TplName = "images.tpl"
