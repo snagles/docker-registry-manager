@@ -19,9 +19,9 @@
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
           <li role="presentation"><a href="#stages" aria-controls="stages" role="tab" data-toggle="tab">Dockerfile</a></li>
-          <li role="presentation"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
-          <li role="presentation"><a href="#interact" aria-controls="interact" role="tab" data-toggle="tab">Interact</a></li>
           <li role="presentation"><a href="#layers" aria-controls="layers" role="tab" data-toggle="tab">Layers</a></li>
+          <li role="presentation"><a href="#private-registry" aria-controls="private-registry" role="tab" data-toggle="tab">Private Registry</a></li>
+          <li role="presentation"><a href="#dockerhub" aria-controls="dockerhub" role="tab" data-toggle="tab">Dockerhub</a></li>
         </ul>
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="overview">
@@ -88,7 +88,7 @@
                 <th>ID:</th>
                 <th>Digest:</th>
                 <th>Size:</th>
-                <th>Push/Pull:</th>
+                <th>Blob:</th>
               </thead>
               <tbody>
                 {{range $index, $layer := .layers}}
@@ -96,20 +96,41 @@
                   <td>{{$index}}</td>
                   <td>{{$layer.BlobSum}}</td>
                   <td>{{$layer.SizeStr}}</td>
-                  <td><button type="button" data-toggle="modal" data-target="#push-modal"><i class="fa fa-upload"></i></button><button type="button" data-toggle="modal" data-target="#pull-modal"><i class="fa fa-download"></i></button></td>
+                  <td><a href="{{$.registry.Scheme}}://{{$.registry.Name}}:{{$.registry.Port}}/{{$.registry.Version}}/{{$.repositoryName}}/blobs/{{$layer.BlobSum}}" download class="btn btn-sm btn-success"><span class="glyphicon glyphicon-download-alt"></span> Download</a></td>
                 </tr>
                 {{end}}
               </tbody>
             </table>
           </div>
-          <div role="tabpanel" class="tab-pane" id="activity"></div>
-          <div role="tabpanel" class="tab-pane" id="interact">
-            <div>Push to {{.registry.Name}}:</div>
+          <div role="tabpanel" class="tab-pane" id="private-registry">
+            <div>Push to {{.tagInfo.Name}}:</div>
             <ol>
               <li><code>cd $PROJECTNAME</code></li>
               <li><code>docker build --rm -t {{.registry.Name}}:{{.registry.Port}}/{{.repositoryName}}:{{.tagInfo.Name}} .</code></li>
               <li><code>docker push {{.registry.Name}}:{{.registry.Port}}/{{.repositoryName}} .</code></li>
             </ol>
+
+            <div>Download {{.tagInfo.Name}}:</div>
+            <div>Push to another private registry {{.tagInfo.Name}}:</div>
+            <a href="{{$.registry.Scheme}}://{{$.registry.Name}}:{{$.registry.Port}}/{{$.registry.Version}}/{{$.repositoryName}}/{{$.tagInfo.Name}}" download><i class="fa fa-download"></i></a>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="dockerhub">
+            <h3>Push to Dockerhub</h3>
+            <form>
+              <div class="form-group">
+                <label for="account-name">Docker Account Name</label>
+                <input type="account-name" class="form-control" id="account-name" placeholder="Docker Account Name">
+              </div>
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="password" class="form-control" id="username" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password">
+              </div>
+              <button type="push" data-toggle="modal" data-target="#dockerhub-modal" class="btn btn-default">Push</button>
+            </form>
           </div>
         </div>
       </div>
