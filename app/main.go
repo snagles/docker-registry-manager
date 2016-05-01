@@ -60,15 +60,33 @@ func main() {
 
 	// Loop through the slice of passed registries and test their status
 	for _, regString := range registryFlags {
-		if err := registry.GetRegistryStatus(regString); err != nil {
-			// Notify of success
+
+		// Build the registry object
+		r, err := registry.ParseRegistry(regString)
+		if err != nil {
+			// Notify of failure to parse
 			utils.Log.WithFields(logrus.Fields{
 				"Error": err,
-			}).Fatal("We are unable to make a connection to the registry!")
+			}).Fatal("We are unable to determine the URI for the registry!")
 
 			// Exit the program
 			os.Exit(1)
 		}
+
+		// Check to see if the registry is available
+		err = r.UpdateRegistryStatus()
+		if err != nil && r.Status != "available" {
+			// Notify of success
+			utils.Log.WithFields(logrus.Fields{
+				"Error": err,
+			}).Fatal("We are unable to connection to the registry!")
+
+			// Exit the program
+			os.Exit(1)
+		}
+
+		// Add the registry to the map of active registries
+		r.AddRegistry()
 	}
 
 	beego.Run()

@@ -25,6 +25,7 @@ type Registry struct {
 	Scheme  string
 	Port    string
 	Version string
+	Status  string
 }
 
 // GetURI returns the full url path for communicating with this registry
@@ -32,54 +33,55 @@ func (r *Registry) GetURI() string {
 	return r.Scheme + "://" + r.Name + ":" + r.Port + "/v2"
 }
 
-// GetRegistryStatus takes in a registry URL and checks for communication errors
+// UpdateRegistryStatus takes in a registry URL and checks for communication errors
 //
 // Create and execute basic GET request to test if each registry can be reached
 // To determine registry status we test the base registry route of /v2/ and check
 // the HTTP response code for a 200 response (200 is a successful request)
-func GetRegistryStatus(registryURI string) error {
+func (r *Registry) UpdateRegistryStatus() error {
 
 	// Parse the registry string into our Registry type
-	registry, err := ParseRegistry(registryURI)
-	if err != nil {
-		return err
-	}
-	// Notify of initial attempt
 	utils.Log.WithFields(logrus.Fields{
-		"Registry URI": registryURI,
+		"Registry URI": r.GetURI(),
 	}).Info("Connecting to registry...")
 
 	// Create and execute a plain get request and check the http status code
-	response, err := http.Get(registry.GetURI())
+	response, err := http.Get(r.GetURI())
 	if err != nil {
 		// Notify of error
 		utils.Log.WithFields(logrus.Fields{
-			"Registry URLs": registry,
+			"Registry URLs": r,
 			"Error":         err,
 			"HTTP Response": response,
 			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
 		}).Error("Get request to registry timed out/failed! Is the URL correct, and is the registry active?")
+		r.Status = "unavailable"
 
 		return err
 	} else if response.StatusCode != 200 {
 		// Notify of error
 		utils.Log.WithFields(logrus.Fields{
-			"Registry URLs": registry,
+			"Registry URLs": r,
 			"HTTP Response": response.StatusCode,
 			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
 		}).Error("Get request to registry failed! Is the URL correct, and is the registry active?")
+		r.Status = "unavailable"
 	}
 
 	// Notify of success
 	utils.Log.WithFields(logrus.Fields{
-		"Registry Information": registry,
-		"Registry URI":         registry.GetURI(),
+		"Registry Information": r,
+		"Registry URI":         r.GetURI(),
 	}).Info("Successfully connected to registry and added to list of active registries!")
 
-	// Add the registry to the map of active registries
-	ActiveRegistries[registry.Name] = registry
+	r.Status = "available"
 
 	return err
+}
+
+// AddRegistry adds the registry to the map of active registries
+func (r *Registry) AddRegistry() {
+	ActiveRegistries[r.Name] = *r
 }
 
 // ParseRegistry takes in a registry URI string and converts it into a registry object
