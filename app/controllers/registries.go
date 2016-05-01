@@ -38,18 +38,52 @@ func (c *RegistriesController) AddRegistry() {
 	port := c.GetString("port")
 	scheme := c.GetString("scheme")
 	uri := scheme + "://" + host + ":" + port + "/v2"
+
+	// TODO: respond client with error
+	r, _ := registry.ParseRegistry(uri)
+
 	// Registry contains all identifying information for communicating with a registry
-	err := registry.GetRegistryStatus(uri)
+	// TODO: respond to client with error
+	err := r.UpdateRegistryStatus()
 	if err != nil {
 		utils.Log.Error("Could not add registry " + uri)
 	}
 	c.Ctx.Redirect(302, "/registries")
 }
 
-// ListRegistries returns all registries
-func (c *RegistriesController) ListRegistries() {
-}
+// TestRegistryStatus responds with JSON containing the status of the registry
+func (c *RegistriesController) TestRegistryStatus() {
 
-// RemoveRegistry removes a registry from the interface
-func (c *RegistriesController) RemoveRegistry() {
+	// Define the response
+	var res struct {
+		Error       string `json:"error, omitempty"`
+		IsAvailable bool   `json:"is_available"`
+	}
+
+	host := c.GetString("host")
+	port := c.GetString("port")
+	scheme := c.GetString("scheme")
+	uri := scheme + "://" + host + ":" + port + "/v2"
+
+	r, err := registry.ParseRegistry(uri)
+	if err != nil {
+		res.Error = err.Error()
+		res.IsAvailable = false
+		c.Data["json"] = &res
+		c.ServeJSON()
+	}
+
+	// Registry contains all identifying information for communicating with a registry
+	err = r.UpdateRegistryStatus()
+	if err != nil {
+		res.Error = err.Error()
+		res.IsAvailable = false
+		c.Data["json"] = &res
+		c.ServeJSON()
+	}
+
+	res.Error = ""
+	res.IsAvailable = true
+	c.Data["json"] = &res
+	c.ServeJSON()
 }

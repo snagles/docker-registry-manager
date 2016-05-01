@@ -18,7 +18,7 @@ func TestGetTags(t *testing.T) {
 		So(r, ShouldNotBeEmpty)
 	})
 
-	err = GetRegistryStatus(rURI)
+	err = UpdateRegistryStatus(rURI)
 	// Test the response error
 	Convey("When we get the registry status there should be no errors and the registry should be added to the map of active registries", t, func() {
 		So(err, ShouldBeNil)
