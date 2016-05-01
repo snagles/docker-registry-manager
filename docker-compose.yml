@@ -3,7 +3,7 @@ docker-registry-manager:
   container_name: docker-registry-manager
   environment:
     - VERBOSITY=5   # Log level of 6 is debug mode. See main.go init for log level details
-    - REGISTRY=
+    - REGISTRYARGS= -registry http://hostname:5000/v2 -registry https://hostname:5001/v2
   ports:
     - 8080:8080
     - 8088:8088

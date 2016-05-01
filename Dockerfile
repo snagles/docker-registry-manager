@@ -21,4 +21,4 @@ RUN cd app/ && go build
 ENV VERBOSITY 5
 
 # Run the app by default when the container starts.
-CMD $GOPATH/src/github.com/stefannaglee/docker-registry-manager/app/app -verbosity $VERBOSITY -registry $REGISTRY
+CMD $GOPATH/src/github.com/stefannaglee/docker-registry-manager/app/app -verbosity $VERBOSITY $REGISTRYARGS
