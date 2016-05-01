@@ -58,7 +58,7 @@ func GetRegistryStatus(registryURI string) error {
 			"Error":         err,
 			"HTTP Response": response,
 			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
-		}).Fatal("Get request to registry timed out/failed! Is the URL correct, and is the registry active?")
+		}).Error("Get request to registry timed out/failed! Is the URL correct, and is the registry active?")
 
 		return err
 	} else if response.StatusCode != 200 {
@@ -67,7 +67,7 @@ func GetRegistryStatus(registryURI string) error {
 			"Registry URLs": registry,
 			"HTTP Response": response.StatusCode,
 			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
-		}).Fatal("Get request to registry failed! Is the URL correct, and is the registry active?")
+		}).Error("Get request to registry failed! Is the URL correct, and is the registry active?")
 	}
 
 	// Notify of success
