@@ -6,6 +6,7 @@
         <li><a href="/">Home</a></li>
         <li><a href="/registries">Registries</a></li>
         <li><a class="registry-name" href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
+        <li><a href="/registries/{{.registryName}}/repositories">Repositories</a></li>
         <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}">{{.repositoryName}}</a></li>
         <li class="active">Tags</li>
       </ol>
