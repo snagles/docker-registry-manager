@@ -21,6 +21,21 @@ type LogEntry struct {
 var Log = logrus.New()
 
 func init() {
+
+	// Create the log directory if needed
+	if _, err := os.Stat("./logs"); os.IsNotExist(err) {
+		if err := os.Mkdir("logs", os.ModePerm); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// Create the log file if needed
+	if _, err := os.Stat("./logs/error.log"); os.IsNotExist(err) {
+		if _, err = os.Create("./logs/error.log"); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	Log.Formatter = &logrus.JSONFormatter{}
 	Log.Hooks.Add(lfshook.NewHook(lfshook.PathMap{
 		logrus.ErrorLevel: "./logs/error.log",
