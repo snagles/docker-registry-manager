@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/pivotal-golang/bytefmt"
 	"github.com/stefannaglee/docker-registry-manager/app/models/registry"
 	"github.com/stefannaglee/docker-registry-manager/app/utilities"
 )
@@ -14,6 +15,28 @@ type RegistriesController struct {
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
 
+	for _, r := range registry.ActiveRegistries {
+
+		// Get the repository count for this registry
+		repositories := registry.GetRepositories(r.Name)
+		r.RepoCount = len(repositories)
+
+		// For each registry update their status
+		r.UpdateRegistryStatus()
+
+		// Get the total size of the registry
+		for _, repo := range repositories {
+			tags, _ := registry.GetTagsForView(r.Name, repo.Name)
+
+			for _, t := range tags {
+				r.RepoTotalSize += t.SizeInt
+			}
+
+		}
+		r.RepoTotalSizeStr = bytefmt.ByteSize(uint64(r.RepoTotalSize))
+
+		registry.ActiveRegistries[r.Name] = r
+	}
 	c.Data["registries"] = registry.ActiveRegistries
 
 	// Index template

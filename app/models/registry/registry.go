@@ -25,7 +25,11 @@ type Registry struct {
 	Scheme  string
 	Port    string
 	Version string
-	Status  string
+
+	Status           string
+	RepoCount        int
+	RepoTotalSize    int64
+	RepoTotalSizeStr string
 }
 
 // GetURI returns the full url path for communicating with this registry

@@ -26,9 +26,9 @@
               </ul>
             </div>
             <div class="box-footer">
-              <span class="label label-success">Active</span>
-              <span class="label label-info">11 Repositories</span>
-              <span class="label label-info">212MB</span>
+              <span class="label label-success text-capitalize">{{$registry.Status}}</span>
+              <span class="label label-info">{{$registry.RepoCount}} Repositories</span>
+              <span class="label label-info">{{$registry.RepoTotalSizeStr}}</span>
             </div>
           </div>
         </a>
