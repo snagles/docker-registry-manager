@@ -119,35 +119,6 @@ ul
   margin-right: 25px;
 }
 
-.box {
-  margin-bottom: 40px;
-  height:300px;
-  min-width:300px
-  border: 1px solid #e3e3e3;
-}
-
-.box-header{
-  height:50px;
-  border-bottom: 1px solid #B6B6B6;
-}
-
-.box-body{
-  height:200px;
-}
-
-.box-footer{
-  height:50px;
-}
-
-.well-box {
-  background-color: #f5f5f5;
-  border: 1px solid #e3e3e3;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
-}
-
-
 .grey-bg{
   background: transparent;
 }
@@ -167,18 +138,54 @@ ul
 .add-new {
   background-color: white;
   border: 1px solid #e3e3e3;
-  height:250px;
-  margin-top:25px;
+  height: 150px;
+  margin-top: 50px;
   cursor: pointer;
+  width: 150px;
+  margin-left: 115px;
+  border-radius: 4px
 }
 
 .add-new-icon {
   display: inline-block!important;
-  font-size: 10em!important;
-  line-height: 250px!important;
-  height: 250px;
-  width:100%;
+  font-size: 140px!important;
+  line-height: 160px!important;
+  height: 150px;
+  width:150px;
   text-align: center;
   vertical-align: bottom;
-  color: #FF5722;
+  color: #adadad;
+}
+
+.box {
+  border: 1px solid #e3e3e3;
+  cursor: pointer;
+  display: inline-block;
+  height: 250px;
+  width:450px!important;
+  margin: 20px;
+}
+
+.box-container {
+}
+
+.box-header{
+  height:25px;
+  border-bottom: 1px solid #B6B6B6;
+}
+
+.box-body{
+  height:200px;
+}
+
+.box-footer{
+  height:25px;
+}
+
+.well-box {
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
 }
