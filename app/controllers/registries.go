@@ -26,15 +26,18 @@ func (c *RegistriesController) Get() {
 
 		// Get the total size of the registry
 		var totalSize int64
+		var tagCount int
 		for _, repo := range repositories {
 			tags, _ := registry.GetTagsForView(r.Name, repo.Name)
 
+			tagCount += len(tags)
 			for _, t := range tags {
 				totalSize += t.SizeInt
 			}
 
 		}
 		r.RepoTotalSizeStr = bytefmt.ByteSize(uint64(totalSize))
+		r.TagCount = tagCount
 
 		registry.ActiveRegistries[r.Name] = r
 	}

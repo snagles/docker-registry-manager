@@ -166,16 +166,33 @@ ul
   margin: 20px;
 }
 
-.box-container {
-}
-
 .box-header{
-  height:25px;
-  border-bottom: 1px solid #B6B6B6;
+  height:50px;
+  color:black;
 }
 
 .box-body{
-  height:200px;
+  height:150px;
+}
+
+.info {
+  margin-top: 15px;
+  width: 126px;
+  display: inline-block;
+  border-right: solid 1px #e5e5e5;
+}
+
+.info:last-child {
+  border-right: none;
+}
+
+.info-container {
+  text-align: center;
+  color: #737373;
+}
+
+.info-metric{
+  font-size:40px;
 }
 
 .box-footer{

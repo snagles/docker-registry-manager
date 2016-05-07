@@ -19,20 +19,30 @@
               <div class="col-lg-12">
                 <div class="box-container">
                   <div class="box-header">
-                    <span>{{$registry.Name}}</span>
+                    <h2>{{$registry.Name}}<small> {{$registry.IP}}</small></h2>
                   </div>
                   <div class="box-body">
-                    <ul>
-                      <li>Host: {{$registry.Name}}</li>
-                      <li>IP: {{$registry.IP}}</li>
-                      <li>Port: {{$registry.Port}}</li>
-                      <li>Version: {{$registry.Version}}</li>
-                    </ul>
+                    <div class="info">
+                      <div class="info-container">
+                        <h3 class="info-metric">{{$registry.RepoCount}}</h3>
+                        <small>Repositories</small>
+                      </div>
+                    </div>
+                    <div class="info">
+                      <div class="info-container">
+                        <h3 class="info-metric">{{$registry.RepoTotalSizeStr}}</h3>
+                        <small>Total Size</small>
+                      </div>
+                    </div>
+                    <div class="info">
+                      <div class="info-container">
+                        <h3 class="info-metric">{{$registry.TagCount}}</h3>
+                        <small>Tags</small>
+                      </div>
+                    </div>
                   </div>
                   <div class="box-footer">
                     <span class="label label-success text-capitalize">{{$registry.Status}}</span>
-                    <span class="label label-info">{{$registry.RepoCount}} Repositories</span>
-                    <span class="label label-info">{{$registry.RepoTotalSizeStr}}</span>
                   </div>
                 </div>
               </div>

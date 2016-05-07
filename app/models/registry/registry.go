@@ -28,6 +28,7 @@ type Registry struct {
 
 	Status           string
 	RepoCount        int
+	TagCount         int
 	RepoTotalSize    int64
 	RepoTotalSizeStr string
 }
