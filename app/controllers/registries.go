@@ -75,6 +75,8 @@ func (c *RegistriesController) AddRegistry() {
 	if err != nil {
 		utils.Log.Error("Could not add registry " + uri)
 	}
+
+	r.AddRegistry()
 	c.Ctx.Redirect(302, "/registries")
 }
 
