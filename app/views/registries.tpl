@@ -30,14 +30,14 @@
                     </div>
                     <div class="info">
                       <div class="info-container">
-                        <h3 class="info-metric">{{$registry.RepoTotalSizeStr}}</h3>
-                        <small>Total Size</small>
+                        <h3 class="info-metric">{{$registry.TagCount}}</h3>
+                        <small>Tags</small>
                       </div>
                     </div>
                     <div class="info">
                       <div class="info-container">
-                        <h3 class="info-metric">{{$registry.TagCount}}</h3>
-                        <small>Tags</small>
+                        <h3 class="info-metric">{{$registry.RepoTotalSizeStr}}</h3>
+                        <small>Total Size</small>
                       </div>
                     </div>
                   </div>
