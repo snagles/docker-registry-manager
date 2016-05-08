@@ -8,8 +8,8 @@
         <li><a href="/registries">Registries</a></li>
         <li><a class="registry-name" href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
         <li><a href="/registries/{{.registryName}}/repositories">Repositories</a></li>
-        <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}">{{.repositoryName}}</a></li>
-        <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}">Tags</a></li>
+        <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags">{{.repositoryName}}</a></li>
+        <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags">Tags</a></li>
         <li><a href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags/{{.tagInfo.Name}}">{{.tagInfo.Name}}</a></li>
         <li class="active">Images</li>
       </ol>

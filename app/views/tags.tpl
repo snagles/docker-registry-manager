@@ -7,7 +7,7 @@
         <li><a href="/registries">Registries</a></li>
         <li><a class="registry-name" href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
         <li><a href="/registries/{{.registryName}}/repositories">Repositories</a></li>
-        <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}">{{.repositoryName}}</a></li>
+        <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags">{{.repositoryName}}</a></li>
         <li class="active">Tags</li>
       </ol>
     </div>
@@ -185,7 +185,15 @@
             type: "POST",
             url: "/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags/"+tagName+"/delete",
             success: function() {
-              window.location.reload(true);
+                  $("#delete-tags").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> We've successfully deleted "+tagName+" from the registry. </div>");
+                  $(".alert").alert();
+                  window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
+                  $("tr[data-tag-name="+tagName+"]").remove();
+            },
+            error: function() {
+                  $("#delete-tags").append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Failure!</strong> We were unable to delete "+tagName+" from the registry. Make sure the delete option is enabled on your registry!</div>");
+                  $(".alert").alert();
+                  window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
             }
           });
         });
