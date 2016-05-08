@@ -111,6 +111,7 @@ ul
   margin-right: 25px;
   counter-reset: section;
   transition: color .5s .3s;
+  margin-bottom: 25px;
 }
 
 .content-block-empty {

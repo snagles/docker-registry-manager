@@ -29,4 +29,7 @@ func init() {
 
 	// Routers for logs
 	beego.Router("/logs", &controllers.LogsController{}, "get:Get")
+
+	// Routers for settings
+	beego.Router("/settings", &controllers.SettingsController{}, "get:Get")
 }
