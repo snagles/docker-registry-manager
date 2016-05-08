@@ -1,12 +1,12 @@
 # Docker Registry Manager
 
-Docker Registry Manager is a golang written, beego driven, web interface for interacting with multiple docker registries (one to many). Hopefully this application can mature to the point of being an easy open source alternative to docker's trusted registry.
+Docker Registry Manager is a golang written, beego driven, web interface for interacting with multiple docker registries (one to many).
 
 WARNING: This application is very much still a work in progress. Core functionality exists, but polish and features are still being worked on a daily basis. Heavy development is expected, so I encourage you to update regularly.
 
 ## Quickstart
- The below steps assume you have a docker registry currently running.
- 
+ The below steps assume you have a docker registry currently running (and with delete mode enabled (https://docs.docker.com/registry/configuration/)).
+
 ### Docker compose
  ```bash
     > git clone https://github.com/stefannaglee/docker-registry-manager.git
@@ -16,12 +16,12 @@ WARNING: This application is very much still a work in progress. Core functional
     > firefox localhost:8080 # for web ui
     > firefox localhost:8088 # for beego admin interface
  ```
- 
+
 ### Go tool
  ```bash
     > git clone https://github.com/stefannaglee/docker-registry-manager.git
     > cd docker-registry-manager/app
-    >  go build . && ./app -verbosity 6 -registry http://hostname:port/v2 # add more registries with another -registry flag
+    > go build . && ./app -verbosity 6 -registry http://hostname:port/v2 # add more registries with another -registry flag
     > firefox localhost:8080 # for web ui
     > firefox localhost:8088 # for beego admin interface
  ```
@@ -34,7 +34,7 @@ WARNING: This application is very much still a work in progress. Core functional
  3. Bulk deletes of repositories
  4. Viewable logs from the interface
  5. Admin interface using beego (on 8088) for tracking of request information
- 
+
 ## Planned Features
  1. Docker compose support for multiple registries (that isn't a hack)
  2. Settings configuration
@@ -42,6 +42,6 @@ WARNING: This application is very much still a work in progress. Core functional
  4. Authentication for registry access (using docker-registry auth)
  4. Activity log using the registries push events
  5. Dashboard for resource usage and other information
- 6. Auotmated downloads of the latest public images for a repository stored on the registry of your choice
+ 6. Automated downloads of the latest public images for a repository stored on the registry of your choice
  7. Automated push and deployment to dockerhub on private registry push (if desired)
  8. Automated cleanup of images basic on configurable parameters
