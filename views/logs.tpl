@@ -15,7 +15,7 @@
       <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
           <thead>
               <tr>
-                  <th data-toggle="tooltip" data-placement="top" title="Message type ranging from 'Fatal' (most severe) to 'Debug' (Used for debugging problems)">Level</th>
+                  <th>Level</th>
                   <th>Message</th>
                   <th>Entry Time</th>
               </tr>
@@ -43,12 +43,8 @@
 <script>
 $(document).ready(function() {
     $('#datatable').DataTable( {
-        "order": [[ 2, "desc" ]],
-        "pageLength": 25
-    } );
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip({container: 'body'})
-    })
+        "order": [[ 2, "desc" ]]
+    });
 });
 </script>
 

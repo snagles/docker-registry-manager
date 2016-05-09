@@ -27,9 +27,6 @@ func init() {
 	// Routers for images
 	beego.Router("/registries/:registryName/repositories/*/tags/:tagName/images", &controllers.ImagesController{}, "get:GetImages")
 
-	// Routers for logs
-	beego.Router("/logs", &controllers.LogsController{}, "get:Get")
-
 	// Routers for settings
 	beego.Router("/settings", &controllers.SettingsController{}, "get:Get")
 }
