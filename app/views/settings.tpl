@@ -38,7 +38,7 @@
       </div>
       <div class="row">
         <div class="col-lg-12">
-          <form class="form ">
+          <form>
             <fieldset class="form-group">
               <label for="log-level">Log Level</label>
               <select class="form-control" id="log-level">
@@ -66,10 +66,13 @@
                 <input type="radio" name="retention-days" id="forever-days" value="forever"> Forever
               </label>
             </fieldset>
-
+            <button type="button" class="btn btn-default"><i class="fa fa-archive"></i> Backup Logs</button>
+            <button type="button" class="btn btn-default"><i class="fa fa-download"></i> Download Logs</button>
+            <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Clear Logs</button>
         </form>
       </div>
     </div>
+    <hr>
     <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -95,9 +98,6 @@
             {{end}}
         </tbody>
     </table>
-    <button type="button" class="btn btn-default"><i class="fa fa-archive"></i> Backup Logs</button>
-    <button type="button" class="btn btn-default"><i class="fa fa-download"></i> Download Logs</button>
-    <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Clear Logs</button>
   </div>
     <div class="row content-block white-bg">
       <div class="row">
