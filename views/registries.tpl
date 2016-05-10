@@ -10,9 +10,9 @@
     </div>
 
     <div class = "content-block-empty">
-      {{range $key, $registry := .registries}}
       <div class="col-lg-12">
         <ul class="boxes">
+          {{range $key, $registry := .registries}}
           <li>
           <a href="/registries/{{$registry.Name}}/repositories">
             <div class="white-bg box col-lg-4 col-md-6 col-sm-12 col-xs-12">
