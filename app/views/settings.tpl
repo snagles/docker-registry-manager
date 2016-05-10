@@ -76,27 +76,18 @@
     <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th data-toggle="tooltip" data-placement="top" title="Message type ranging from 'Fatal' (most severe) to 'Debug' (Used for debugging problems)">Level</th>
-                <th>Message</th>
-                <th>Entry Time</th>
+                <th>Level</th>
+                <th>Msg</th>
+                <th>Time</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <th>Level</th>
-                <th>Message</th>
+                <th>Msg</th>
                 <th>Time</th>
             </tr>
         </tfoot>
-        <tbody>
-            {{range $key := .logs}}
-            <tr>
-                <td>{{$key.Level}}</td>
-                <td>{{$key.Msg}}</td>
-                <td>{{$key.Time}}</td>
-            </tr>
-            {{end}}
-        </tbody>
     </table>
   </div>
     <div class="row content-block white-bg">
@@ -130,8 +121,14 @@
 <script>
   $(document).ready(function() {
       $('#datatable').DataTable( {
+          "ajax": '/logs',
           "order": [[ 2, "desc" ]],
-          "pageLength": 10
+          "pageLength": 10,
+          "columns": [
+            { "data": "Level" },
+            { "data": "Msg"},
+            { "data": "Time"}
+         ]
       } );
   });
 </script>
