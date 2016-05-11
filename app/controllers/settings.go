@@ -1,9 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
-	"fmt"
-
 	"github.com/astaxie/beego"
 	"github.com/stefannaglee/docker-registry-manager/app/utilities"
 )
@@ -20,8 +17,6 @@ func (c *SettingsController) Get() {
 func (c *SettingsController) GetLogs() {
 	logs := utils.ParseLogFile()
 
-	c.Data["logs"] = logs
-	log, _ := json.MarshalIndent(logs, "", "    ")
-	fmt.Println(string(log))
+	c.Data["json"] = &logs
 	c.ServeJSON()
 }

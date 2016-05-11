@@ -77,14 +77,14 @@
         <thead>
             <tr>
                 <th>Level</th>
-                <th>Msg</th>
+                <th>Message</th>
                 <th>Time</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <th>Level</th>
-                <th>Msg</th>
+                <th>Message</th>
                 <th>Time</th>
             </tr>
         </tfoot>
@@ -120,14 +120,17 @@
   </div>
 <script>
   $(document).ready(function() {
-      $('#datatable').DataTable( {
-          "ajax": '/logs',
+      var table = $('#datatable').DataTable( {
+          "ajax": {
+              url: '/logs',
+              dataSrc: '',
+          },
           "order": [[ 2, "desc" ]],
           "pageLength": 10,
           "columns": [
-            { "data": "Level" },
-            { "data": "Msg"},
-            { "data": "Time"}
+            { "data": "level" },
+            { "data": "msg"},
+            { "data": "time"}
          ]
       } );
   });

@@ -11,13 +11,15 @@ import (
 	"github.com/rifflock/lfshook"
 )
 
+// LogEntry contains information unmarshalled from logrus that was logged to a file
 //{"level":"error","msg":"Test","time":"2016-04-10T12:05:30-04:00"}
 type LogEntry struct {
-	Level string
-	Msg   string
-	Time  time.Time
+	Level   string    `json:"level"`
+	Message string    `json:"msg"`
+	Time    time.Time `json:"time"`
 }
 
+// Log creates a new logrus instance that can be exported and used throughout the project
 var Log = logrus.New()
 
 func init() {
@@ -47,6 +49,7 @@ func init() {
 	}))
 }
 
+// ParseLogFile parses the locally stored flat log file that was logged to by logrus
 func ParseLogFile() []LogEntry {
 	file, err := os.Open("logs/error.log")
 	if err != nil {
