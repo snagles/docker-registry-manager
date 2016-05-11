@@ -81,30 +81,40 @@ func ClearLogFile() error {
 		Log.Error(err)
 		return err
 	}
+
+	now := time.Now().Format(time.RFC3339)
+	logTime, _ := time.Parse(time.RFC3339, now)
 	newEntry := LogEntry{
 		Level:   "warn",
 		Message: "Truncated and cleared the log file!",
-		Time:    time.Now(),
+		Time:    logTime,
 	}
 
 	// Open and have the first entry informing user that the log has been recently emptied
-	newLog, err := os.Open("logs/error.log.new")
+	newLog, err := os.OpenFile("./logs/error.log.new", os.O_WRONLY, 0666)
 	if err != nil {
 		Log.Error(err)
 		return err
 	}
 	jsonEntry, _ := json.Marshal(newEntry)
-	newLog.Write(jsonEntry)
+	if _, err := newLog.Write(jsonEntry); err != nil {
+		Log.Error(err)
+	}
+	newLog.WriteString("\n")
 	defer newLog.Close()
 
 	// Rename the old error log, and update the name of the new one
-	if err := os.Rename("logs/error.log", "logs/error.log.old"); err != nil {
+	if err := os.Rename("./logs/error.log", "./logs/error.log.old"); err != nil {
 		Log.Error("Could not rename and clear old log file!")
 		return err
 	}
-	if err := os.Rename("logs/error.log.new", "logs/error.log"); err != nil {
+	if err := os.Rename("./logs/error.log.new", "./logs/error.log"); err != nil {
 		Log.Error("Could not rename and clear old log file!")
 		return err
+	}
+
+	if err := os.Remove("./logs/error.log.old"); err != nil {
+		Log.Error(err)
 	}
 
 	return nil

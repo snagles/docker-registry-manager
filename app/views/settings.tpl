@@ -31,7 +31,7 @@
       <div class="row">
       </div>
     </div>
-    <div class="row content-block white-bg">
+    <div class="row content-block white-bg" id="logs">
       <div class="row">
         <h1>Logs</h1>
         <hr>
@@ -68,7 +68,7 @@
             </fieldset>
             <button type="button" class="btn btn-default"><i class="fa fa-archive"></i> Backup Logs</button>
             <button type="button" class="btn btn-default"><i class="fa fa-download"></i> Download Logs</button>
-            <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Clear Logs</button>
+            <button id="clear-logs" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Clear Logs</button>
         </form>
       </div>
     </div>
@@ -133,6 +133,19 @@
             { "data": "time"}
          ]
       } );
+
+    $("#clear-logs").click(function(e){
+      e.preventDefault();
+      $.ajax({
+          type: "POST",
+          url: "/logs/clear",
+          success:function(result){
+            table.ajax.reload();
+            $("#logs").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Cleared logs. </div>");
+            $(".alert").alert();
+            window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
+          }});
+    });
   });
 </script>
 {{end}}
