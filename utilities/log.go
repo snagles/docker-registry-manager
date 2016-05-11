@@ -74,3 +74,39 @@ func ParseLogFile() []LogEntry {
 
 	return es
 }
+
+func ClearLogFile() error {
+	// Create the new file
+	if _, err := os.Create("./logs/error.log.new"); err != nil {
+		Log.Error(err)
+		return err
+	}
+	newEntry := LogEntry{
+		Level:   "warn",
+		Message: "Truncated and cleared the log file!",
+		Time:    time.Now(),
+	}
+
+	// Open and have the first entry informing user that the log has been recently emptied
+	newLog, err := os.Open("logs/error.log.new")
+	if err != nil {
+		Log.Error(err)
+		return err
+	}
+	jsonEntry, _ := json.Marshal(newEntry)
+	newLog.Write(jsonEntry)
+	defer newLog.Close()
+
+	// Rename the old error log, and update the name of the new one
+	if err := os.Rename("logs/error.log", "logs/error.log.old"); err != nil {
+		Log.Error("Could not rename and clear old log file!")
+		return err
+	}
+	if err := os.Rename("logs/error.log.new", "logs/error.log"); err != nil {
+		Log.Error("Could not rename and clear old log file!")
+		return err
+	}
+
+	return nil
+
+}

@@ -20,3 +20,13 @@ func (c *SettingsController) GetLogs() {
 	c.Data["json"] = &logs
 	c.ServeJSON()
 }
+
+func (c *SettingsController) ClearLogs() {
+
+	err := utils.ClearLogFile()
+	if err == nil {
+		c.CustomAbort(200, "Success")
+	}
+	c.CustomAbort(404, "Failed to clear log: "+err.Error())
+
+}
