@@ -67,7 +67,7 @@
               </label>
             </fieldset>
             <button type="button" class="btn btn-default"><i class="fa fa-archive"></i> Backup Logs</button>
-            <button type="button" class="btn btn-default"><i class="fa fa-download"></i> Download Logs</button>
+            <a href="/logs" download="logs.json" class="btn btn-default" download><i class="fa fa-download"></i> Download Logs</a>
             <button id="clear-logs" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Clear Logs</button>
         </form>
       </div>
@@ -136,8 +136,7 @@
 
     $("#clear-logs").click(function(e){
       e.preventDefault();
-      $.ajax({
-          type: "POST",
+      $.ajax({type: "POST",
           url: "/logs/clear",
           success:function(result){
             table.ajax.reload();
