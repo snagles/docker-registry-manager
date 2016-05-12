@@ -66,7 +66,7 @@
                 <input type="radio" name="retention-days" id="forever-days" value="forever"> Forever
               </label>
             </fieldset>
-            <button type="button" class="btn btn-default"><i class="fa fa-archive"></i> Backup Logs</button>
+            <button id="archive-logs" type="button" class="btn btn-default"><i class="fa fa-archive"></i> Archive Logs</button>
             <a href="/logs" download="logs.json" class="btn btn-default" download><i class="fa fa-download"></i> Download Logs</a>
             <button id="clear-logs" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Clear Logs</button>
         </form>
@@ -141,6 +141,17 @@
           success:function(result){
             table.ajax.reload();
             $("#logs").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Cleared logs. </div>");
+            $(".alert").alert();
+            window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
+          }});
+    });
+    $("#archive-logs").click(function(e){
+      e.preventDefault();
+      $.ajax({type: "POST",
+          url: "/logs/archive",
+          success:function(result){
+            table.ajax.reload();
+            $("#logs").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Archived logs in /logs. </div>");
             $(".alert").alert();
             window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
           }});

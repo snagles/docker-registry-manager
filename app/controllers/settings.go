@@ -30,3 +30,13 @@ func (c *SettingsController) ClearLogs() {
 	c.CustomAbort(404, "Failed to clear log: "+err.Error())
 
 }
+
+func (c *SettingsController) ArchiveLogs() {
+
+	err := utils.ArchiveLogFile()
+	if err == nil {
+		c.CustomAbort(200, "Success")
+	}
+	c.CustomAbort(404, "Failed to clear log: "+err.Error())
+
+}

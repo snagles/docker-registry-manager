@@ -120,3 +120,44 @@ func ClearLogFile() error {
 	return nil
 
 }
+
+func ArchiveLogFile() error {
+	// Create the new file
+	if _, err := os.Create("./logs/error.log.new"); err != nil {
+		Log.Error(err)
+		return err
+	}
+
+	now := time.Now().Format(time.RFC3339)
+	logTime, _ := time.Parse(time.RFC3339, now)
+	newEntry := LogEntry{
+		Level:   "warn",
+		Message: "Archived the log file! Location: " + "./logs/" + logTime.String() + "-error.log",
+		Time:    logTime,
+	}
+
+	// Open and have the first entry informing user that the log has been recently archived
+	newLog, err := os.OpenFile("./logs/error.log.new", os.O_WRONLY, 0666)
+	if err != nil {
+		Log.Error(err)
+		return err
+	}
+	jsonEntry, _ := json.Marshal(newEntry)
+	if _, err := newLog.Write(jsonEntry); err != nil {
+		Log.Error(err)
+	}
+	newLog.WriteString("\n")
+	defer newLog.Close()
+
+	// Rename the old error log, and update the name of the new one
+	if err := os.Rename("./logs/error.log", "./logs/"+logTime.String()+"-error.log"); err != nil {
+		Log.Error("Could not archive log file!")
+		return err
+	}
+	if err := os.Rename("./logs/error.log.new", "./logs/error.log"); err != nil {
+		Log.Error("Could not rename old log file!")
+		return err
+	}
+
+	return err
+}
