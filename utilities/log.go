@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -128,11 +129,10 @@ func ArchiveLogFile() error {
 		return err
 	}
 
-	now := time.Now().Format(time.RFC3339)
-	logTime, _ := time.Parse(time.RFC3339, now)
+	logTime := time.Now()
 	newEntry := LogEntry{
 		Level:   "warn",
-		Message: "Archived the log file! Location: " + "./logs/" + logTime.String() + "-error.log",
+		Message: "Archived the log file! Location: " + "./logs/" + strconv.Itoa(int(logTime.Unix())) + "-error.log",
 		Time:    logTime,
 	}
 
@@ -150,7 +150,7 @@ func ArchiveLogFile() error {
 	defer newLog.Close()
 
 	// Rename the old error log, and update the name of the new one
-	if err := os.Rename("./logs/error.log", "./logs/"+logTime.String()+"-error.log"); err != nil {
+	if err := os.Rename("./logs/error.log", "./logs/"+strconv.Itoa(int(logTime.Unix()))+"-error.log"); err != nil {
 		Log.Error("Could not archive log file!")
 		return err
 	}
