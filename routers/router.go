@@ -31,6 +31,8 @@ func init() {
 	beego.Router("/logs", &controllers.SettingsController{}, "get:GetLogs")
 	beego.Router("/logs/clear", &controllers.SettingsController{}, "post:ClearLogs")
 	beego.Router("/logs/archive", &controllers.SettingsController{}, "post:ArchiveLogs")
+	beego.Router("/logs/toggle-debug", &controllers.SettingsController{}, "get:ToggleDebug")
+	beego.Router("/logs/level", &controllers.SettingsController{}, "get:GetLogLevel")
 
 	// Routers for settings
 	beego.Router("/settings", &controllers.SettingsController{}, "get:Get")

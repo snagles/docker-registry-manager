@@ -38,38 +38,13 @@
       </div>
       <div class="row">
         <div class="col-lg-12">
-          <form>
-            <fieldset class="form-group">
-              <label for="log-level">Log Level</label>
-              <select class="form-control" id="log-level">
-                <option>1 - Fatal</option>
-                <option>2 - Panic</option>
-                <option>3 - Error </option>
-                <option>4 - Warn</option>
-                <option>5 - Info</option>
-                <option>6 - Debug</option>
-              </select>
-              <div class="text-muted">Higher numbers include itself, and all log level numbers below. </div>
-            </fieldset>
-            <fieldset class="form-group">
-              <label for="log-level">Log Retention</label>
-              <label class="radio-inline">
-                <input type="radio" name="retention-days" id="7-days" value="7"> 7 Days
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="retention-days" id="14-days" value="14-days"> 14 Days
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="retention-days" id="31-days" value="31-days"> 31 Days
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="retention-days" id="forever-days" value="forever"> Forever
-              </label>
-            </fieldset>
+          Debug Logging
+          <label id="debug">
+            <input id = "debug-level" type="checkbox" data-size="small" checked data-onstyle="success"></input>
+          </label>
             <button id="archive-logs" type="button" class="btn btn-default"><i class="fa fa-archive"></i> Archive Logs</button>
             <a href="/logs" download="logs.json" class="btn btn-default" download><i class="fa fa-download"></i> Download Logs</a>
             <button id="clear-logs" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Clear Logs</button>
-        </form>
       </div>
     </div>
     <hr>
@@ -120,19 +95,49 @@
   </div>
 <script>
   $(document).ready(function() {
-      var table = $('#datatable').DataTable( {
-          "ajax": {
-              url: '/logs',
-              dataSrc: '',
-          },
-          "order": [[ 2, "desc" ]],
-          "pageLength": 10,
-          "columns": [
-            { "data": "level" },
-            { "data": "msg"},
-            { "data": "time"}
-         ]
-      } );
+    // Initialize bootstrap toggle for the debug levels
+    $('#debug-level').bootstrapToggle();
+    // Get the current log level
+    var debug = 0;
+    $.get("logs/level", function(data) {
+      currentLogLevel = data.LogLevel
+      if (data.LogLevel == "debug") {
+        debug = 1;
+        $('#debug-level').bootstrapToggle("on");
+      }
+      else {
+        debug = 0;
+        $('#debug-level').bootstrapToggle("off");
+      }
+    });
+    $("#debug").click(function(e){
+      $.ajax({type: "GET",
+          url: "/logs/toggle-debug",
+          success:function(result){
+            if (debug == 0) {
+              $('#debug-level').bootstrapToggle("on");
+              debug = 1;
+            }
+            else {
+              $('#debug-level').bootstrapToggle("off");
+              debug = 0;
+            }
+          }});
+    });
+
+    var table = $('#datatable').DataTable( {
+        "ajax": {
+            url: '/logs',
+            dataSrc: '',
+        },
+        "order": [[ 2, "desc" ]],
+        "pageLength": 10,
+        "columns": [
+          { "data": "level" },
+          { "data": "msg"},
+          { "data": "time"}
+       ],
+    } );
 
     $("#clear-logs").click(function(e){
       e.preventDefault();

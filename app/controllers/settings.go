@@ -40,3 +40,23 @@ func (c *SettingsController) ArchiveLogs() {
 	c.CustomAbort(404, "Failed to clear log: "+err.Error())
 
 }
+
+func (c *SettingsController) ToggleDebug() {
+
+	utils.ToggleDebug()
+	c.CustomAbort(200, "Success")
+}
+
+func (c *SettingsController) GetLogLevel() {
+
+	currentLevel := utils.Log.Level
+	type level struct {
+		LogLevel string
+	}
+	l := level{
+		LogLevel: currentLevel.String(),
+	}
+	c.Data["json"] = &l
+	c.ServeJSON()
+
+}
