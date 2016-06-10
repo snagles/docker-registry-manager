@@ -11,6 +11,8 @@ type SettingsController struct {
 
 func (c *SettingsController) Get() {
 
+	c.Data["releaseVersion"] = utils.ReleaseVersion
+
 	c.TplName = "settings.tpl"
 }
 
@@ -57,6 +59,20 @@ func (c *SettingsController) GetLogLevel() {
 		LogLevel: currentLevel.String(),
 	}
 	c.Data["json"] = &l
+	c.ServeJSON()
+
+}
+
+func (c *SettingsController) GetReleaseVersion() {
+
+	currentRelease := utils.ReleaseVersion
+	type ReleaseVersion struct {
+		ReleaseVersion string
+	}
+	r := ReleaseVersion{
+		ReleaseVersion: currentRelease,
+	}
+	c.Data["json"] = &r
 	c.ServeJSON()
 
 }

@@ -71,7 +71,7 @@
         <hr>
       </div>
       <div class="row">
-        <p>Version: <small> 1.06</small></p>
+        <p>Version: <small> {{.releaseVersion}}</small></p>
         <p>Wiki: <small> https://github.com/stefannaglee/docker-registry-manager/tree/master/resources/docs/wiki</small></p>
         <p>Chat: <small> https://chat.stefannaglee.com/</small></p>
         <p>Source: <small> https://github.com/stefannaglee/docker-registry-manager</small></p>
