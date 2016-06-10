@@ -4,8 +4,6 @@ import (
 	"math"
 	"strconv"
 	"time"
-
-	"github.com/Sirupsen/logrus"
 )
 
 // TimeAgo returns the rounded form of amount of time elapsed between now and the passed time
@@ -46,16 +44,4 @@ func Round(f float64) int {
 		return 0
 	}
 	return int(f + math.Copysign(0.5, f))
-}
-
-// TogleeDebug toggles the debug level on or off depending on the current state
-func ToggleDebug() {
-	if Log.Level == logrus.DebugLevel {
-		Log.Level = logrus.InfoLevel
-	} else {
-		Log.WithFields(logrus.Fields{
-			"Test": "Test",
-		}).Debug("Turned on debug logging...")
-		Log.Level = logrus.DebugLevel
-	}
 }

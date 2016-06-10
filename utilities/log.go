@@ -161,3 +161,15 @@ func ArchiveLogFile() error {
 
 	return err
 }
+
+// TogleeDebug toggles the debug level on or off depending on the current state
+func ToggleDebug() {
+	if Log.Level == logrus.DebugLevel {
+		Log.Level = logrus.InfoLevel
+	} else {
+		Log.WithFields(logrus.Fields{
+			"Test": "Test",
+		}).Info("Turned on debug logging...")
+		Log.Level = logrus.DebugLevel
+	}
+}
