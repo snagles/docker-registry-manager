@@ -71,11 +71,14 @@
         <hr>
       </div>
       <div class="row">
-        <p>Version: <small> {{.releaseVersion}}</small></p>
+        <p>
+          <a href="https://travis-ci.org/stefannaglee/docker-registry-manager"><img src="https://travis-ci.org/stefannaglee/docker-registry-manager.svg?branch=master" alt="Build Status" title="" /></a>
+          <a href="https://coveralls.io/github/stefannaglee/docker-registry-manager?branch=1-add-coveralls-support"><img src="https://coveralls.io/repos/github/stefannaglee/docker-registry-manager/badge.svg?branch=1-add-coveralls-support" alt="Coverage Status" title="" /></a>
+          <a href="https://godoc.org/github.com/stefannaglee/docker-registry-manager/app"><img src="https://godoc.org/github.com/stefannaglee/docker-registry-manager?status.svg" alt="GoDoc" title="" /></a>
+          <a href="https://godoc.org/github.com/stefannaglee/docker-registry-manager/app"><img src="https://img.shields.io/badge/Release-{{.releaseVersion}}-green.svg" alt="Release" title="" /></a>
+        </p>
         <p>Wiki: <small> https://github.com/stefannaglee/docker-registry-manager/tree/master/resources/docs/wiki</small></p>
-        <p>Chat: <small> https://chat.stefannaglee.com/</small></p>
         <p>Source: <small> https://github.com/stefannaglee/docker-registry-manager</small></p>
-        <p>GoDocs: <small> https://stefannaglee/docker-registry-manager/godocs</small></p>
         <p>Feature Requests: <small> https://github.com/stefannaglee/docker-registry-manager</small></p>
         <p>Bug Report: <small> https://github.com/stefannaglee/docs/wiki/bug-report</small></p>
       </div>
