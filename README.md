@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.org/stefannaglee/docker-registry-manager.svg?branch=master) [![GoDoc](https://godoc.org/github.com/stefannaglee/docker-registry-manager?status.svg)](https://godoc.org/github.com/stefannaglee/docker-registry-manager/app) [![Release](https://img.shields.io/badge/Release-1.0.0-green.svg)](https://godoc.org/github.com/stefannaglee/docker-registry-manager/app) [![Coverage Status](https://coveralls.io/repos/github/stefannaglee/docker-registry-manager/badge.svg?branch=master)](https://coveralls.io/github/stefannaglee/docker-registry-manager?branch=master)
+
 # Docker Registry Manager
 
 Docker Registry Manager is a golang written, beego driven, web interface for interacting with multiple docker registries (one to many).
