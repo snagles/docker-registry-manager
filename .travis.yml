@@ -7,4 +7,8 @@ before_install:
   - go get github.com/mattn/goveralls
   - go get golang.org/x/tools/cmd/cover
 script:
-  - $HOME/gopath/bin/goveralls -service=travis-ci
+- go test -v ./models/registry/ -covermode=count -coverprofile=registry.cov
+- goveralls -coverprofile=registry.cov -service=travis-ci
+- go test -v ./models/registry/ -covermode=count -coverprofile=functional.cov
+- goveralls -coverprofile=functional.cov -service=travis-ci
+
