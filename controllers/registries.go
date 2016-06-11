@@ -3,8 +3,8 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"github.com/pivotal-golang/bytefmt"
-	"github.com/stefannaglee/docker-registry-manager/app/models/registry"
-	"github.com/stefannaglee/docker-registry-manager/app/utilities"
+	"github.com/stefannaglee/docker-registry-manager/models/registry"
+	"github.com/stefannaglee/docker-registry-manager/utilities"
 )
 
 // RegistriesController extends the beego.Controller type

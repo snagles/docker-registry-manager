@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/stefannaglee/docker-registry-manager/app/models/registry"
+	"github.com/stefannaglee/docker-registry-manager/models/registry"
 )
 
 type RepositoriesController struct {

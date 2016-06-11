@@ -11,7 +11,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/pivotal-golang/bytefmt"
-	"github.com/stefannaglee/docker-registry-manager/app/utilities"
+	"github.com/stefannaglee/docker-registry-manager/utilities"
 )
 
 // Tags contains a slice of tags for the given repository

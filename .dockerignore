@@ -1,4 +1,4 @@
-app/app
+app
 app/logs/error.log
 *.log
 .remote-sync.json
