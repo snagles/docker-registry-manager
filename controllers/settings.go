@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/stefannaglee/docker-registry-manager/app/utilities"
+	"github.com/stefannaglee/docker-registry-manager/utilities"
 )
 
 type SettingsController struct {
