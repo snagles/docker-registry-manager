@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/stefannaglee/docker-registry-manager/app/controllers"
+	"github.com/stefannaglee/docker-registry-manager/controllers"
 )
 
 func init() {

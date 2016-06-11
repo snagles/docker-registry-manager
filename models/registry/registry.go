@@ -7,7 +7,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	_ "github.com/go-sql-driver/mysql" // need to initialize mysql before making a connection
-	"github.com/stefannaglee/docker-registry-manager/app/utilities"
+	"github.com/stefannaglee/docker-registry-manager/utilities"
 )
 
 // ActiveRegistries contains a map of all active registries identified by their name

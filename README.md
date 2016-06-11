@@ -22,8 +22,8 @@ WARNING: This application is very much still a work in progress. Core functional
 ### Go tool
  ```bash
     > git clone https://github.com/stefannaglee/docker-registry-manager.git
-    > cd docker-registry-manager/app
-    > go build . && ./app -verbosity 6 -registry http://hostname:port/v2 # add more registries with another -registry flag
+    > cd docker-registry-manager
+    > go build . && . -verbosity 6 -registry http://hostname:port/v2 # add more registries with another -registry flag
     > firefox localhost:8080 # for web ui
     > firefox localhost:8088 # for beego admin interface
  ```

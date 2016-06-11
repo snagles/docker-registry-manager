@@ -10,7 +10,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/pivotal-golang/bytefmt"
-	"github.com/stefannaglee/docker-registry-manager/app/utilities"
+	"github.com/stefannaglee/docker-registry-manager/utilities"
 )
 
 // Image contains all information related to the image

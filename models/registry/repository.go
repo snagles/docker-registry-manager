@@ -8,7 +8,7 @@ import (
 	"net/url"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/stefannaglee/docker-registry-manager/app/utilities"
+	"github.com/stefannaglee/docker-registry-manager/utilities"
 )
 
 // RepositoriesList contains a slice of all repositories
