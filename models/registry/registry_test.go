@@ -12,7 +12,7 @@ func TestParseRegistry(t *testing.T) {
 	validRegistryURI := "https://host.domain.com:5000"
 	// Create a registy type that contains the expected output from ParseRegistry
 	expectedRegistryResponse := Registry{
-		Name:   "host.domain",
+		Name:   "host.domain.com",
 		Scheme: "https",
 		Port:   "5000",
 	}
