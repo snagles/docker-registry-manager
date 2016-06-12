@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
@@ -12,13 +11,6 @@ import (
 	"github.com/stefannaglee/docker-registry-manager/models/registry"
 	_ "github.com/stefannaglee/docker-registry-manager/routers"
 	"github.com/stefannaglee/docker-registry-manager/utilities"
-)
-
-const (
-	// Update version for each release
-	MajorVersion = 1
-	MinorVersion = 0
-	PatchVersion = 0
 )
 
 // DuplicateFlags slice contains a list of registries to use.
@@ -41,8 +33,6 @@ var logLevel int
 var registryFlags DuplicateFlags
 
 func init() {
-
-	utils.ReleaseVersion = strconv.Itoa(MajorVersion) + "." + strconv.Itoa(MinorVersion) + "." + strconv.Itoa(PatchVersion)
 
 	// Set and parse the command line flags
 	flag.IntVar(&logLevel, "verbosity", 5, "Execution log level of the program: 1 = Panic Level, 2 = Fatal Level, 3 = Error Level, 4 = Warn Level, 5 = Info Level, 6 = Debug Level")

@@ -1,13 +1,31 @@
 package utils
 
-import "fmt"
+import "errors"
 
-func Update() error {
+var ReleaseVersion string
+
+func init() {
+	tag, err := GetTag()
+	if err != nil {
+		Log.Error("Could not get git tag version")
+	}
+	ReleaseVersion = tag
+}
+
+// UpdateApp stops the current instance of the app, updates to the latest sha on the branch, and restarts the app
+func UpdateApp() (bool, error) {
 
 	isUpToDate, err := IsAppUpToDate()
-	fmt.Println(isUpToDate)
-	fmt.Println(err)
-	return nil
+	if err != nil {
+		Log.Error(err)
+		return false, err
+	}
+
+	if isUpToDate {
+		return false, errors.New("Already up to date!")
+	}
+
+	return true, nil
 }
 
 // IsAppUpToDate checks to see if the local status of the git tree is up to date with the remote

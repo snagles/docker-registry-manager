@@ -80,6 +80,14 @@ func GetBaseSHA() (string, error) {
 	return string(baseSHA), err
 }
 
+// GetTag returns the current tag
+// https://git-scm.com/book/en/v2/Git-Basics-Tagging
+func GetTag() (string, error) {
+	cmdArgs := []string{"describe"}
+	tag, err := exec.Command("/usr/bin/git", cmdArgs...).Output()
+	return string(tag), err
+}
+
 // RemoteUpdate updates with origin
 func RemoteUpdate() error {
 	cmdArgs := []string{"remote", "update"}
