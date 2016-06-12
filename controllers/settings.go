@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/toolbox"
 	"github.com/stefannaglee/docker-registry-manager/utilities"
 )
 
@@ -73,6 +76,40 @@ func (c *SettingsController) GetReleaseVersion() {
 		ReleaseVersion: currentRelease,
 	}
 	c.Data["json"] = &r
+	c.ServeJSON()
+
+}
+
+// GetLiveStatistics returns stats on request information tracked by beego
+func (c *SettingsController) GetLiveStatistics() {
+
+	r := toolbox.StatisticsMap
+	rs := r.GetMapData()
+
+	// Convert beego times to seconds for sorted
+	for _, req := range rs {
+		var err error
+		req["min_s"], err = utils.StatToSeconds(req["min_time"].(string))
+		if err != nil {
+			utils.Log.Error(err)
+		}
+		req["max_s"], err = utils.StatToSeconds(req["max_time"].(string))
+		if err != nil {
+			utils.Log.Error(err)
+		}
+		req["avg_s"], err = utils.StatToSeconds(req["avg_time"].(string))
+		if err != nil {
+			utils.Log.Error(err)
+		}
+		req["total_s"], err = utils.StatToSeconds(req["total_time"].(string))
+		if err != nil {
+			utils.Log.Error(err)
+		}
+	}
+
+	fmt.Println(rs)
+
+	c.Data["json"] = &rs
 	c.ServeJSON()
 
 }

@@ -13,6 +13,37 @@
         <hr>
       </div>
       <div class="row">
+        <ul class="nav nav-tabs" role="tablist" style="margin-bottom:20px;">
+          <li role="presentation" class="active"><a href="#stats" aria-controls="overview" role="tab" data-toggle="tab">Request Stats</a></li>
+        </ul>
+        <div role="tabpanel" class="tab-pane" id="stats">
+          <table id="stats-datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+              <thead>
+                  <tr>
+                    <th>Method</th>
+                    <th>Request URL</th>
+                    <th>Average Time</th>
+                    <th>Max Time</th>
+                    <th>Min Time</th>
+                    <th>Total Time</th>
+                    <th>Request Count</th>
+                  </tr>
+              </thead>
+              <tbody>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Method</th>
+                  <th>Request URL</th>
+                  <th>Average Time</th>
+                  <th>Max Time</th>
+                  <th>Min Time</th>
+                  <th>Total Time</th>
+                  <th>Request Count</th>
+                </tr>
+              </tfoot>
+          </table>
+        </div>
       </div>
     </div>
     <div class="row content-block white-bg">
@@ -98,6 +129,28 @@
   </div>
 <script>
   $(document).ready(function() {
+
+
+    // Get the stats data table stats
+    $.getJSON( "/settings/stats", function( data ) {
+      $.each( data, function( i, item ) {
+        console.log(item);
+        var $tr = $('<tr>').append(
+          $("<td>").text(item.method),
+          $('<td>').text(item.request_url),
+          $('<td data-order='+item.avg_s+'>').text(item.avg_time),
+          $('<td data-order='+item.max_s+'>').text(item.max_time),
+          $('<td data-order='+item.min_s+'>').text(item.min_time),
+          $('<td data-order='+item.total_s+'>').text(item.total_time),
+          $('<td>').text(item.times)
+        ).appendTo('#stats-datatable');
+      });
+      $('#stats-datatable').DataTable( {
+          "order": [[ 2, "desc" ]],
+          "pageLength": 10,
+      });
+    });
+
     // Initialize bootstrap toggle for the debug levels
     $('#debug-level').bootstrapToggle();
     // Get the current log level
