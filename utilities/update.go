@@ -2,6 +2,7 @@ package utils
 
 import "errors"
 
+// ReleaseVersion contains the git tag version
 var ReleaseVersion string
 
 func init() {

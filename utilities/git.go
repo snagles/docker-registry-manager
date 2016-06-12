@@ -83,7 +83,8 @@ func GetBaseSHA() (string, error) {
 // GetTag returns the current tag
 // https://git-scm.com/book/en/v2/Git-Basics-Tagging
 func GetTag() (string, error) {
-	cmdArgs := []string{"describe"}
+	cmdArgs := []string{"describe", "--abbrev=0"} // only shows annotated
+	//cmdArgs := []string{"describe"} // This shows all tags
 	tag, err := exec.Command("/usr/bin/git", cmdArgs...).Output()
 	return string(tag), err
 }
