@@ -12,6 +12,18 @@ import (
 	"github.com/rifflock/lfshook"
 )
 
+// GoPath contains the gopath of the env
+var GoPath string
+
+// AppPath contains the app path of the env
+var AppPath string
+
+// LogPath contains the path to store the logs
+var LogPath string
+
+// LogFile contains the fully qualified log file location
+var LogFile string
+
 // LogEntry contains information unmarshalled from logrus that was logged to a file
 //{"level":"error","msg":"Test","time":"2016-04-10T12:05:30-04:00"}
 type LogEntry struct {
@@ -25,34 +37,43 @@ var Log = logrus.New()
 
 func init() {
 
+	goPath := os.Getenv("GOPATH")
+	GoPath = goPath
+	appPath := goPath + "/src/github.com/stefannaglee/docker-registry-manager/"
+	AppPath = appPath
+	logPath := appPath + "/logs/"
+	LogPath = logPath
+	logFile := logPath + "/error.log"
+	LogFile = logFile
+
 	// Create the log directory if needed
-	if _, err := os.Stat("./logs"); os.IsNotExist(err) {
-		if err := os.Mkdir("logs", os.ModePerm); err != nil {
+	if _, err := os.Stat(logPath); os.IsNotExist(err) {
+		if err := os.Mkdir(logPath, os.ModePerm); err != nil {
 			log.Fatal(err)
 		}
 	}
 
 	// Create the log file if needed
-	if _, err := os.Stat("./logs/error.log"); os.IsNotExist(err) {
-		if _, err = os.Create("./logs/error.log"); err != nil {
+	if _, err := os.Stat(logFile); os.IsNotExist(err) {
+		if _, err = os.Create(logFile); err != nil {
 			log.Fatal(err)
 		}
 	}
 
 	Log.Formatter = &logrus.JSONFormatter{}
 	Log.Hooks.Add(lfshook.NewHook(lfshook.PathMap{
-		logrus.ErrorLevel: "./logs/error.log",
-		logrus.InfoLevel:  "./logs/error.log",
-		logrus.WarnLevel:  "./logs/error.log",
-		logrus.FatalLevel: "./logs/error.log",
-		logrus.PanicLevel: "./logs/error.log",
-		logrus.DebugLevel: "./logs/error.log",
+		logrus.ErrorLevel: logFile,
+		logrus.InfoLevel:  logFile,
+		logrus.WarnLevel:  logFile,
+		logrus.FatalLevel: logFile,
+		logrus.PanicLevel: logFile,
+		logrus.DebugLevel: logFile,
 	}))
 }
 
 // ParseLogFile parses the locally stored flat log file that was logged to by logrus
 func ParseLogFile() []LogEntry {
-	file, err := os.Open("logs/error.log")
+	file, err := os.Open(LogFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,9 +97,10 @@ func ParseLogFile() []LogEntry {
 	return es
 }
 
+// ClearLogFile empties the log file
 func ClearLogFile() error {
 	// Create the new file
-	if _, err := os.Create("./logs/error.log.new"); err != nil {
+	if _, err := os.Create(LogFile + ".new"); err != nil {
 		Log.Error(err)
 		return err
 	}
@@ -92,7 +114,7 @@ func ClearLogFile() error {
 	}
 
 	// Open and have the first entry informing user that the log has been recently emptied
-	newLog, err := os.OpenFile("./logs/error.log.new", os.O_WRONLY, 0666)
+	newLog, err := os.OpenFile(LogFile+".new", os.O_WRONLY, 0666)
 	if err != nil {
 		Log.Error(err)
 		return err
@@ -105,16 +127,16 @@ func ClearLogFile() error {
 	defer newLog.Close()
 
 	// Rename the old error log, and update the name of the new one
-	if err := os.Rename("./logs/error.log", "./logs/error.log.old"); err != nil {
+	if err := os.Rename(LogFile, LogFile+".old"); err != nil {
 		Log.Error("Could not rename and clear old log file!")
 		return err
 	}
-	if err := os.Rename("./logs/error.log.new", "./logs/error.log"); err != nil {
+	if err := os.Rename(LogFile+".new", LogFile); err != nil {
 		Log.Error("Could not rename and clear old log file!")
 		return err
 	}
 
-	if err := os.Remove("./logs/error.log.old"); err != nil {
+	if err := os.Remove(LogFile + ".old"); err != nil {
 		Log.Error(err)
 	}
 
@@ -122,9 +144,10 @@ func ClearLogFile() error {
 
 }
 
+// ArchiveLogFile creates a backup of the current log in the logs directory, creates a new log file, and writes to the new log
 func ArchiveLogFile() error {
 	// Create the new file
-	if _, err := os.Create("./logs/error.log.new"); err != nil {
+	if _, err := os.Create(LogFile + ".new"); err != nil {
 		Log.Error(err)
 		return err
 	}
@@ -132,29 +155,29 @@ func ArchiveLogFile() error {
 	logTime := time.Now()
 	newEntry := LogEntry{
 		Level:   "warn",
-		Message: "Archived the log file! Location: " + "./logs/" + strconv.Itoa(int(logTime.Unix())) + "-error.log",
+		Message: "Archived the log file! Location: " + LogPath + strconv.Itoa(int(logTime.Unix())) + "-error.log",
 		Time:    logTime,
 	}
 
 	// Open and have the first entry informing user that the log has been recently archived
-	newLog, err := os.OpenFile("./logs/error.log.new", os.O_WRONLY, 0666)
+	newLog, err := os.OpenFile(LogFile+".new", os.O_WRONLY, 0666)
 	if err != nil {
 		Log.Error(err)
 		return err
 	}
 	jsonEntry, _ := json.Marshal(newEntry)
-	if _, err := newLog.Write(jsonEntry); err != nil {
+	if _, err = newLog.Write(jsonEntry); err != nil {
 		Log.Error(err)
 	}
 	newLog.WriteString("\n")
 	defer newLog.Close()
 
 	// Rename the old error log, and update the name of the new one
-	if err := os.Rename("./logs/error.log", "./logs/"+strconv.Itoa(int(logTime.Unix()))+"-error.log"); err != nil {
+	if err = os.Rename(LogFile, LogPath+strconv.Itoa(int(logTime.Unix()))+"-error.log"); err != nil {
 		Log.Error("Could not archive log file!")
 		return err
 	}
-	if err := os.Rename("./logs/error.log.new", "./logs/error.log"); err != nil {
+	if err = os.Rename(LogFile+".new", LogFile); err != nil {
 		Log.Error("Could not rename old log file!")
 		return err
 	}
@@ -162,7 +185,7 @@ func ArchiveLogFile() error {
 	return err
 }
 
-// TogleeDebug toggles the debug level on or off depending on the current state
+// ToggleDebug toggles the debug level on or off depending on the current state
 func ToggleDebug() {
 	if Log.Level == logrus.DebugLevel {
 		Log.WithFields(logrus.Fields{
