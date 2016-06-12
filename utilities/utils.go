@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"errors"
 	"math"
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -44,4 +46,39 @@ func Round(f float64) int {
 		return 0
 	}
 	return int(f + math.Copysign(0.5, f))
+}
+
+func StatToSeconds(stat string) (float64, error) {
+
+	// First parse out the ms, s, us, and the amount
+	r := regexp.MustCompile("([0-9]+.[0-9]+)([a-z]+)")
+
+	results := r.FindStringSubmatch(stat)
+
+	if len(results) > 1 {
+		valueStr := results[1]
+		value, err := strconv.ParseFloat(valueStr, 10)
+		if err != nil {
+			return 0, err
+		}
+
+		time := results[2]
+
+		switch time {
+		case "us":
+			convValue := value / 1000000
+			// microseconds to seconds
+			return convValue, nil
+		case "ms":
+			convValue := value / 1000
+			// microseconds to seconds
+			return convValue, nil
+			// milliseconds to seconds
+		case "s":
+			return value, nil
+		}
+	}
+
+	return 0, errors.New("Failed to parse time string from beego")
+
 }

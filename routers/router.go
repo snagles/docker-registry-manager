@@ -37,4 +37,5 @@ func init() {
 
 	// Routers for settings
 	beego.Router("/settings", &controllers.SettingsController{}, "get:Get")
+	beego.Router("/settings/stats", &controllers.SettingsController{}, "get:GetLiveStatistics")
 }
