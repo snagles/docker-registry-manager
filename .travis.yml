@@ -9,6 +9,5 @@ before_install:
 script:
 - go test -v ./models/registry/ -covermode=count -coverprofile=registry.cov
 - goveralls -coverprofile=registry.cov -service=travis-ci
-- go test -v ./models/registry/ -covermode=count -coverprofile=functional.cov
-- goveralls -coverprofile=functional.cov -service=travis-ci
-
+- go test -v ./utilities/ -covermode=count -coverprofile=utilities.cov
+- goveralls -coverprofile=utilities.cov -service=travis-ci

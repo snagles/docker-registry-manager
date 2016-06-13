@@ -48,6 +48,7 @@ func Round(f float64) int {
 	return int(f + math.Copysign(0.5, f))
 }
 
+// StatToSeconds takes in a beego stat param (e.g 20.40us or 15.20ms) and returns the time in seconds
 func StatToSeconds(stat string) (float64, error) {
 
 	// First parse out the ms, s, us, and the amount
