@@ -71,7 +71,7 @@ func GetTagsForView(registryName string, repositoryName string) (TagsForView, er
 				// Check if the registry is listed as active
 				r := Registries[registryName]
 				// Create and execute Get request
-				response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
+				response, _ := http.Head(r.URI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
 				if err != nil {
 					utils.Log.Error(err)
 				}
@@ -124,10 +124,10 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 	r := Registries[registryName]
 
 	// Create and execute Get request
-	response, err := http.Get(r.GetURI() + "/" + repositoryName + "/tags/list")
+	response, err := http.Get(r.URI() + "/" + repositoryName + "/tags/list")
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"Registry URL": string(r.GetURI()),
+			"Registry URL": string(r.URI()),
 			"Error":        err,
 			"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
 		}).Error("Get request to registry failed for the tags endpoint.")
@@ -185,7 +185,7 @@ func DeleteTag(registryName string, repositoryName string, tag string) (bool, er
 
 	// Check if the tag exists. If it does not we cannot get the digest from it
 	client := &http.Client{}
-	req, _ := http.NewRequest("HEAD", r.GetURI()+"/"+repositoryName+"/manifests/"+tag, nil)
+	req, _ := http.NewRequest("HEAD", r.URI()+"/"+repositoryName+"/manifests/"+tag, nil)
 
 	// Note When deleting a manifest from a registry version 2.3 or later, the following header must be used when HEAD or GET-ing the manifest to obtain the correct digest to delete:
 	// Accept: application/vnd.docker.distribution.manifest.v2+json
@@ -210,7 +210,7 @@ func DeleteTag(registryName string, repositoryName string, tag string) (bool, er
 			// Create and execute DELETE request
 			digest := resp.Header["Docker-Content-Digest"][0]
 			client := &http.Client{}
-			req, _ := http.NewRequest("DELETE", r.GetURI()+"/"+repositoryName+"/manifests/"+digest, nil)
+			req, _ := http.NewRequest("DELETE", r.URI()+"/"+repositoryName+"/manifests/"+digest, nil)
 			req.Header.Set("Accept", "application/vnd.docker.distribution.manifest.v2+json")
 			resp, err := client.Do(req)
 			if err != nil || resp.StatusCode != 200 {
@@ -251,7 +251,7 @@ func GetTag(registryName string, repositoryName string, tagName string) (TagForV
 		// Check if the registry is listed as active
 		r := Registries[registryName]
 		// Create and execute Get request
-		response, err := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
+		response, err := http.Head(r.URI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
 		if err != nil {
 			utils.Log.Error(err)
 			return t, err

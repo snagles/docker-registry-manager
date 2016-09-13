@@ -124,7 +124,7 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 	r := Registries[registryName]
 
 	// Create and execute Get request
-	response, err := http.Get(r.GetURI() + "/" + repositoryName + "/manifests/" + tagName)
+	response, err := http.Get(r.URI() + "/" + repositoryName + "/manifests/" + tagName)
 
 	if response.StatusCode != 200 {
 		utils.Log.WithFields(logrus.Fields{
@@ -184,7 +184,7 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 		// Check if the registry is listed as active
 		r := Registries[registryName]
 		// Create and execute Get request
-		response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
+		response, _ := http.Head(r.URI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
 		if err != nil {
 			utils.Log.Error(err)
 		}

@@ -33,8 +33,8 @@ type Registry struct {
 	RepoTotalSizeStr string
 }
 
-// GetURI returns the full url path for communicating with this registry
-func (r *Registry) GetURI() string {
+// URI returns the full url path for communicating with this registry
+func (r *Registry) URI() string {
 	return r.Scheme + "://" + r.Name + ":" + r.Port + "/v2"
 }
 
@@ -47,11 +47,11 @@ func (r *Registry) UpdateRegistryStatus() error {
 
 	// Parse the registry string into our Registry type
 	utils.Log.WithFields(logrus.Fields{
-		"Registry URI": r.GetURI(),
+		"Registry URI": r.URI(),
 	}).Info("Connecting to registry...")
 
 	// Create and execute a plain get request and check the http status code
-	response, err := http.Get(r.GetURI())
+	response, err := http.Get(r.URI())
 	if err != nil {
 		// Notify of error
 		utils.Log.WithFields(logrus.Fields{
@@ -76,7 +76,7 @@ func (r *Registry) UpdateRegistryStatus() error {
 	// Notify of success
 	utils.Log.WithFields(logrus.Fields{
 		"Registry Information": r,
-		"Registry URI":         r.GetURI(),
+		"Registry URI":         r.URI(),
 	}).Info("Successfully connected to registry and added to list of active registries!")
 
 	r.Status = "available"
