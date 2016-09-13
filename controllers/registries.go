@@ -15,7 +15,7 @@ type RegistriesController struct {
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
 
-	for _, r := range registry.ActiveRegistries {
+	for _, r := range registry.Registries {
 
 		// Get the repository count for this registry
 		repositories := registry.GetRepositories(r.Name)
@@ -39,21 +39,21 @@ func (c *RegistriesController) Get() {
 		r.RepoTotalSizeStr = bytefmt.ByteSize(uint64(totalSize))
 		r.TagCount = tagCount
 
-		registry.ActiveRegistries[r.Name] = r
+		registry.Registries[r.Name] = r
 	}
-	c.Data["registries"] = registry.ActiveRegistries
+	c.Data["registries"] = registry.Registries
 
 	// Index template
 	c.TplName = "registries.tpl"
 }
 
 func (c *RegistriesController) GetRegistryCount() {
-	c.Data["registries"] = registry.ActiveRegistries
+	c.Data["registries"] = registry.Registries
 
 	registryCount := struct {
 		Count int
 	}{
-		len(registry.ActiveRegistries),
+		len(registry.Registries),
 	}
 	c.Data["json"] = &registryCount
 	c.ServeJSON()

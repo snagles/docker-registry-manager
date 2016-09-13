@@ -69,7 +69,7 @@ func GetTagsForView(registryName string, repositoryName string) (TagsForView, er
 			for _, layer := range img.FsLayers {
 
 				// Check if the registry is listed as active
-				r := ActiveRegistries[registryName]
+				r := Registries[registryName]
 				// Create and execute Get request
 				response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
 				if err != nil {
@@ -118,10 +118,10 @@ func GetTags(registryName string, repositoryName string) (Tags, error) {
 	repositoryName, _ = url.QueryUnescape(repositoryName)
 
 	// Check if the registry is listed as active
-	if _, ok := ActiveRegistries[registryName]; !ok {
+	if _, ok := Registries[registryName]; !ok {
 		return Tags{}, errors.New(registryName + " was not found within the active list of registries.")
 	}
-	r := ActiveRegistries[registryName]
+	r := Registries[registryName]
 
 	// Create and execute Get request
 	response, err := http.Get(r.GetURI() + "/" + repositoryName + "/tags/list")
@@ -178,10 +178,10 @@ func DeleteTag(registryName string, repositoryName string, tag string) (bool, er
 	repositoryName, _ = url.QueryUnescape(repositoryName)
 
 	// Check if the registry is listed as active
-	if _, ok := ActiveRegistries[registryName]; !ok {
+	if _, ok := Registries[registryName]; !ok {
 		return false, errors.New(registryName + " was not found within the active list of registries.")
 	}
-	r := ActiveRegistries[registryName]
+	r := Registries[registryName]
 
 	// Check if the tag exists. If it does not we cannot get the digest from it
 	client := &http.Client{}
@@ -249,7 +249,7 @@ func GetTag(registryName string, repositoryName string, tagName string) (TagForV
 	for _, layer := range img.FsLayers {
 
 		// Check if the registry is listed as active
-		r := ActiveRegistries[registryName]
+		r := Registries[registryName]
 		// Create and execute Get request
 		response, err := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
 		if err != nil {

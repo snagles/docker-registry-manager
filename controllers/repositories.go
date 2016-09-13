@@ -27,10 +27,10 @@ func (c *RepositoriesController) GetRepositories() {
 }
 
 func (c *RepositoriesController) GetAllRepositoryCount() {
-	c.Data["registries"] = registry.ActiveRegistries
+	c.Data["registries"] = registry.Registries
 
 	var count int
-	for _, reg := range registry.ActiveRegistries {
+	for _, reg := range registry.Registries {
 		repositories := registry.GetRepositories(reg.Name)
 		count += len(repositories)
 	}
@@ -49,7 +49,7 @@ func (c *RepositoriesController) GetAllRepositories() {
 
 	var allRepositories [][]registry.Repository
 
-	for _, reg := range registry.ActiveRegistries {
+	for _, reg := range registry.Registries {
 
 		// Get the list of all repositories
 		repositories := registry.GetRepositories(reg.Name)

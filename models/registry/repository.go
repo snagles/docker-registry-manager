@@ -42,10 +42,10 @@ func GetRepositories(registryName string) []Repository {
 func GetRepositoriesFromRegistry(registryName string) (RepositoriesList, error) {
 
 	// Check if the registry is listed as active
-	if _, ok := ActiveRegistries[registryName]; !ok {
+	if _, ok := Registries[registryName]; !ok {
 		return RepositoriesList{}, errors.New(registryName + " was not found within the active list of registries.")
 	}
-	r := ActiveRegistries[registryName]
+	r := Registries[registryName]
 
 	// Create and execute Get request for the catalog of repositores
 	// https://github.com/docker/distribution/blob/master/docs/spec/api.md#catalog

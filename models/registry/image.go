@@ -118,10 +118,10 @@ type V1Compatibility struct {
 func GetImage(registryName string, repositoryName string, tagName string) (Image, error) {
 
 	// Check if the registry is listed as active
-	if _, ok := ActiveRegistries[registryName]; !ok {
+	if _, ok := Registries[registryName]; !ok {
 		return Image{}, errors.New(registryName + " was not found within the active list of registries.")
 	}
-	r := ActiveRegistries[registryName]
+	r := Registries[registryName]
 
 	// Create and execute Get request
 	response, err := http.Get(r.GetURI() + "/" + repositoryName + "/manifests/" + tagName)
@@ -182,7 +182,7 @@ func GetImage(registryName string, repositoryName string, tagName string) (Image
 	for index, layer := range img.FsLayers {
 
 		// Check if the registry is listed as active
-		r := ActiveRegistries[registryName]
+		r := Registries[registryName]
 		// Create and execute Get request
 		response, _ := http.Head(r.GetURI() + "/" + repositoryName + "/blobs/" + layer.BlobSum)
 		if err != nil {
