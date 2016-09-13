@@ -10,12 +10,12 @@ import (
 	"github.com/stefannaglee/docker-registry-manager/utilities"
 )
 
-// ActiveRegistries contains a map of all active registries identified by their name
-var ActiveRegistries map[string]Registry
+// Registries contains a map of all active registries identified by their name
+var Registries map[string]*Registry
 
 func init() {
 	// Create the active registries map
-	ActiveRegistries = make(map[string]Registry, 0)
+	Registries = make(map[string]*Registry, 0)
 }
 
 // Registry contains all identifying information for communicating with a registry
@@ -86,7 +86,7 @@ func (r *Registry) UpdateRegistryStatus() error {
 
 // AddRegistry adds the registry to the map of active registries
 func (r *Registry) AddRegistry() {
-	ActiveRegistries[r.Name] = *r
+	Registries[r.Name] = r
 }
 
 // ParseRegistry takes in a registry URI string and converts it into a registry object

@@ -23,7 +23,7 @@ func (c *ImagesController) GetImages() {
 
 	tagInfo, _ := registry.GetTag(registryName, repositoryName, tagName)
 
-	activeRegistries := registry.ActiveRegistries
+	activeRegistries := registry.Registries
 	if _, ok := activeRegistries[registryName]; ok {
 		registry := activeRegistries[registryName]
 		c.Data["registry"] = registry
