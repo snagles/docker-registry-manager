@@ -1,6 +1,7 @@
 package registry
 
 import (
+	"errors"
 	"net"
 	"net/http"
 	"net/url"
@@ -16,6 +17,15 @@ var Registries map[string]*Registry
 func init() {
 	// Create the active registries map
 	Registries = make(map[string]*Registry, 0)
+}
+
+func GetRegistryByName(registryName string) (*Registry, error) {
+	r, exists := Registries[registryName]
+	if !exists {
+		return nil, errors.New("Registry has not been added")
+	}
+
+	return r, nil
 }
 
 // Registry contains all identifying information for communicating with a registry
