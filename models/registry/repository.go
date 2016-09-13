@@ -49,10 +49,10 @@ func GetRepositoriesFromRegistry(registryName string) (RepositoriesList, error) 
 
 	// Create and execute Get request for the catalog of repositores
 	// https://github.com/docker/distribution/blob/master/docs/spec/api.md#catalog
-	response, err := http.Get(r.GetURI() + "/_catalog")
+	response, err := http.Get(r.URI() + "/_catalog")
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"Registry URL": string(r.GetURI()),
+			"Registry URL": string(r.URI()),
 			"Error":        err,
 			"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
 		}).Error("Get request to registry failed for the /_catalog endpoint! Is your registry active?")
