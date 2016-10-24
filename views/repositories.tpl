@@ -17,21 +17,21 @@
       <div class="row">
         <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
           <thead>
-            <th>ID:</th>
-            <th>Repository Name:</th>
+            <th>Repository Name</th>
             <th>Tags</th>
+            <th>Last Modified</th>
           </thead>
           <tfoot>
-            <th>ID:</th>
-            <th>Repository Name:</th>
+            <th>Repository Name</th>
             <th>Tags</th>
+            <th>Last Modified</th>
           </tfoot>
           <tbody>
             {{range $key, $repository := .repositories}}
             <tr>
-              <td>{{$key}}</td>
-              <td><a href=/registries/{{$.registryName}}/repositories/{{$repository.EncodedURI}}/tags>{{$repository.Name}}</span></td>
-              <td>{{$repository.TagCount}}</td>
+              <td><a href="/registries/{{$.registryName}}/repositories/{{urlquery $repository.Name}}/tags">{{$repository.Name}}</span></td>
+              <td>{{len $repository.Tags}}</td>
+              <td></td>
             </tr>
             {{end}}
           </tbody>

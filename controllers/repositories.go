@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/stefannaglee/docker-registry-manager/models/registry"
+	"github.com/snagles/docker-registry-manager/models/registry"
 )
 
 type RepositoriesController struct {
@@ -14,57 +14,15 @@ func (c *RepositoriesController) GetRepositories() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
 
-	repositories := registry.GetRepositories(registryName)
+	if r, ok := registry.Registries[registryName]; ok {
 
-	for index, repo := range repositories {
-		tags, _ := registry.GetTags(registryName, repo.Name)
-		repositories[index].TagCount = len(tags.Tags)
-	}
-	c.Data["registryName"] = registryName
-	c.Data["repositories"] = repositories
-	// Index template
-	c.TplName = "repositories.tpl"
-}
+		repositories := r.Repositories
 
-func (c *RepositoriesController) GetAllRepositoryCount() {
-	c.Data["registries"] = registry.Registries
+		c.Data["registryName"] = registryName
+		c.Data["repositories"] = repositories
+		// Index template
+		c.TplName = "repositories.tpl"
 
-	var count int
-	for _, reg := range registry.Registries {
-		repositories := registry.GetRepositories(reg.Name)
-		count += len(repositories)
-	}
-	repositoryCount := struct {
-		Count int
-	}{
-		count,
 	}
 
-	c.Data["json"] = &repositoryCount
-	c.ServeJSON()
-}
-
-// GetAllRepositories returns the template for the all registries page
-func (c *RepositoriesController) GetAllRepositories() {
-
-	var allRepositories [][]registry.Repository
-
-	for _, reg := range registry.Registries {
-
-		// Get the list of all repositories
-		repositories := registry.GetRepositories(reg.Name)
-
-		// For each repository get the tags
-		for index, repo := range repositories {
-			tags, _ := registry.GetTags(reg.Name, repo.Name)
-			repositories[index].TagCount = len(tags.Tags)
-			repositories[index].Registry = reg.Name
-		}
-		allRepositories = append(allRepositories, repositories)
-	}
-
-	c.Data["repositories"] = allRepositories
-
-	// Index template
-	c.TplName = "all_repositories.tpl"
 }

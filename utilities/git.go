@@ -28,7 +28,7 @@ type Ref struct {
 func GetRemoteBranchSHA(branch string) (string, error) {
 
 	// Get the branches current SHA
-	url := "https://api.github.com/repos/stefannaglee/docker-registry-manager/git/refs/heads/" + branch
+	url := "https://api.github.com/repos/snagles/docker-registry-manager/git/refs/heads/" + branch
 	res, err := http.Get(url)
 	if err != nil {
 		Log.Error(err)

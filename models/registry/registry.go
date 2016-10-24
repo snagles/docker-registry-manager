@@ -1,44 +1,55 @@
 package registry
 
 import (
-	"errors"
 	"net"
-	"net/http"
 	"net/url"
+	"time"
 
-	"github.com/Sirupsen/logrus"
-	_ "github.com/go-sql-driver/mysql" // need to initialize mysql before making a connection
-	"github.com/stefannaglee/docker-registry-manager/utilities"
+	"github.com/snagles/docker-registry-manager/models/client"
+	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 // Registries contains a map of all active registries identified by their name
 var Registries map[string]*Registry
 
 func init() {
-	// Create the active registries map
 	Registries = make(map[string]*Registry, 0)
 }
 
-func GetRegistryByName(registryName string) (*Registry, error) {
-	r, exists := Registries[registryName]
-	if !exists {
-		return nil, errors.New("Registry has not been added")
+func AddRegistry(uri string) error {
+	r, err := ParseRegistry(uri)
+	if err != nil {
+		return err
 	}
 
-	return r, nil
+	repos, err := client.GetRepositories(uri)
+	if err != nil {
+		return err
+	}
+
+	for _, repoName := range repos {
+		repo := Repository{
+			Name: repoName,
+		}
+		r.Repositories = append(r.Repositories, repo)
+
+	}
+
+	Registries[r.Name] = &r
+
+	return nil
 }
 
 // Registry contains all identifying information for communicating with a registry
 type Registry struct {
-	Name    string
-	IP      string
-	Scheme  string
-	Port    string
-	Version string
-
-	Status           string
-	RepoCount        int
+	Name             string
+	IP               string
+	Scheme           string
+	Port             string
+	Version          string
+	Repositories     []Repository
 	TagCount         int
+	Status           string
 	RepoTotalSize    int64
 	RepoTotalSizeStr string
 }
@@ -48,68 +59,35 @@ func (r *Registry) URI() string {
 	return r.Scheme + "://" + r.Name + ":" + r.Port + "/v2"
 }
 
-// UpdateRegistryStatus takes in a registry URL and checks for communication errors
-//
-// Create and execute basic GET request to test if each registry can be reached
-// To determine registry status we test the base registry route of /v2/ and check
-// the HTTP response code for a 200 response (200 is a successful request)
-func (r *Registry) UpdateRegistryStatus() error {
-
-	// Parse the registry string into our Registry type
-	utils.Log.WithFields(logrus.Fields{
-		"Registry URI": r.URI(),
-	}).Info("Connecting to registry...")
-
-	// Create and execute a plain get request and check the http status code
-	response, err := http.Get(r.URI())
-	if err != nil {
-		// Notify of error
-		utils.Log.WithFields(logrus.Fields{
-			"Registry URLs": r,
-			"Error":         err,
-			"HTTP Response": response,
-			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
-		}).Error("Get request to registry timed out/failed! Is the URL correct, and is the registry active?")
-		r.Status = "unavailable"
-
-		return err
-	} else if response.StatusCode != 200 {
-		// Notify of error
-		utils.Log.WithFields(logrus.Fields{
-			"Registry URLs": r,
-			"HTTP Response": response.StatusCode,
-			"Possible Fix":  "Check to see if your registry is up, and serving on the correct port with 'docker ps'.",
-		}).Error("Get request to registry failed! Is the URL correct, and is the registry active?")
-		r.Status = "unavailable"
-	}
-
-	// Notify of success
-	utils.Log.WithFields(logrus.Fields{
-		"Registry Information": r,
-		"Registry URI":         r.URI(),
-	}).Info("Successfully connected to registry and added to list of active registries!")
-
-	r.Status = "available"
-
-	return err
+type Repository struct {
+	Name string
+	Tags []Tag
 }
 
-// AddRegistry adds the registry to the map of active registries
-func (r *Registry) AddRegistry() {
-	Registries[r.Name] = r
+type Tag struct {
+	Image client.Image
+
+	ID              string
+	Name            string
+	UpdatedTime     time.Time
+	UpdatedTimeUnix int64
+	TimeAgo         string
+	Layers          int
+	Size            string
+	SizeInt         int64
 }
 
 // ParseRegistry takes in a registry URI string and converts it into a registry object
-func ParseRegistry(registryURI string) (Registry, error) {
+func ParseRegistry(registry string) (Registry, error) {
 
-	// Create an empty Registry
+	// only supports v2 currently
 	r := Registry{
 		Version: "v2",
 	}
 
 	// Parse the URL and get the scheme
 	// e.g https, http, etc.
-	u, err := url.Parse(registryURI)
+	u, err := url.Parse(registry)
 	if err != nil {
 		utils.Log.Error(err)
 		return r, err
@@ -131,17 +109,14 @@ func ParseRegistry(registryURI string) (Registry, error) {
 	r.Port = port
 
 	// Lookup the ip for the passed host
-	// Using the host name try looking up the IP for informational purposes
 	ip, err := net.LookupHost(host)
 	if err != nil {
 		utils.Log.Error(err)
-		// We do not need to return an error since we don't "need" the IP of the host
+		return r, err
 	}
-	// Set IP if we have it
-	if ip != nil {
+	if len(ip) > 0 {
 		r.IP = ip[0]
 	}
 
-	// Return the newly created registry type
 	return r, err
 }

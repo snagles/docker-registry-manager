@@ -24,7 +24,7 @@
                   <div class="box-body">
                     <div class="info">
                       <div class="info-container">
-                        <h3 class="info-metric">{{$registry.RepoCount}}</h3>
+                        <h3 class="info-metric">{{len $registry.Repositories}}</h3>
                         <small>Repositories</small>
                       </div>
                     </div>
