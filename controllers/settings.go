@@ -5,7 +5,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/toolbox"
-	"github.com/stefannaglee/docker-registry-manager/utilities"
+	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 type SettingsController struct {

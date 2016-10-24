@@ -39,12 +39,10 @@
              </tfoot>
              <tbody>
                {{range $key, $tag := .tags}}
-              <tr data-tag-name="{{$tag.Name}}">
+              <tr data-tag-name="{{$tag}}">
                 <td></td>
-                <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$tag.Name}}/images>{{$tag.Name}}</span></td>
-                <td data-order="{{$tag.UpdatedTimeUnix}}">{{$tag.TimeAgo}}</td>
-                <td>{{$tag.Size}}</td>
-                <td>{{$tag.Layers}}</td>
+                <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$tag}}/images>{{$tag}}</span></td>
+                <td data-order=""></td>
               </tr>
               {{end}}
             </tbody>

@@ -3,14 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
-	"github.com/stefannaglee/docker-registry-manager/models/registry"
-	_ "github.com/stefannaglee/docker-registry-manager/routers"
-	"github.com/stefannaglee/docker-registry-manager/utilities"
+	_ "github.com/snagles/docker-registry-manager/routers"
+	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 // DuplicateFlags slice contains a list of registries to use.
@@ -57,37 +55,6 @@ func init() {
 }
 
 func main() {
-
-	// Loop through the slice of passed registries and test their status
-	for _, regString := range registryFlags {
-
-		// Build the registry object
-		r, err := registry.ParseRegistry(regString)
-		if err != nil {
-			// Notify of failure to parse
-			utils.Log.WithFields(logrus.Fields{
-				"Error": err,
-			}).Fatal("We are unable to determine the URI for the registry!")
-
-			// Exit the program
-			os.Exit(1)
-		}
-
-		// Check to see if the registry is available
-		err = r.UpdateRegistryStatus()
-		if err != nil && r.Status != "available" {
-			// Notify of success
-			utils.Log.WithFields(logrus.Fields{
-				"Error": err,
-			}).Fatal("We are unable to connection to the registry!")
-
-			// Exit the program
-			os.Exit(1)
-		}
-
-		// Add the registry to the map of active registries
-		r.AddRegistry()
-	}
 
 	beego.Run()
 
