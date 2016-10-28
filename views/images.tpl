@@ -20,13 +20,13 @@
           <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
           <li role="presentation"><a href="#stages" aria-controls="stages" role="tab" data-toggle="tab">Dockerfile</a></li>
           <li role="presentation"><a href="#layers" aria-controls="layers" role="tab" data-toggle="tab">Layers</a></li>
-          <li role="presentation"><a href="#private-registry" aria-controls="private-registry" role="tab" data-toggle="tab">Private Registry</a></li>
-          <li role="presentation"><a href="#dockerhub" aria-controls="dockerhub" role="tab" data-toggle="tab">Dockerhub</a></li>
+          <li role="presentation"><a href="#deploy" aria-controls="deploy" role="tab" data-toggle="tab">Deploy</a></li>
+          <li role="presentation"><a href="#config" aria-controls="config" role="tab" data-toggle="tab">Config</a></li>
         </ul>
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="overview">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="col-md-12">
                   <h4>Image</h4>
                   <ul>
@@ -34,10 +34,12 @@
                     <li>Architecture: {{.arch}}</li>
                     <li>Layers: {{.tagInfo.Layers}}</li>
                     <li>Size: {{.tagInfo.Size}}</li>
+                    <li>Language: </li>
+                    <li>Last Updated: {{.tagInfo.TimeAgo}}</li>
                   </ul>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="col-md-12">
                   <h4>Registry Host</h4>
                   <ul>
@@ -45,16 +47,6 @@
                     <li>IP: {{.registry.IP}}</li>
                     <li>Port: {{.registry.Port}}</li>
                     <li>Version: {{.registry.Version}}</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="col-md-12">
-                  <h4>Metadata</h4>
-                  <ul>
-                    <li>Language: </li>
-                    <li>Last Updated: {{.tagInfo.TimeAgo}}</li>
-
                   </ul>
                 </div>
               </div>
@@ -102,7 +94,7 @@
               </tbody>
             </table>
           </div>
-          <div role="tabpanel" class="tab-pane" id="private-registry">
+          <div role="tabpanel" class="tab-pane" id="deploy">
             <div>Push to {{.tagInfo.Name}}:</div>
             <ol>
               <li><code>cd $PROJECTNAME</code></li>
@@ -114,23 +106,8 @@
             <div>Push to another private registry {{.tagInfo.Name}}:</div>
             <a href="{{$.registry.Scheme}}://{{$.registry.Name}}:{{$.registry.Port}}/{{$.registry.Version}}/{{$.repositoryName}}/{{$.tagInfo.Name}}" download><i class="fa fa-download"></i></a>
           </div>
-          <div role="tabpanel" class="tab-pane" id="dockerhub">
-            <h3>Push to Dockerhub</h3>
-            <form>
-              <div class="form-group">
-                <label for="account-name">Docker Account Name</label>
-                <input type="account-name" class="form-control" id="account-name" placeholder="Docker Account Name">
-              </div>
-              <div class="form-group">
-                <label for="username">Username</label>
-                <input type="password" class="form-control" id="username" placeholder="Username">
-              </div>
-              <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password">
-              </div>
-              <button type="push" data-toggle="modal" data-target="#dockerhub-modal" class="btn btn-default">Push</button>
-            </form>
+          <div role="tabpanel" class="tab-pane" id="config">
+            <h3>Config</h3>
           </div>
         </div>
       </div>
