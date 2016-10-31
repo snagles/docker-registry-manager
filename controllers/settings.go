@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/toolbox"
 	"github.com/snagles/docker-registry-manager/utilities"
@@ -106,8 +104,6 @@ func (c *SettingsController) GetLiveStatistics() {
 			utils.Log.Error(err)
 		}
 	}
-
-	fmt.Println(rs)
 
 	c.Data["json"] = &rs
 	c.ServeJSON()

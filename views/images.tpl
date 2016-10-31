@@ -19,9 +19,9 @@
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
           <li role="presentation"><a href="#stages" aria-controls="stages" role="tab" data-toggle="tab">Dockerfile</a></li>
+          <li role="presentation"><a href="#config" aria-controls="config" role="tab" data-toggle="tab">Config</a></li>
           <li role="presentation"><a href="#layers" aria-controls="layers" role="tab" data-toggle="tab">Layers</a></li>
           <li role="presentation"><a href="#deploy" aria-controls="deploy" role="tab" data-toggle="tab">Deploy</a></li>
-          <li role="presentation"><a href="#config" aria-controls="config" role="tab" data-toggle="tab">Config</a></li>
         </ul>
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="overview">
@@ -74,6 +74,10 @@
               </tbody>
             </table>
           </div>
+          <div role="tabpanel" class="tab-pane" id="config">
+            <h3>Config</h3>
+            {{.config}}
+          </div>
           <div role="tabpanel" class="tab-pane" id="layers">
             <table class="table">
               <thead>
@@ -106,9 +110,7 @@
             <div>Push to another private registry {{.tagInfo.Name}}:</div>
             <a href="{{$.registry.Scheme}}://{{$.registry.Name}}:{{$.registry.Port}}/{{$.registry.Version}}/{{$.repositoryName}}/{{$.tagInfo.Name}}" download><i class="fa fa-download"></i></a>
           </div>
-          <div role="tabpanel" class="tab-pane" id="config">
-            <h3>Config</h3>
-          </div>
+
         </div>
       </div>
     </div>
