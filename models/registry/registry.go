@@ -33,6 +33,11 @@ func AddRegistry(uri string) error {
 		}
 		r.Repositories = append(r.Repositories, repo)
 
+		tags, err := client.GetTags(uri, repoName)
+		if err == nil {
+			r.TagCount = len(tags)
+		}
+
 	}
 
 	Registries[r.Name] = &r
