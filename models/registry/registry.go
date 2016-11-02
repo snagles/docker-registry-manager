@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/pivotal-golang/bytefmt"
 	"github.com/snagles/docker-registry-manager/models/client"
 	"github.com/snagles/docker-registry-manager/utilities"
 )
@@ -27,18 +28,30 @@ func AddRegistry(uri string) error {
 		return err
 	}
 
+	// Use a layer map to de-duplicate shared layers
+	layerMap := make(map[string]int64, 0)
+
+	// Get the tags and image information
 	for _, repoName := range repos {
-		repo := Repository{
-			Name: repoName,
-		}
-		r.Repositories = append(r.Repositories, repo)
+		r.Repositories = append(r.Repositories, Repository{Name: repoName})
 
-		tags, err := client.GetTags(uri, repoName)
+		tagList, err := client.GetTags(uri, repoName)
 		if err == nil {
-			r.TagCount = len(tags)
+			r.TagCount = len(tagList)
+			for _, tagName := range tagList {
+				img, _ := client.GetImage(uri, repoName, tagName)
+				for _, layer := range img.FsLayers {
+					layerMap[layer.BlobSum] = layer.Size
+				}
+			}
 		}
-
 	}
+
+	// Total the size of the layers
+	for _, size := range layerMap {
+		r.RepoTotalSize += size
+	}
+	r.RepoTotalSizeStr = bytefmt.ByteSize(uint64(r.RepoTotalSize))
 
 	Registries[r.Name] = &r
 
