@@ -23,37 +23,7 @@ func AddRegistry(uri string) error {
 		return err
 	}
 
-	repos, err := client.GetRepositories(uri)
-	if err != nil {
-		return err
-	}
-
-	// Use a layer map to de-duplicate shared layers
-	layerMap := make(map[string]int64, 0)
-
-	// Get the tags and image information
-	for _, repoName := range repos {
-		r.Repositories = append(r.Repositories, Repository{Name: repoName})
-
-		tagList, err := client.GetTags(uri, repoName)
-		if err == nil {
-			r.TagCount = len(tagList)
-			for _, tagName := range tagList {
-				img, _ := client.GetImage(uri, repoName, tagName)
-				for _, layer := range img.FsLayers {
-					layerMap[layer.BlobSum] = layer.Size
-				}
-			}
-		}
-	}
-
-	// Total the size of the layers
-	for _, size := range layerMap {
-		r.RepoTotalSize += size
-	}
-	r.RepoTotalSizeStr = bytefmt.ByteSize(uint64(r.RepoTotalSize))
-
-	Registries[r.Name] = &r
+	r.Refresh()
 
 	return nil
 }
@@ -75,6 +45,44 @@ type Registry struct {
 // URI returns the full url path for communicating with this registry
 func (r *Registry) URI() string {
 	return r.Scheme + "://" + r.Name + ":" + r.Port + "/v2"
+}
+
+func (r *Registry) Refresh() {
+
+	// Get the lsit of repositories on this registry
+	repoList, _ := client.GetRepositories(r.URI())
+
+	// Use a layer map to de-duplicate shared layers across the registry
+	registryLayerMap := make(map[string]int64, 0)
+
+	// Get the repository information
+	for _, repoName := range repoList {
+
+		// Build a repository object
+		repo := Repository{Name: repoName}
+
+		tagList, _ := client.GetTags(r.URI(), repoName)
+		for _, tagName := range tagList {
+			tag := Tag{Name: tagName}
+			tag.Image, _ = client.GetImage(r.URI(), repoName, tagName)
+			for _, layer := range tag.Image.FsLayers {
+				registryLayerMap[layer.BlobSum] = layer.Size
+			}
+
+			// Add the tag to the repository
+			repo.Tags = append(repo.Tags, tag)
+		}
+		r.Repositories = append(r.Repositories, repo)
+		r.TagCount += len(tagList)
+	}
+
+	// Total the size of the layers
+	for _, size := range registryLayerMap {
+		r.RepoTotalSize += size
+	}
+	r.RepoTotalSizeStr = bytefmt.ByteSize(uint64(r.RepoTotalSize))
+
+	Registries[r.Name] = r
 }
 
 type Repository struct {
