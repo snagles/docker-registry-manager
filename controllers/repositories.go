@@ -16,10 +16,8 @@ func (c *RepositoriesController) GetRepositories() {
 
 	if r, ok := registry.Registries[registryName]; ok {
 
-		repositories := r.Repositories
-
 		c.Data["registryName"] = registryName
-		c.Data["repositories"] = repositories
+		c.Data["repositories"] = r.Repositories
 		// Index template
 		c.TplName = "repositories.tpl"
 
