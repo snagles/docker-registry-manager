@@ -90,6 +90,22 @@ type Repository struct {
 	Tags []Tag
 }
 
+func (r *Repository) LastModified() time.Time {
+	var lastModified time.Time
+	for _, tag := range r.Tags {
+		for _, history := range tag.Image.History {
+			if history.V1Compatibility.Created.After(lastModified) {
+				lastModified = history.V1Compatibility.Created
+			}
+		}
+	}
+	return lastModified
+}
+func (r *Repository) LastModifiedTimeAgo() string {
+	lastModified := r.LastModified()
+	return utils.TimeAgo(lastModified)
+}
+
 type Tag struct {
 	Image client.Image
 

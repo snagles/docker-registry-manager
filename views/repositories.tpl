@@ -31,7 +31,7 @@
             <tr>
               <td><a href="/registries/{{$.registryName}}/repositories/{{urlquery $repository.Name}}/tags">{{$repository.Name}}</span></td>
               <td>{{len $repository.Tags}}</td>
-              <td></td>
+              <td>{{$repository.LastModifiedTimeAgo}}</td>
             </tr>
             {{end}}
           </tbody>
