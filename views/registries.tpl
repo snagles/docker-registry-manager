@@ -40,7 +40,7 @@
                     </div>
                     <div class="info">
                       <div class="info-container">
-                        <h3 class="info-metric">{{$registry.RepoTotalSizeStr}}</h3>
+                        <h3 class="info-metric">{{$registry.DiskSize}}</h3>
                         <small>Total Size</small>
                       </div>
                     </div>
