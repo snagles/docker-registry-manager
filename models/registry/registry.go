@@ -30,16 +30,14 @@ func AddRegistry(uri string) error {
 
 // Registry contains all identifying information for communicating with a registry
 type Registry struct {
-	Name             string
-	IP               string
-	Scheme           string
-	Port             string
-	Version          string
-	Repositories     []Repository
-	TagCount         int
-	Status           string
-	RepoTotalSize    int64
-	RepoTotalSizeStr string
+	Name         string
+	IP           string
+	Scheme       string
+	Port         string
+	Version      string
+	Repositories []Repository
+	TagCount     int
+	Status       string
 }
 
 // URI returns the full url path for communicating with this registry
@@ -47,13 +45,27 @@ func (r *Registry) URI() string {
 	return r.Scheme + "://" + r.Name + ":" + r.Port + "/v2"
 }
 
+func (r *Registry) DiskSize() string {
+	registryLayerMap := make(map[string]bool, 0)
+	var size int64
+
+	for _, repo := range r.Repositories {
+		for _, tag := range repo.Tags {
+			for _, layer := range tag.Image.FsLayers {
+				if _, ok := registryLayerMap[layer.BlobSum]; !ok {
+					registryLayerMap[layer.BlobSum] = true
+					size += layer.Size
+				}
+			}
+		}
+	}
+	return bytefmt.ByteSize(uint64(size))
+}
+
 func (r *Registry) Refresh() {
 
 	// Get the lsit of repositories on this registry
 	repoList, _ := client.GetRepositories(r.URI())
-
-	// Use a layer map to de-duplicate shared layers across the registry
-	registryLayerMap := make(map[string]int64, 0)
 
 	// Get the repository information
 	for _, repoName := range repoList {
@@ -65,9 +77,6 @@ func (r *Registry) Refresh() {
 		for _, tagName := range tagList {
 			tag := Tag{Name: tagName}
 			tag.Image, _ = client.GetImage(r.URI(), repoName, tagName)
-			for _, layer := range tag.Image.FsLayers {
-				registryLayerMap[layer.BlobSum] = layer.Size
-			}
 
 			// Add the tag to the repository
 			repo.Tags = append(repo.Tags, tag)
@@ -76,12 +85,6 @@ func (r *Registry) Refresh() {
 		r.TagCount += len(tagList)
 	}
 
-	// Total the size of the layers
-	for _, size := range registryLayerMap {
-		r.RepoTotalSize += size
-	}
-	r.RepoTotalSizeStr = bytefmt.ByteSize(uint64(r.RepoTotalSize))
-
 	Registries[r.Name] = r
 }
 
@@ -89,6 +92,8 @@ type Repository struct {
 	Name string
 	Tags []Tag
 }
+
+// Add other "calculation" fields as methods
 
 func (r *Repository) LastModified() time.Time {
 	var lastModified time.Time
@@ -101,6 +106,7 @@ func (r *Repository) LastModified() time.Time {
 	}
 	return lastModified
 }
+
 func (r *Repository) LastModifiedTimeAgo() string {
 	lastModified := r.LastModified()
 	return utils.TimeAgo(lastModified)
