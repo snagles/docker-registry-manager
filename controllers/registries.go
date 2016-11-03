@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/registry"
+	"github.com/snagles/docker-registry-manager/models/manager"
 )
 
 // RegistriesController extends the beego.Controller type
