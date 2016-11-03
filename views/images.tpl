@@ -10,43 +10,29 @@
         <li><a href="/registries/{{.registryName}}/repositories">Repositories</a></li>
         <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags">{{.repositoryName}}</a></li>
         <li><a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags">Tags</a></li>
-        <li><a href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags/{{.tagInfo.Name}}">{{.tagInfo.Name}}</a></li>
-        <li class="active">Images</li>
+        <li class="active">{{.tagName}}</li>
       </ol>
     </div>
     <div class="content-block white-bg">
       <div class="row">
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
-          <li role="presentation"><a href="#stages" aria-controls="stages" role="tab" data-toggle="tab">Dockerfile</a></li>
-          <li role="presentation"><a href="#config" aria-controls="config" role="tab" data-toggle="tab">Config</a></li>
+          <li role="presentation"><a href="#stages" aria-controls="stages" role="tab" data-toggle="tab">Stages</a></li>
           <li role="presentation"><a href="#layers" aria-controls="layers" role="tab" data-toggle="tab">Layers</a></li>
           <li role="presentation"><a href="#deploy" aria-controls="deploy" role="tab" data-toggle="tab">Deploy</a></li>
         </ul>
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="overview">
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <div class="col-md-12">
-                  <h4>Image</h4>
+                  <h4>Image Overview</h4>
                   <ul>
                     <li>Operating System: {{.os}}</li>
-                    <li>Architecture: {{.arch}}</li>
-                    <li>Layers: {{.tagInfo.Layers}}</li>
-                    <li>Size: {{.tagInfo.Size}}</li>
+                    <li>Layers: {{len .image.FsLayers}}</li>
+                    <li>Size: {{.image.Size}}</li>
                     <li>Language: </li>
                     <li>Last Updated: {{.tagInfo.TimeAgo}}</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="col-md-12">
-                  <h4>Registry Host</h4>
-                  <ul>
-                    <li>Name: {{.registry.Name}}</li>
-                    <li>IP: {{.registry.IP}}</li>
-                    <li>Port: {{.registry.Port}}</li>
-                    <li>Version: {{.registry.Version}}</li>
                   </ul>
                 </div>
               </div>
@@ -73,10 +59,6 @@
                 {{end}}
               </tbody>
             </table>
-          </div>
-          <div role="tabpanel" class="tab-pane" id="config">
-            <h3>Config</h3>
-            {{.config}}
           </div>
           <div role="tabpanel" class="tab-pane" id="layers">
             <table class="table">
@@ -105,12 +87,7 @@
               <li><code>docker build --rm -t {{.registry.Name}}:{{.registry.Port}}/{{.repositoryName}}:{{.tagInfo.Name}} .</code></li>
               <li><code>docker push {{.registry.Name}}:{{.registry.Port}}/{{.repositoryName}} .</code></li>
             </ol>
-
-            <div>Download {{.tagInfo.Name}}:</div>
-            <div>Push to another private registry {{.tagInfo.Name}}:</div>
-            <a href="{{$.registry.Scheme}}://{{$.registry.Name}}:{{$.registry.Port}}/{{$.registry.Version}}/{{$.repositoryName}}/{{$.tagInfo.Name}}" download><i class="fa fa-download"></i></a>
           </div>
-
         </div>
       </div>
     </div>
