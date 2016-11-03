@@ -85,7 +85,8 @@ func (r *Registry) Refresh() {
 		repo.Tags = make(map[string]*Tag, 0)
 		for _, tagName := range tagList {
 			tag := Tag{Name: tagName}
-			tag.Image, _ = client.GetImage(r.URI(), repoName, tagName)
+			img, _ := client.GetImage(r.URI(), repoName, tagName)
+			tag.Image = Image{img}
 
 			// Add the tag to the repository
 			repo.Tags[tagName] = &tag
@@ -118,7 +119,7 @@ func (r *Repository) LastModifiedTimeAgo() string {
 }
 
 type Tag struct {
-	Image client.Image
+	Image
 
 	ID   string
 	Name string
@@ -149,6 +150,37 @@ func (t *Tag) Size() string {
 
 func (t *Tag) LayerCount() int {
 	return len(t.Image.FsLayers)
+}
+
+type Image struct {
+	client.Image
+}
+
+func (i *Image) LastModified() time.Time {
+	var lastModified time.Time
+	for _, history := range i.History {
+		if history.V1Compatibility.Created.After(lastModified) {
+			lastModified = history.V1Compatibility.Created
+		}
+	}
+	return lastModified
+}
+
+func (i *Image) LastModifiedTimeAgo() string {
+	lastModified := i.LastModified()
+	return utils.TimeAgo(lastModified)
+}
+
+func (i *Image) Size() string {
+	var size int64
+	for _, layer := range i.FsLayers {
+		size += layer.Size
+	}
+	return bytefmt.ByteSize(uint64(size))
+}
+
+func (i *Image) LayerCount() int {
+	return len(i.FsLayers)
 }
 
 // ParseRegistry takes in a registry URI string and converts it into a registry object

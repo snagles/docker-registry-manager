@@ -4,7 +4,6 @@ import (
 	"net/url"
 
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/client"
 	"github.com/snagles/docker-registry-manager/models/registry"
 )
 
@@ -17,25 +16,18 @@ func (c *ImagesController) GetImages() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
 	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
-
+	repositoryNameEncode := url.QueryEscape(repositoryName)
 	c.Data["tagName"] = c.Ctx.Input.Param(":tagName")
 
-	repositoryNameEncode := url.QueryEscape(repositoryName)
-
-	registry := registry.Registries[registryName]
-	img, _ := client.GetImage(registry.URI(), repositoryName, c.Ctx.Input.Param(":tagName"))
-
+	registry, _ := registry.Registries[registryName]
 	c.Data["registry"] = registry
 
-	c.Data["image"] = img
-	c.Data["containsV1Size"] = img.ContainsV1Size
-	c.Data["os"] = img.History[0].V1Compatibility.Os
-	c.Data["arch"] = img.History[0].V1Compatibility.Architecture
-	c.Data["history"] = img.History
+	image, _ := registry.Repositories[repositoryName].Tags[c.Ctx.Input.Param(":tagName")]
+	c.Data["image"] = image
+
 	c.Data["registryName"] = registryName
-	c.Data["repositoryName"] = repositoryName
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
-	c.Data["layers"] = img.FsLayers
+	c.Data["repositoryName"] = repositoryName
 
 	// Index template
 	c.TplName = "images.tpl"
