@@ -4,7 +4,6 @@ import (
 	"net/url"
 
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/client"
 	"github.com/snagles/docker-registry-manager/models/registry"
 )
 
@@ -20,7 +19,8 @@ func (c *TagsController) GetTags() {
 	repositoryNameEncode := url.QueryEscape(repositoryName)
 
 	registry, _ := registry.Registries[registryName]
-	tags, _ := client.GetTags(registry.URI(), repositoryName)
+	repository, _ := registry.Repositories[repositoryName]
+	tags := repository.Tags
 
 	c.Data["tags"] = tags
 	c.Data["registryName"] = registryName

@@ -23,26 +23,28 @@
                 <tr>
                   <th><input name="select_all" value="1" type="checkbox"></th>
                   <th>Tags:</th>
-                  <th>Updated:</th>
                   <th>Size:</th>
                   <th>Layers:</th>
+                  <th>Updated:</th>
                 </tr>
              </thead>
              <tfoot>
                 <tr>
                   <th></th>
                   <th>Tags:</th>
-                  <th>Updated:</th>
                   <th>Size:</th>
                   <th>Layers:</th>
+                  <th>Updated:</th>
                 </tr>
              </tfoot>
              <tbody>
                {{range $key, $tag := .tags}}
-              <tr data-tag-name="{{$tag}}">
+              <tr data-tag-name="{{$key}}">
                 <td></td>
-                <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$tag}}/images>{{$tag}}</span></td>
-                <td data-order=""></td>
+                <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$key}}/images>{{$key}}</span></td>
+                <td>{{$tag.Size}}</td>
+                <td>{{$tag.LayerCount}}</td>
+                <td data-order="">{{$tag.LastModifiedTimeAgo}}</td>
               </tr>
               {{end}}
             </tbody>

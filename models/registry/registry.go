@@ -120,14 +120,35 @@ func (r *Repository) LastModifiedTimeAgo() string {
 type Tag struct {
 	Image client.Image
 
-	ID              string
-	Name            string
-	UpdatedTime     time.Time
-	UpdatedTimeUnix int64
-	TimeAgo         string
-	Layers          int
-	Size            string
-	SizeInt         int64
+	ID   string
+	Name string
+}
+
+func (t *Tag) LastModified() time.Time {
+	var lastModified time.Time
+	for _, history := range t.Image.History {
+		if history.V1Compatibility.Created.After(lastModified) {
+			lastModified = history.V1Compatibility.Created
+		}
+	}
+	return lastModified
+}
+
+func (t *Tag) LastModifiedTimeAgo() string {
+	lastModified := t.LastModified()
+	return utils.TimeAgo(lastModified)
+}
+
+func (t *Tag) Size() string {
+	var size int64
+	for _, layer := range t.Image.FsLayers {
+		size += layer.Size
+	}
+	return bytefmt.ByteSize(uint64(size))
+}
+
+func (t *Tag) LayerCount() int {
+	return len(t.Image.FsLayers)
 }
 
 // ParseRegistry takes in a registry URI string and converts it into a registry object
