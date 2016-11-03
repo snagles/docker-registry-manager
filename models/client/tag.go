@@ -40,7 +40,10 @@ func DeleteTag(uri string, repository string, tag string) (bool, error) {
 
 	// Check if the tag exists. If it does not we cannot get the digest from it
 	client := &http.Client{}
-	req, _ := http.NewRequest("HEAD", uri+"/"+repository+"/manifests/"+tag, nil)
+	req, err := http.NewRequest("HEAD", uri+"/"+repository+"/manifests/"+tag, nil)
+	if err != nil {
+		utils.Log.Debug(err)
+	}
 
 	// Note When deleting a manifest from a registry version 2.3 or later, the following header must be used when HEAD or GET-ing the manifest to obtain the correct digest to delete:
 	// Accept: application/vnd.docker.distribution.manifest.v2+json
@@ -50,7 +53,6 @@ func DeleteTag(uri string, repository string, tag string) (bool, error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
-			"Request":  resp.Request,
 			"Error":    err,
 			"Tag":      tag,
 			"Response": resp,

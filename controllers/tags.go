@@ -4,6 +4,7 @@ import (
 	"net/url"
 
 	"github.com/astaxie/beego"
+	"github.com/snagles/docker-registry-manager/models/client"
 	"github.com/snagles/docker-registry-manager/models/manager"
 )
 
@@ -29,4 +30,19 @@ func (c *TagsController) GetTags() {
 
 	// Index template
 	c.TplName = "tags.tpl"
+}
+
+func (c *TagsController) DeleteTags() {
+	registryName := c.Ctx.Input.Param(":registryName")
+	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
+	tag := c.Ctx.Input.Param(":tagName")
+
+	registry, _ := registry.Registries[registryName]
+	success, err := client.DeleteTag(registry.URI(), repositoryName, tag)
+	if !success || err != nil {
+		c.CustomAbort(200, "Failure")
+	}
+
+	c.CustomAbort(200, "Success")
+
 }
