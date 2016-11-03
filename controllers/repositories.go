@@ -15,12 +15,9 @@ func (c *RepositoriesController) GetRepositories() {
 	registryName := c.Ctx.Input.Param(":registryName")
 
 	if r, ok := registry.Registries[registryName]; ok {
-
 		c.Data["registryName"] = registryName
 		c.Data["repositories"] = r.Repositories
 		// Index template
 		c.TplName = "repositories.tpl"
-
 	}
-
 }
