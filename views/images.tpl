@@ -28,11 +28,9 @@
                 <div class="col-md-12">
                   <h4>Image Overview</h4>
                   <ul>
-                    <li>Operating System: {{.os}}</li>
-                    <li>Layers: {{len .image.FsLayers}}</li>
+                    <li>Layers: {{.image.LayerCount}}</li>
                     <li>Size: {{.image.Size}}</li>
-                    <li>Language: </li>
-                    <li>Last Updated: {{.tagInfo.TimeAgo}}</li>
+                    <li>Last Updated: {{.image.LastModifiedTimeAgo}}</li>
                   </ul>
                 </div>
               </div>
@@ -48,7 +46,7 @@
                 {{end}}
               </thead>
               <tbody>
-                {{range $key, $img := .history}}
+                {{range $key, $img := .image.History}}
                 <tr>
                   <td>{{$img.V1Compatibility.IDShort}}</td>
                   <td>{{$img.V1Compatibility.ContainerConfig.CmdClean}}</td>
@@ -63,15 +61,13 @@
           <div role="tabpanel" class="tab-pane" id="layers">
             <table class="table">
               <thead>
-                <th>ID:</th>
                 <th>Digest:</th>
                 <th>Size:</th>
                 <th>Blob:</th>
               </thead>
               <tbody>
-                {{range $index, $layer := .layers}}
+                {{range $index, $layer := .image.FsLayers}}
                 <tr>
-                  <td>{{$index}}</td>
                   <td>{{$layer.BlobSum}}</td>
                   <td>{{$layer.SizeStr}}</td>
                   <td><a href="{{$.registry.Scheme}}://{{$.registry.Name}}:{{$.registry.Port}}/{{$.registry.Version}}/{{$.repositoryName}}/blobs/{{$layer.BlobSum}}" download class="btn btn-sm btn-success"><span class="glyphicon glyphicon-download-alt"></span> Download</a></td>
