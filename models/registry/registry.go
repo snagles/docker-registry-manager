@@ -35,14 +35,21 @@ type Registry struct {
 	Scheme       string
 	Port         string
 	Version      string
-	Repositories []Repository
-	TagCount     int
+	Repositories map[string]*Repository
 	Status       string
 }
 
 // URI returns the full url path for communicating with this registry
 func (r *Registry) URI() string {
 	return r.Scheme + "://" + r.Name + ":" + r.Port + "/v2"
+}
+
+func (r *Registry) TagCount() int {
+	var count int
+	for _, repo := range r.Repositories {
+		count += len(repo.Tags)
+	}
+	return count
 }
 
 func (r *Registry) DiskSize() string {
@@ -68,32 +75,30 @@ func (r *Registry) Refresh() {
 	repoList, _ := client.GetRepositories(r.URI())
 
 	// Get the repository information
+	r.Repositories = make(map[string]*Repository, 0)
 	for _, repoName := range repoList {
 
 		// Build a repository object
 		repo := Repository{Name: repoName}
 
 		tagList, _ := client.GetTags(r.URI(), repoName)
+		repo.Tags = make(map[string]*Tag, 0)
 		for _, tagName := range tagList {
 			tag := Tag{Name: tagName}
 			tag.Image, _ = client.GetImage(r.URI(), repoName, tagName)
 
 			// Add the tag to the repository
-			repo.Tags = append(repo.Tags, tag)
+			repo.Tags[tagName] = &tag
 		}
-		r.Repositories = append(r.Repositories, repo)
-		r.TagCount += len(tagList)
+		r.Repositories[repoName] = &repo
 	}
-
 	Registries[r.Name] = r
 }
 
 type Repository struct {
 	Name string
-	Tags []Tag
+	Tags map[string]*Tag
 }
-
-// Add other "calculation" fields as methods
 
 func (r *Repository) LastModified() time.Time {
 	var lastModified time.Time
