@@ -23,6 +23,10 @@ func AddRegistry(uri string) error {
 		return err
 	}
 
+	err = client.HealthCheck(r.URI())
+	if err != nil {
+		return err
+	}
 	r.Refresh()
 
 	return nil

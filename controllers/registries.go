@@ -39,6 +39,9 @@ func (c *RegistriesController) AddRegistry() {
 	uri := scheme + "://" + host + ":" + port + "/v2"
 
 	// Registry contains all identifying information for communicating with a registry
-	registry.AddRegistry(uri)
+	err := registry.AddRegistry(uri)
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
 	c.Ctx.Redirect(302, "/registries")
 }
