@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
@@ -71,11 +72,14 @@ func DeleteTag(uri string, repository string, tag string) (bool, error) {
 			req.Header.Set("Accept", "application/vnd.docker.distribution.manifest.v2+json")
 			resp, err = client.Do(req)
 			if err != nil || resp.StatusCode != 200 {
+				body, readErr := ioutil.ReadAll(resp.Body)
 				utils.Log.WithFields(logrus.Fields{
-					"Error":    err,
-					"Tag":      tag,
-					"Response": resp,
+					"Connection Error": err,
+					"Error Response":   string(body),
+					"Tag":              tag,
+					"Read Error":       readErr,
 				}).Error("Could not delete tag!")
+
 				return false, err
 			}
 			return true, nil
@@ -83,9 +87,8 @@ func DeleteTag(uri string, repository string, tag string) (bool, error) {
 	}
 	// Error if there was nothing in the Docker-Content-Digest field
 	utils.Log.WithFields(logrus.Fields{
-		"Error":    errors.New("No digest gotten from response header"),
-		"Tag":      tag,
-		"Response": resp,
+		"Error": errors.New("No digest gotten from response header"),
+		"Tag":   tag,
 	}).Error("Could not delete tag!")
 	return false, errors.New("No digest gotten from response header")
 
