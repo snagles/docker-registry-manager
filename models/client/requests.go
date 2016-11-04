@@ -11,13 +11,9 @@ import (
 // Helper function for get requests
 func get(uri string) ([]byte, error) {
 	response, err := http.Get(uri)
-	if err != nil || response.StatusCode != 200 {
-		logrus.Error(err)
-		logrus.Error(response.StatusCode)
+	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
 			"Registry URL": uri,
-			"Status Code":  response.StatusCode,
-			"Response":     response,
 			"Error":        err,
 			"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
 		}).Error("Get request to registry failed for the endpoint! Is your registry active?")
@@ -25,7 +21,7 @@ func get(uri string) ([]byte, error) {
 	}
 
 	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
+	if err != nil || response.StatusCode != 200 {
 		utils.Log.WithFields(logrus.Fields{
 			"Error": err,
 			"Body":  body,

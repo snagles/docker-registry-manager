@@ -22,7 +22,7 @@
             </fieldset>
             <div class="modal-footer">
               <button style="float:left;" type="button" id="test" class="btn btn-warning">Test</button>
-              <input type="submit" class="btn btn-success">
+              <input type="submit" class="btn btn-success" id="add-registry" value="Submit">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
         </form>
