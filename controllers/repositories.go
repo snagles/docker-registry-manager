@@ -44,3 +44,20 @@ func (c *RepositoriesController) GetAllRepositoryCount() {
 	c.Data["json"] = &repositoryCount
 	c.ServeJSON()
 }
+
+// GetAllRepositories returns the template for the all registries page
+func (c *RepositoriesController) GetAllRepositories() {
+
+	repos := make(map[string][]*registry.Repository)
+
+	for registryName, registry := range registry.Registries {
+		for _, repository := range registry.Repositories {
+			repos[registryName] = append(repos[registryName], repository)
+		}
+	}
+
+	c.Data["repositories"] = repos
+
+	// Index template
+	c.TplName = "all_repositories.tpl"
+}
