@@ -14,6 +14,7 @@ func init() {
 	beego.Router("/registries/", &controllers.RegistriesController{})
 	beego.Router("/registries/all/count", &controllers.RegistriesController{}, "get:GetRegistryCount")
 	beego.Router("/registries/add", &controllers.RegistriesController{}, "post:AddRegistry")
+	beego.Router("/registries/test", &controllers.RegistriesController{}, "post:TestRegistryStatus")
 
 	// Routers for repositories
 	beego.Router("/registries/:registryName/repositories/", &controllers.RepositoriesController{}, "get:GetRepositories")

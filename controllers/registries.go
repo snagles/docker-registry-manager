@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/snagles/docker-registry-manager/models/client"
 	"github.com/snagles/docker-registry-manager/models/manager"
 )
 
@@ -44,4 +45,33 @@ func (c *RegistriesController) AddRegistry() {
 		c.CustomAbort(404, err.Error())
 	}
 	c.Ctx.Redirect(302, "/registries")
+}
+
+// TestRegistryStatus responds with JSON containing the status of the registry
+func (c *RegistriesController) TestRegistryStatus() {
+
+	// Define the response
+	var res struct {
+		Error       string `json:"error, omitempty"`
+		IsAvailable bool   `json:"is_available"`
+	}
+
+	host := c.GetString("host")
+	port := c.GetString("port")
+	scheme := c.GetString("scheme")
+	uri := scheme + "://" + host + ":" + port + "/v2"
+
+	// run the health check
+	err := client.HealthCheck(uri)
+	if err != nil {
+		res.Error = err.Error()
+		res.IsAvailable = false
+		c.Data["json"] = &res
+		c.ServeJSON()
+	}
+
+	res.Error = ""
+	res.IsAvailable = true
+	c.Data["json"] = &res
+	c.ServeJSON()
 }
