@@ -6,11 +6,12 @@ import "errors"
 var ReleaseVersion string
 
 func init() {
-	tag, err := GetTag()
+	sha, err := GetAppSHA()
 	if err != nil {
-		Log.Error("Could not get git tag version")
+		Log.Error(err.Error())
+		Log.Error("Could not get git sha version")
 	}
-	ReleaseVersion = tag
+	ReleaseVersion = sha
 }
 
 // UpdateApp stops the current instance of the app, updates to the latest sha on the branch, and restarts the app

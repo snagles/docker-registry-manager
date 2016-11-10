@@ -4,7 +4,8 @@ import (
 	"net/url"
 
 	"github.com/astaxie/beego"
-	"github.com/stefannaglee/docker-registry-manager/models/registry"
+	"github.com/snagles/docker-registry-manager/models/client"
+	"github.com/snagles/docker-registry-manager/models/manager"
 )
 
 type TagsController struct {
@@ -18,7 +19,9 @@ func (c *TagsController) GetTags() {
 	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
 	repositoryNameEncode := url.QueryEscape(repositoryName)
 
-	tags, _ := registry.GetTagsForView(registryName, repositoryName)
+	registry, _ := registry.Registries[registryName]
+	repository, _ := registry.Repositories[repositoryName]
+	tags := repository.Tags
 
 	c.Data["tags"] = tags
 	c.Data["registryName"] = registryName
@@ -34,7 +37,11 @@ func (c *TagsController) DeleteTags() {
 	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
 	tag := c.Ctx.Input.Param(":tagName")
 
-	registry.DeleteTag(registryName, repositoryName, tag)
+	registry, _ := registry.Registries[registryName]
+	success, err := client.DeleteTag(registry.URI(), repositoryName, tag)
+	if !success || err != nil {
+		c.CustomAbort(404, "Failure")
+	}
 
 	c.CustomAbort(200, "Success")
 

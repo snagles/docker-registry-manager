@@ -2,9 +2,8 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/pivotal-golang/bytefmt"
-	"github.com/stefannaglee/docker-registry-manager/models/registry"
-	"github.com/stefannaglee/docker-registry-manager/utilities"
+	"github.com/snagles/docker-registry-manager/models/client"
+	"github.com/snagles/docker-registry-manager/models/manager"
 )
 
 // RegistriesController extends the beego.Controller type
@@ -15,45 +14,19 @@ type RegistriesController struct {
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
 
-	for _, r := range registry.ActiveRegistries {
-
-		// Get the repository count for this registry
-		repositories := registry.GetRepositories(r.Name)
-		r.RepoCount = len(repositories)
-
-		// For each registry update their status
-		r.UpdateRegistryStatus()
-
-		// Get the total size of the registry
-		var totalSize int64
-		var tagCount int
-		for _, repo := range repositories {
-			tags, _ := registry.GetTagsForView(r.Name, repo.Name)
-
-			tagCount += len(tags)
-			for _, t := range tags {
-				totalSize += t.SizeInt
-			}
-
-		}
-		r.RepoTotalSizeStr = bytefmt.ByteSize(uint64(totalSize))
-		r.TagCount = tagCount
-
-		registry.ActiveRegistries[r.Name] = r
-	}
-	c.Data["registries"] = registry.ActiveRegistries
+	c.Data["registries"] = registry.Registries
 
 	// Index template
 	c.TplName = "registries.tpl"
 }
 
 func (c *RegistriesController) GetRegistryCount() {
-	c.Data["registries"] = registry.ActiveRegistries
+	c.Data["registries"] = registry.Registries
 
 	registryCount := struct {
 		Count int
 	}{
-		len(registry.ActiveRegistries),
+		len(registry.Registries),
 	}
 	c.Data["json"] = &registryCount
 	c.ServeJSON()
@@ -66,17 +39,11 @@ func (c *RegistriesController) AddRegistry() {
 	scheme := c.GetString("scheme")
 	uri := scheme + "://" + host + ":" + port + "/v2"
 
-	// TODO: respond client with error
-	r, _ := registry.ParseRegistry(uri)
-
 	// Registry contains all identifying information for communicating with a registry
-	// TODO: respond to client with error
-	err := r.UpdateRegistryStatus()
+	err := registry.AddRegistry(uri)
 	if err != nil {
-		utils.Log.Error("Could not add registry " + uri)
+		c.CustomAbort(404, err.Error())
 	}
-
-	r.AddRegistry()
 	c.Ctx.Redirect(302, "/registries")
 }
 
@@ -94,16 +61,8 @@ func (c *RegistriesController) TestRegistryStatus() {
 	scheme := c.GetString("scheme")
 	uri := scheme + "://" + host + ":" + port + "/v2"
 
-	r, err := registry.ParseRegistry(uri)
-	if err != nil {
-		res.Error = err.Error()
-		res.IsAvailable = false
-		c.Data["json"] = &res
-		c.ServeJSON()
-	}
-
-	// Registry contains all identifying information for communicating with a registry
-	err = r.UpdateRegistryStatus()
+	// run the health check
+	err := client.HealthCheck(uri)
 	if err != nil {
 		res.Error = err.Error()
 		res.IsAvailable = false

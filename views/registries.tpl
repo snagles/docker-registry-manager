@@ -24,19 +24,23 @@
                   <div class="box-body">
                     <div class="info">
                       <div class="info-container">
-                        <h3 class="info-metric">{{$registry.RepoCount}}</h3>
-                        <small>Repositories</small>
+                        <h3 class="info-metric">{{len $registry.Repositories}}</h3>
+                        <small>
+                          {{ $repoCount := len $registry.Repositories }} {{ if eq $repoCount 1 }} Repository {{else}} Repositories {{ end }}
+                        </small>
                       </div>
                     </div>
                     <div class="info">
                       <div class="info-container">
                         <h3 class="info-metric">{{$registry.TagCount}}</h3>
-                        <small>Tags</small>
+                        <small>
+                          {{ $tagCount := $registry.TagCount }} {{ if eq $tagCount 1 }} Tag {{else}} Tags {{ end }}
+                        </small>
                       </div>
                     </div>
                     <div class="info">
                       <div class="info-container">
-                        <h3 class="info-metric">{{$registry.RepoTotalSizeStr}}</h3>
+                        <h3 class="info-metric">{{$registry.DiskSize}}</h3>
                         <small>Total Size</small>
                       </div>
                     </div>

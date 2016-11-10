@@ -4,7 +4,7 @@ import (
 	"net/url"
 
 	"github.com/astaxie/beego"
-	"github.com/stefannaglee/docker-registry-manager/models/registry"
+	"github.com/snagles/docker-registry-manager/models/manager"
 )
 
 type ImagesController struct {
@@ -16,28 +16,18 @@ func (c *ImagesController) GetImages() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
 	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
-	tagName := c.Ctx.Input.Param(":tagName")
 	repositoryNameEncode := url.QueryEscape(repositoryName)
+	c.Data["tagName"] = c.Ctx.Input.Param(":tagName")
 
-	img, _ := registry.GetImage(registryName, repositoryName, tagName)
+	registry, _ := registry.Registries[registryName]
+	c.Data["registry"] = registry
 
-	tagInfo, _ := registry.GetTag(registryName, repositoryName, tagName)
+	image, _ := registry.Repositories[repositoryName].Tags[c.Ctx.Input.Param(":tagName")]
+	c.Data["image"] = image
 
-	activeRegistries := registry.ActiveRegistries
-	if _, ok := activeRegistries[registryName]; ok {
-		registry := activeRegistries[registryName]
-		c.Data["registry"] = registry
-	}
-
-	c.Data["containsV1Size"] = img.ContainsV1Size
-	c.Data["os"] = img.History[0].V1Compatibility.Os
-	c.Data["arch"] = img.History[0].V1Compatibility.Architecture
-	c.Data["history"] = img.History
 	c.Data["registryName"] = registryName
-	c.Data["repositoryName"] = repositoryName
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
-	c.Data["tagInfo"] = tagInfo
-	c.Data["layers"] = img.FsLayers
+	c.Data["repositoryName"] = repositoryName
 
 	// Index template
 	c.TplName = "images.tpl"
