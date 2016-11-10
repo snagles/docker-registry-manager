@@ -15,10 +15,12 @@ RUN go get -v -d ./...
 RUN go get -v github.com/smartystreets/goconvey
 
 # Build the application inside the container.
-RUN cd app/ && go build
+RUN go build .
 
 # Set env for verbose output (Default info level)
 ENV VERBOSITY 5
 
+EXPOSE 8080
+
 # Run the app by default when the container starts.
-CMD $GOPATH/src/github.com/snagles/docker-registry-manager -verbosity $VERBOSITY $REGISTRYARGS
+CMD /go/src/github.com/snagles/docker-registry-manager/docker-registry-manager -verbosity $VERBOSITY
