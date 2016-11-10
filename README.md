@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master) [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager) [![Release](https://img.shields.io/badge/Release-1.0.0-green.svg)](https://godoc.org/github.com/snagles/docker-registry-manager) [![Coverage Status](https://coveralls.io/repos/github/snagles/docker-registry-manager/badge.svg?branch=master)](https://coveralls.io/github/snagles/docker-registry-manager?branch=master)
+![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master) [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager) [![Release](https://img.shields.io/badge/Release-1.0.1-green.svg)](https://godoc.org/github.com/snagles/docker-registry-manager) [![Coverage Status](https://coveralls.io/repos/github/snagles/docker-registry-manager/badge.svg?branch=master)](https://coveralls.io/github/snagles/docker-registry-manager?branch=master)
 
 # Docker Registry Manager
 
