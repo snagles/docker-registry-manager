@@ -26,12 +26,12 @@
             <th>Tags:</th>
           </tfoot>
           <tbody>
-            {{range $key, $repository := .repositories}}
-              {{range $key, $repo := $repository}}
+            {{range $registryName, $repositories := .repositories}}
+              {{range $key, $repo := $repositories}}
               <tr>
-                <td><a href=/registries/{{$repo.Registry}}/repositories/{{$repo.EncodedURI}}/tags>{{$repo.Name}}</span></td>
-                <td>{{$repo.Registry}}</td>
-                <td>{{$repo.TagCount}}</td>
+                <td><a href=/registries/{{$registryName}}/repositories/{{urlquery $repo.Name}}/tags>{{$repo.Name}}</span></td>
+                <td>{{$registryName}}</td>
+                <td>{{len $repo.Tags}}</td>
               </tr>
               {{end}}
             {{end}}
