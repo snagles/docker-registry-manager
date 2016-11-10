@@ -78,7 +78,8 @@ func DeleteTag(uri string, repository string, tag string) (bool, error) {
 					"Error Response":   string(body),
 					"Tag":              tag,
 					"Read Error":       readErr,
-				}).Error("Could not delete tag!")
+				}).Error("Could not delete tag! Received: " + string(body))
+				err = errors.New(string(body))
 
 				return false, err
 			}

@@ -40,7 +40,7 @@ func (c *TagsController) DeleteTags() {
 	registry, _ := registry.Registries[registryName]
 	success, err := client.DeleteTag(registry.URI(), repositoryName, tag)
 	if !success || err != nil {
-		c.CustomAbort(200, "Failure")
+		c.CustomAbort(404, "Failure")
 	}
 
 	c.CustomAbort(200, "Success")

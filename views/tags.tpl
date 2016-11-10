@@ -184,16 +184,18 @@
           $.ajax({
             type: "POST",
             url: "/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags/"+tagName+"/delete",
-            success: function() {
-                  $("#delete-tags").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> We've successfully deleted "+tagName+" from the registry. </div>");
-                  $(".alert").alert();
-                  window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
-                  $("tr[data-tag-name="+tagName+"]").remove();
-            },
-            error: function() {
-                  $("#delete-tags").append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Failure!</strong> We were unable to delete "+tagName+" from the registry. Make sure the delete option is enabled on your registry!</div>");
-                  $(".alert").alert();
-                  window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
+            statusCode: {
+              404: function() {
+                $("#delete-tags").append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Failure!</strong> We were unable to delete "+tagName+" from the registry. Make sure the delete option is enabled on your registry! For more details view the <a href='/settings'>logs</a>.</div>");
+                $(".alert").alert();
+                window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
+              },
+              200: function() {
+                $("#delete-tags").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> We've successfully deleted "+tagName+" from the registry. </div>");
+                $(".alert").alert();
+                window.setTimeout(function() { $(".alert").alert('close'); }, 5000);
+                $("tr[data-tag-name="+tagName+"]").remove();
+              }
             }
           });
         });
