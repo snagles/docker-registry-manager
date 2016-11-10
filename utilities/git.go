@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os/exec"
+	"strings"
 )
 
 // Ref contains the response from the github ref request
@@ -67,9 +68,10 @@ func GetAppBranch() (string, error) {
 
 // GetAppSHA returns the current SHA location
 func GetAppSHA() (string, error) {
-	cmdArgs := []string{"rev-parse", "HEAD"}
+	cmdArgs := []string{"rev-parse", "--short", "HEAD"}
 	branchSHA, err := exec.Command("/usr/bin/git", cmdArgs...).Output()
-	return string(branchSHA), err
+	clean := strings.Replace(string(branchSHA), "\n", "", -1)
+	return string(clean), err
 }
 
 // GetBaseSHA returns the current base SHA location

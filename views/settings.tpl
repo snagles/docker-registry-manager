@@ -17,7 +17,7 @@
           <a href="https://travis-ci.org/snagles/docker-registry-manager"><img src="https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master" alt="Build Status" title="" /></a>
           <a href="https://coveralls.io/github/snagles/docker-registry-manager?branch=master"><img src="https://coveralls.io/repos/github/snagles/docker-registry-manager/badge.svg?branch=master" alt="Coverage Status" title="" /></a>
           <a href="https://godoc.org/github.com/snagles/docker-registry-manager"><img src="https://godoc.org/github.com/snagles/docker-registry-manager?status.svg" alt="GoDoc" title="" /></a>
-          <a href="https://github.com/snagles/docker-registry-manager/releases/tag/{{.releaseVersion}}"><img src="https://img.shields.io/badge/Release-{{.releaseVersion}}-green.svg" alt="Version" title="" /></a>
+          <a href="https://github.com/snagles/docker-registry-manager/commit/{{.releaseVersion}}"><img src="https://img.shields.io/badge/Release-{{.releaseVersion}}-green.svg" alt="Version" title="" /></a>
         </p>
         <p>Wiki: <small> https://github.com/snagles/docker-registry-manager/tree/master/resources/docs/wiki</small></p>
         <p>Source: <small> https://github.com/snagles/docker-registry-manager</small></p>
