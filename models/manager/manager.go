@@ -17,6 +17,16 @@ func init() {
 	Registries = make(map[string]*Registry, 0)
 }
 
+func refresh() {
+	for name, registry := range Registries {
+		utils.Log.Debug("Refreshing " + name)
+		registry.Refresh()
+		utils.Log.Debug("Refreshed " + name)
+	}
+	time.Sleep(45 * time.Second)
+	refresh()
+}
+
 func AddRegistry(uri string) error {
 	r, err := ParseRegistry(uri)
 	if err != nil {
@@ -28,6 +38,7 @@ func AddRegistry(uri string) error {
 		return err
 	}
 	r.Refresh()
+	go refresh()
 
 	return nil
 }
@@ -73,7 +84,7 @@ func (r *Registry) DiskSize() string {
 	return bytefmt.ByteSize(uint64(size))
 }
 
-func (r *Registry) Refresh() {
+func (r Registry) Refresh() {
 
 	// Get the lsit of repositories on this registry
 	repoList, _ := client.GetRepositories(r.URI())
@@ -97,7 +108,7 @@ func (r *Registry) Refresh() {
 		}
 		r.Repositories[repoName] = &repo
 	}
-	Registries[r.Name] = r
+	Registries[r.Name] = &r
 }
 
 type Repository struct {
