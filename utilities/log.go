@@ -39,7 +39,7 @@ func init() {
 
 	goPath := os.Getenv("GOPATH")
 	GoPath = goPath
-	appPath := goPath + "/src/github.com/snagles/docker-registry-manager/"
+	appPath := goPath + "/src/github.com/DemonVex/docker-registry-manager/"
 	AppPath = appPath
 	logPath := appPath + "/logs/"
 	LogPath = logPath

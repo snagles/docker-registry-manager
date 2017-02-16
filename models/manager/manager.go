@@ -5,9 +5,9 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/pivotal-golang/bytefmt"
-	"github.com/snagles/docker-registry-manager/models/client"
-	"github.com/snagles/docker-registry-manager/utilities"
+	"code.cloudfoundry.org/bytefmt"
+	"github.com/DemonVex/docker-registry-manager/models/client"
+	"github.com/DemonVex/docker-registry-manager/utilities"
 )
 
 // Registries contains a map of all active registries identified by their name

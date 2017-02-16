@@ -6,10 +6,10 @@ FROM golang:alpine
 RUN apk add --no-cache git
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/github.com/snagles/docker-registry-manager/
+ADD . /go/src/github.com/DemonVex/docker-registry-manager/
 
 # Install dependencies
-WORKDIR $GOPATH/src/github.com/snagles/docker-registry-manager/
+WORKDIR $GOPATH/src/github.com/DemonVex/docker-registry-manager/
 
 RUN go get -v -d ./...
 RUN go get -v github.com/smartystreets/goconvey
@@ -23,4 +23,4 @@ ENV VERBOSITY 5
 EXPOSE 8080
 
 # Run the app by default when the container starts.
-CMD /go/src/github.com/snagles/docker-registry-manager/docker-registry-manager -verbosity $VERBOSITY
+CMD /go/src/github.com/DemonVex/docker-registry-manager/docker-registry-manager -verbosity $VERBOSITY

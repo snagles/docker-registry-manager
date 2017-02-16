@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master) [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager) [![Release](https://img.shields.io/badge/Release-1.0.1-green.svg)](https://godoc.org/github.com/snagles/docker-registry-manager) [![Coverage Status](https://coveralls.io/repos/github/snagles/docker-registry-manager/badge.svg?branch=master)](https://coveralls.io/github/snagles/docker-registry-manager?branch=master)
+![Build Status](https://travis-ci.org/DemonVex/docker-registry-manager.svg?branch=master) [![GoDoc](https://godoc.org/github.com/DemonVex/docker-registry-manager?status.svg)](https://godoc.org/github.com/DemonVex/docker-registry-manager) [![Release](https://img.shields.io/badge/Release-1.0.1-green.svg)](https://godoc.org/github.com/DemonVex/docker-registry-manager) [![Coverage Status](https://coveralls.io/repos/github/DemonVex/docker-registry-manager/badge.svg?branch=master)](https://coveralls.io/github/DemonVex/docker-registry-manager?branch=master)
 
 # Docker Registry Manager
 
@@ -13,14 +13,14 @@ WARNING: This application is very much still a work in progress. Core functional
  Install compose (https://docs.docker.com/compose/install/)
 
 ```bash
- git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
+ git clone https://github.com/DemonVex/docker-registry-manager.git && cd docker-registry-manager
  docker-compose up -d
  firefox localhost:8080
 ```
 
 ### Go
  ```bash
-    git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
+    git clone https://github.com/DemonVex/docker-registry-manager.git && cd docker-registry-manager
     go build . && ./docker-registry-manager -verbosity 6
     firefox localhost:8080
  ```

@@ -5,8 +5,8 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
-	_ "github.com/snagles/docker-registry-manager/routers"
-	"github.com/snagles/docker-registry-manager/utilities"
+	_ "github.com/DemonVex/docker-registry-manager/routers"
+	"github.com/DemonVex/docker-registry-manager/utilities"
 )
 
 var logLevel int

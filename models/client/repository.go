@@ -3,8 +3,8 @@ package client
 import (
 	"encoding/json"
 
+	"github.com/DemonVex/docker-registry-manager/utilities"
 	"github.com/Sirupsen/logrus"
-	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 // GetRepositories returns a slice of repositories for the passed registry name

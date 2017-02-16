@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"strings"
 
+	"code.cloudfoundry.org/bytefmt"
+	"github.com/DemonVex/docker-registry-manager/utilities"
 	"github.com/Sirupsen/logrus"
-	"github.com/pivotal-golang/bytefmt"
-	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 // GetImage returns the image information for a given tag

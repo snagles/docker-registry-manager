@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"github.com/DemonVex/docker-registry-manager/models/client"
+	"github.com/DemonVex/docker-registry-manager/models/manager"
+	"github.com/DemonVex/docker-registry-manager/utilities"
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/client"
-	"github.com/snagles/docker-registry-manager/models/manager"
-	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 type RepositoriesController struct {

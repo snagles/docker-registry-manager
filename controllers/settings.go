@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"github.com/DemonVex/docker-registry-manager/utilities"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/toolbox"
-	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 type SettingsController struct {

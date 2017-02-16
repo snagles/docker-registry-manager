@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/url"
 
+	"github.com/DemonVex/docker-registry-manager/models/manager"
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/manager"
 )
 
 type ImagesController struct {

@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/DemonVex/docker-registry-manager/utilities"
 	"github.com/Sirupsen/logrus"
-	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 // GetTags returns a slice of tags for a given repository and registry

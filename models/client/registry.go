@@ -1,8 +1,8 @@
 package client
 
 import (
+	"github.com/DemonVex/docker-registry-manager/utilities"
 	"github.com/Sirupsen/logrus"
-	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 // HealthCheck takes in a registry URL and checks for communication errors
