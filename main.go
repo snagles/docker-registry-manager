@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 
-	"github.com/Sirupsen/logrus"
-	"github.com/astaxie/beego"
 	_ "github.com/DemonVex/docker-registry-manager/routers"
 	"github.com/DemonVex/docker-registry-manager/utilities"
+	"github.com/Sirupsen/logrus"
+	"github.com/astaxie/beego"
 )
 
 var logLevel int
