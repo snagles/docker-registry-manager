@@ -18,13 +18,16 @@ func init() {
 }
 
 func refresh() {
-	for name, registry := range Registries {
-		utils.Log.Debug("Refreshing " + name)
-		registry.Refresh()
-		utils.Log.Debug("Refreshed " + name)
+	for {
+		utils.Log.Debug("Start refreshing")
+		for name, registry := range Registries {
+			utils.Log.Debug("Refreshing " + name)
+			registry.Refresh()
+			utils.Log.Debug("Refreshed " + name)
+		}
+		utils.Log.Debug("Refreshing is done")
+		time.Sleep(45 * time.Second)
 	}
-	time.Sleep(45 * time.Second)
-	refresh()
 }
 
 func AddRegistry(uri string) error {
