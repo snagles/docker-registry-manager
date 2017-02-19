@@ -35,8 +35,8 @@ func (c *RegistriesController) GetRegistryCount() {
 // AddRegistry adds a registry to the active registry list from a form
 func (c *RegistriesController) AddRegistry() {
 	host := c.GetString("host")
-	port := c.GetString("port")
-	scheme := c.GetString("scheme")
+	port := c.GetString("port", "5000")
+	scheme := c.GetString("scheme", "https")
 	uri := scheme + "://" + host + ":" + port + "/v2"
 
 	// Registry contains all identifying information for communicating with a registry
@@ -57,8 +57,8 @@ func (c *RegistriesController) TestRegistryStatus() {
 	}
 
 	host := c.GetString("host")
-	port := c.GetString("port")
-	scheme := c.GetString("scheme")
+	port := c.GetString("port", "5000")
+	scheme := c.GetString("scheme", "https")
 	uri := scheme + "://" + host + ":" + port + "/v2"
 
 	// run the health check
