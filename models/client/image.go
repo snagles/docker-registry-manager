@@ -12,9 +12,9 @@ import (
 // GetImage returns the image information for a given tag
 // HEAD /v2/<name>/manifests/<reference>
 func GetImage(uri string, repository string, tag string) (Image, error) {
-
+	var err error
 	// Create and execute Get request
-	body, err := get(uri + "/" + repository + "/manifests/" + tag)
+	body, _ := get(uri + "/" + repository + "/manifests/" + tag)
 
 	img := Image{}
 	if err := json.Unmarshal(body, &img); err != nil {
@@ -42,7 +42,9 @@ func GetImage(uri string, repository string, tag string) (Image, error) {
 		v1JSON.IDShort = v1JSON.ID[0:7]
 
 		// Remove shell command
-		v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.Cmd[0], "/bin/sh -c #(nop)", "", -1)
+		if len(v1JSON.ContainerConfig.Cmd) > 0 {
+			v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.Cmd[0], "/bin/sh -c #(nop)", "", -1)
+		}
 		img.History[index].V1Compatibility = v1JSON
 	}
 
