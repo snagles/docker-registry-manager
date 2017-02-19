@@ -71,7 +71,7 @@ func DeleteTag(uri string, repository string, tag string) (bool, error) {
 			req, _ := http.NewRequest("DELETE", uri+"/"+repository+"/manifests/"+digest, nil)
 			req.Header.Set("Accept", "application/vnd.docker.distribution.manifest.v2+json")
 			resp, err = client.Do(req)
-			if err != nil || resp.StatusCode != 200 {
+			if err != nil || (resp.StatusCode < 200 || resp.StatusCode >= 300) {
 				body, readErr := ioutil.ReadAll(resp.Body)
 				utils.Log.WithFields(logrus.Fields{
 					"Connection Error": err,
