@@ -34,13 +34,14 @@ func (c *RegistriesController) GetRegistryCount() {
 
 // AddRegistry adds a registry to the active registry list from a form
 func (c *RegistriesController) AddRegistry() {
-	host := c.GetString("host")
-	port := c.GetString("port", "5000")
-	scheme := c.GetString("scheme", "https")
-	uri := scheme + "://" + host + ":" + port + "/v2"
-
 	// Registry contains all identifying information for communicating with a registry
-	err := registry.AddRegistry(uri)
+
+	scheme, host, port, err := c.sanitizeForm()
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
+
+	err = registry.AddRegistry(scheme, host, port)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -55,23 +56,41 @@ func (c *RegistriesController) TestRegistryStatus() {
 		Error       string `json:"error, omitempty"`
 		IsAvailable bool   `json:"is_available"`
 	}
-
-	host := c.GetString("host")
-	port := c.GetString("port", "5000")
-	scheme := c.GetString("scheme", "https")
-	uri := scheme + "://" + host + ":" + port + "/v2"
-
-	// run the health check
-	err := client.HealthCheck(uri)
-	if err != nil {
+	var err error
+	whenErr := func(err error) {
 		res.Error = err.Error()
 		res.IsAvailable = false
 		c.Data["json"] = &res
 		c.ServeJSON()
 	}
 
+	scheme, host, port, err := c.sanitizeForm()
+	if err != nil {
+		whenErr(err)
+		return
+	}
+	r, err := registry.NewRegistry(scheme, host, port)
+	if err != nil {
+		whenErr(err)
+		return
+	}
+
+	// run the health check
+	err = client.HealthCheck(r.URI())
+	if err != nil {
+		whenErr(err)
+		return
+	}
+
 	res.Error = ""
 	res.IsAvailable = true
 	c.Data["json"] = &res
 	c.ServeJSON()
+}
+
+func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, err error) {
+	host = c.GetString("host")
+	port, err = c.GetInt("port", 5000)
+	scheme = c.GetString("scheme", "https")
+	return
 }
