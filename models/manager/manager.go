@@ -2,8 +2,9 @@ package registry
 
 import (
 	"net"
-	"net/url"
 	"time"
+
+	"fmt"
 
 	"code.cloudfoundry.org/bytefmt"
 	"github.com/DemonVex/docker-registry-manager/models/client"
@@ -11,10 +12,10 @@ import (
 )
 
 // Registries contains a map of all active registries identified by their name
-var Registries map[string]*Registry
+var Registries map[string]*registry
 
 func init() {
-	Registries = make(map[string]*Registry, 0)
+	Registries = map[string]*registry{}
 }
 
 func refresh() {
@@ -30,8 +31,8 @@ func refresh() {
 	}
 }
 
-func AddRegistry(uri string) error {
-	r, err := ParseRegistry(uri)
+func AddRegistry(scheme, host string, port int) error {
+	r, err := NewRegistry(scheme, host, port)
 	if err != nil {
 		return err
 	}
@@ -46,23 +47,46 @@ func AddRegistry(uri string) error {
 	return nil
 }
 
+// Create a new registry from URI parts
+func NewRegistry(scheme, host string, port int) (registry, error) {
+	var err error
+	r := registry{
+		Scheme:  scheme,
+		Host:    host,
+		Port:    port,
+		Version: 2,
+	}
+
+	// Lookup the ip for the passed host
+	ip, err := net.LookupHost(host)
+	if err != nil {
+		utils.Log.Error(err)
+		return registry{}, err
+	}
+	if len(ip) > 0 {
+		r.IP = ip[0]
+	}
+
+	return r, nil
+}
+
 // Registry contains all identifying information for communicating with a registry
-type Registry struct {
-	Name         string
+type registry struct {
+	Host         string
 	IP           string
 	Scheme       string
-	Port         string
-	Version      string
+	Port         int
+	Version      int
 	Repositories map[string]*Repository
-	Status       string
+	Status       int
 }
 
 // URI returns the full url path for communicating with this registry
-func (r *Registry) URI() string {
-	return r.Scheme + "://" + r.Name + ":" + r.Port + "/v2"
+func (r *registry) URI() string {
+	return fmt.Sprintf("%s://%s:%d/v%d", r.Scheme, r.Host, r.Port, r.Version)
 }
 
-func (r *Registry) TagCount() int {
+func (r *registry) TagCount() int {
 	var count int
 	for _, repo := range r.Repositories {
 		count += len(repo.Tags)
@@ -70,7 +94,7 @@ func (r *Registry) TagCount() int {
 	return count
 }
 
-func (r *Registry) DiskSize() string {
+func (r *registry) DiskSize() string {
 	registryLayerMap := make(map[string]bool, 0)
 	var size int64
 
@@ -87,13 +111,13 @@ func (r *Registry) DiskSize() string {
 	return bytefmt.ByteSize(uint64(size))
 }
 
-func (r Registry) Refresh() {
+func (r registry) Refresh() {
 
-	// Get the lsit of repositories on this registry
+	// Get the list of repositories on this registry
 	repoList, _ := client.GetRepositories(r.URI())
 
 	// Get the repository information
-	r.Repositories = make(map[string]*Repository, 0)
+	r.Repositories = map[string]*Repository{}
 	for _, repoName := range repoList {
 
 		// Build a repository object
@@ -111,7 +135,7 @@ func (r Registry) Refresh() {
 		}
 		r.Repositories[repoName] = &repo
 	}
-	Registries[r.Name] = &r
+	Registries[r.Host] = &r
 }
 
 type Repository struct {
@@ -199,48 +223,4 @@ func (i *Image) Size() string {
 
 func (i *Image) LayerCount() int {
 	return len(i.FsLayers)
-}
-
-// ParseRegistry takes in a registry URI string and converts it into a registry object
-func ParseRegistry(registry string) (Registry, error) {
-
-	// only supports v2 currently
-	r := Registry{
-		Version: "v2",
-	}
-
-	// Parse the URL and get the scheme
-	// e.g https, http, etc.
-	u, err := url.Parse(registry)
-	if err != nil {
-		utils.Log.Error(err)
-		return r, err
-	}
-
-	// Set scheme
-	r.Scheme = u.Scheme
-
-	// Get the host and port
-	// e.g test.domain.com and 5000, etc.
-	host, port, err := net.SplitHostPort(u.Host)
-	if err != nil {
-		utils.Log.Error(err)
-		return r, err
-	}
-
-	// Set name and port
-	r.Name = host
-	r.Port = port
-
-	// Lookup the ip for the passed host
-	ip, err := net.LookupHost(host)
-	if err != nil {
-		utils.Log.Error(err)
-		return r, err
-	}
-	if len(ip) > 0 {
-		r.IP = ip[0]
-	}
-
-	return r, err
 }
