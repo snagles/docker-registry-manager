@@ -10,6 +10,11 @@ import (
 
 // Helper function for get requests
 func get(uri string) ([]byte, error) {
+	body, _, err := getWithHeaders(uri)
+	return body, err
+}
+
+func getWithHeaders(uri string) ([]byte, http.Header, error) {
 	response, err := http.Get(uri)
 	if err != nil {
 		utils.Log.WithFields(logrus.Fields{
@@ -17,8 +22,9 @@ func get(uri string) ([]byte, error) {
 			"Error":        err,
 			"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
 		}).Error("Get request to registry failed for the endpoint! Is your registry active?")
-		return nil, err
+		return nil, nil, err
 	}
+	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil || response.StatusCode != 200 {
@@ -26,10 +32,9 @@ func get(uri string) ([]byte, error) {
 			"Error": err,
 			"Body":  body,
 		}).Error("Unable to read response body returned from the registry!")
-		return nil, err
+		return nil, nil, err
 	}
-	defer response.Body.Close()
-	return body, err
+	return body, response.Header, err
 }
 
 // head function for head requests
