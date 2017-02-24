@@ -96,7 +96,7 @@ func (r *registry) TagCount() int {
 }
 
 func (r *registry) DiskSize() string {
-	registryLayerMap := make(map[string]bool, 0)
+	registryLayerMap := map[string]bool{}
 	var size int64
 
 	for _, repo := range r.Repositories {
@@ -125,7 +125,7 @@ func (r registry) Refresh() {
 		repo := Repository{Name: repoName}
 
 		tagList, _ := client.GetTags(r.URI(), repoName)
-		repo.Tags = make(map[string]*Tag, 0)
+		repo.Tags = map[string]*Tag{}
 		for _, tagName := range tagList {
 			tag := Tag{Name: tagName}
 			img, _ := client.GetImage(r.URI(), repoName, tagName)
