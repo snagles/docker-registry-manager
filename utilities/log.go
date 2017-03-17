@@ -61,14 +61,16 @@ func init() {
 	}
 
 	Log.Formatter = &logrus.JSONFormatter{}
-	Log.Hooks.Add(lfshook.NewHook(lfshook.PathMap{
+	lfsHook := lfshook.NewHook(lfshook.PathMap{
 		logrus.ErrorLevel: logFile,
 		logrus.InfoLevel:  logFile,
 		logrus.WarnLevel:  logFile,
 		logrus.FatalLevel: logFile,
 		logrus.PanicLevel: logFile,
 		logrus.DebugLevel: logFile,
-	}))
+	})
+	lfsHook.SetFormatter(&logrus.JSONFormatter{})
+	Log.Hooks.Add(lfsHook)
 }
 
 // ParseLogFile parses the locally stored flat log file that was logged to by logrus
@@ -83,9 +85,9 @@ func ParseLogFile() []LogEntry {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		e := LogEntry{}
-		err := json.Unmarshal([]byte(scanner.Text()), &e)
+		err := json.Unmarshal(scanner.Bytes(), &e)
 		if err != nil {
-			Log.Error(err)
+			continue
 		}
 		es = append(es, e)
 	}
