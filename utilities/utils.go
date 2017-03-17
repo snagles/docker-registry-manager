@@ -52,7 +52,7 @@ func Round(f float64) int {
 func StatToSeconds(stat string) (float64, error) {
 
 	// First parse out the ms, s, us, and the amount
-	r := regexp.MustCompile("([0-9]+.[0-9]+)([a-z]+)")
+	r := regexp.MustCompile("([0-9]+[.]?[0-9]*)([a-z]{1,2})")
 
 	results := r.FindStringSubmatch(stat)
 
@@ -67,16 +67,23 @@ func StatToSeconds(stat string) (float64, error) {
 
 		switch time {
 		case "us":
-			convValue := value / 1000000
 			// microseconds to seconds
+			convValue := value / 1000000
 			return convValue, nil
 		case "ms":
-			convValue := value / 1000
-			// microseconds to seconds
-			return convValue, nil
 			// milliseconds to seconds
+			convValue := value / 1000
+			return convValue, nil
 		case "s":
 			return value, nil
+		case "m":
+			// minutes to seconds
+			convValue := value * 60
+			return convValue, nil
+		case "h":
+			// hours to seconds
+			convValue := value * 3600
+			return convValue, nil
 		}
 	}
 
