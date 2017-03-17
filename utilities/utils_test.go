@@ -72,9 +72,21 @@ func TestStatToSeconds(t *testing.T) {
 		So(err, ShouldBeNil)
 	})
 
-	seconds, err = StatToSeconds("400s")
-	Convey("StatToSeconds should return the expected seconds result for 400s", t, func() {
-		So(seconds, ShouldEqual, 400)
+	seconds, err = StatToSeconds("4s")
+	Convey("StatToSeconds should return the expected seconds result for 4s", t, func() {
+		So(seconds, ShouldEqual, 4)
+		So(err, ShouldBeNil)
+	})
+
+	seconds, err = StatToSeconds("11m")
+	Convey("StatToSeconds should return the expected seconds result for 11m", t, func() {
+		So(seconds, ShouldEqual, 660)
+		So(err, ShouldBeNil)
+	})
+
+	seconds, err = StatToSeconds("100h")
+	Convey("StatToSeconds should return the expected seconds result for 100h", t, func() {
+		So(seconds, ShouldEqual, 360000)
 		So(err, ShouldBeNil)
 	})
 
