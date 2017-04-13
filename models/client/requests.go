@@ -17,11 +17,7 @@ func get(uri string) ([]byte, error) {
 func getWithHeaders(uri string) ([]byte, http.Header, error) {
 	response, err := http.Get(uri)
 	if err != nil {
-		utils.Log.WithFields(logrus.Fields{
-			"Registry URL": uri,
-			"Error":        err,
-			"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
-		}).Error("Get request to registry failed for the endpoint! Is your registry active?")
+		logRequestError(uri, err)
 		return nil, nil, err
 	}
 	defer response.Body.Close()
@@ -40,16 +36,28 @@ func getWithHeaders(uri string) ([]byte, http.Header, error) {
 // head function for head requests
 func head(uri string) (*http.Response, error) {
 	response, err := http.Head(uri)
+	if err != nil {
+		logRequestError(uri, err)
+		return nil, err
+	}
 	defer response.Body.Close()
-	if err != nil || response.StatusCode != 200 {
+
+	if response.StatusCode != 200 {
 		utils.Log.WithFields(logrus.Fields{
 			"Registry URL": uri,
 			"Status Code":  response.StatusCode,
 			"Response":     response,
-			"Error":        err,
 			"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
 		}).Error("Get request to registry failed for the endpoint! Is your registry active?")
 		return nil, err
 	}
 	return response, err
+}
+
+func logRequestError(uri string, err error) {
+	utils.Log.WithFields(logrus.Fields{
+		"Registry URL": uri,
+		"Error":        err,
+		"Possible Fix": "Check to see if your registry is up, and serving on the correct port with 'docker ps'. ",
+	}).Error("Get request to registry failed for the endpoint! Is your registry active?")
 }
