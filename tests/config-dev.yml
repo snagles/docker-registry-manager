@@ -24,14 +24,14 @@ storage:
     cache:
         blobdescriptor: redis
     filesystem:
-        rootdirectory: testSetupChangesToProjectTestPath 
+        rootdirectory: testSetupChangesToProjectTestPath
     maintenance:
         uploadpurging:
             enabled: false
 http:
-    addr: :5000
+    addr: :5010
     debug:
-        addr: localhost:5001
+        addr: localhost:5011
     headers:
         X-Content-Type-Options: [nosniff]
 redis:
@@ -45,7 +45,7 @@ redis:
   writetimeout: 10ms
 notifications:
     endpoints:
-        - name: local-5003
+        - name: local-5013
           url: http://localhost:5003/callback
           headers:
              Authorization: [Bearer <an example token>]

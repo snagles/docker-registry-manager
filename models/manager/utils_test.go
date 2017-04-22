@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 	go SetupTestRegistry()
 	var ready bool
 	for ready == false {
-		resp, _ := http.Get("http://localhost:5000/v2/")
+		resp, _ := http.Get("http://localhost:5010/v2/")
 		if resp != nil {
 			ready = true
 			defer resp.Body.Close()
