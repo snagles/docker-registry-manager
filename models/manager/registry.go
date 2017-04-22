@@ -46,8 +46,11 @@ func (r *Registry) Refresh() {
 			// Add the tag to the repository
 			repo.Tags[tagName] = &tag
 		}
-		r.Repositories[repoName] = &repo
+		refreshedRegistry.Repositories[repoName] = &repo
 	}
+	AllRegistries.Lock()
+	AllRegistries.Registries[refreshedRegistry.URL] = &refreshedRegistry
+	AllRegistries.Unlock()
 }
 
 func (r *Registry) Status() string {
