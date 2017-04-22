@@ -25,7 +25,7 @@ type Registry struct {
 
 func (r *Registry) Refresh() {
 
-	refreshedRegistry := Registry{}
+	refreshedRegistry := *r
 	repoList, _ := refreshedRegistry.Registry.Repositories()
 	// Get the repository information
 	refreshedRegistry.Repositories = map[string]*Repository{}
