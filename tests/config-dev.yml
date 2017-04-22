@@ -24,7 +24,7 @@ storage:
     cache:
         blobdescriptor: redis
     filesystem:
-        rootdirectory: /var/lib/registry
+        rootdirectory: testSetupChangesToProjectTestPath 
     maintenance:
         uploadpurging:
             enabled: false
@@ -58,7 +58,7 @@ notifications:
           timeout: 1s
           threshold: 10
           backoff: 1s
-          disabled: true 
+          disabled: true
 health:
   storagedriver:
     enabled: true

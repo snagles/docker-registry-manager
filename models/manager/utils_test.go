@@ -1,60 +1,71 @@
 package manager
 
 import (
+	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"testing"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/docker/distribution/configuration"
+	"github.com/docker/distribution/context"
+	"github.com/docker/distribution/registry"
+	_ "github.com/docker/distribution/registry/storage/driver/filesystem"
+	"github.com/docker/distribution/version"
 )
 
 const TestResourceDirectory = "/src/github.com/snagles/docker-registry-manager/tests"
 
 // TestMain handles the setup and teardown of the test registry for use
 func TestMain(m *testing.M) {
-	cmd, err := SetupTestRegistry()
-	if err != nil {
-		logrus.Error("Unable to start the test registry!" + err.Error())
+	go SetupTestRegistry()
+	var ready bool
+	for ready == false {
+		resp, _ := http.Get("http://localhost:5000/v2/")
+		if resp != nil {
+			ready = true
+			defer resp.Body.Close()
+		}
 	}
 	code := m.Run()
-	err = TearDownTestRegistry(cmd)
-	if err != nil {
-		logrus.Error("Unable to teardown the registry!" + err.Error())
-	}
 	os.Exit(code)
 }
 
 // SetupTestRegistry by calling the registry serve command with test config
-func SetupTestRegistry() (*exec.Cmd, error) {
+func SetupTestRegistry() {
 	goPath := os.Getenv("GOPATH")
 	if goPath == "" {
 		goPath = defaultGOPATH()
 	}
 
-	// Check to see if the registry binary is installed
-	if _, err := os.Stat(goPath + "/bin/registry"); os.IsNotExist(err) {
-		logrus.WithFields(logrus.Fields{
-			"Fix action":       "go get github.com/docker/distribution/cmd/registry",
-			"More information": "https://github.com/docker/distribution/blob/master/BUILDING.md",
-		}).Error("Registry binary is not installed in your GOPATH.")
+	// Use the test config file to create and run a new registry
+	ctx := context.WithVersion(context.Background(), version.Version)
+	fp, err := os.Open(goPath + TestResourceDirectory + "/config-dev.yml")
+	if err != nil {
+		logrus.Fatalln(err)
+	}
+	devConfig, err := configuration.Parse(fp)
+	if err != nil {
+		logrus.Fatalln(err)
+	}
+	// overwrite the filesystem location to use the project path
+	devConfig.Storage["filesystem"]["rootdirectory"] = goPath + TestResourceDirectory + "/var/lib/registry"
+
+	// Create the new registry
+	registry, err := registry.NewRegistry(ctx, devConfig)
+	if err != nil {
+		logrus.Fatalln(err)
 	}
 
-	os.Setenv("REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY", goPath+TestResourceDirectory+"/var/lib/registry")
-	cmd := exec.Command(goPath+"/bin/registry", "serve", goPath+TestResourceDirectory+"/config-dev.yml")
-	// start the command and dont wait
-	err := cmd.Start()
-	return cmd, err
+	// Start the registry
+	err = registry.ListenAndServe()
+	if err != nil {
+		logrus.Fatalln(err)
+	}
 }
 
-// TearDownTestRegistry kills the serve command process started by the setup
-func TearDownTestRegistry(cmd *exec.Cmd) error {
-	err := cmd.Process.Kill()
-	return err
-}
-
-// take from https://github.com/golang/go/blob/go1.8/src/go/build/build.go#L260-L277
+// taken from https://github.com/golang/go/blob/go1.8/src/go/build/build.go#L260-L277
 func defaultGOPATH() string {
 	env := "HOME"
 	if runtime.GOOS == "windows" {
