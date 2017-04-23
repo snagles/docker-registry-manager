@@ -20,6 +20,10 @@
               <label for="scheme-input">Scheme</label>
               <input type="text" class="form-control" id="scheme-input" name="scheme" placeholder="default: https">
             </fieldset>
+            <fieldset class="form-group">
+              <label for="interval-input">Refresh Interval (seconds)</label>
+              <input type="text" class="form-control" id="interval-input" name="interval" placeholder="default: 10">
+            </fieldset>
             <div class="modal-footer">
               <button style="float:left;" type="button" id="test" class="btn btn-warning">Test</button>
               <input type="submit" class="btn btn-success" id="add-registry" value="Submit">

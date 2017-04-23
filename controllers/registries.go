@@ -44,7 +44,12 @@ func (c *RegistriesController) AddRegistry() {
 		c.CustomAbort(404, err.Error())
 	}
 
-	ttl := 10 * time.Second
+	interval, err := c.GetInt("interval", 10)
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
+
+	ttl := time.Duration(interval) * time.Second
 
 	_, err = manager.AddRegistry(scheme, host, port, ttl)
 	if err != nil {
