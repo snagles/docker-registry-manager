@@ -23,7 +23,6 @@
                 <tr>
                   <th><input name="select_all" value="1" type="checkbox"></th>
                   <th>Tags:</th>
-                  <th>Size:</th>
                   <th>Layers:</th>
                   <th>Updated:</th>
                 </tr>
@@ -32,7 +31,6 @@
                 <tr>
                   <th></th>
                   <th>Tags:</th>
-                  <th>Size:</th>
                   <th>Layers:</th>
                   <th>Updated:</th>
                 </tr>
@@ -42,8 +40,7 @@
               <tr data-tag-name="{{$key}}">
                 <td></td>
                 <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$key}}/images>{{$key}}</span></td>
-                <td>{{$tag.Size}}</td>
-                <td>{{$tag.LayerCount}}</td>
+                <td>{{len $tag.V1.FSLayers}}</td>
                 <td data-order="">{{$tag.LastModifiedTimeAgo}}</td>
               </tr>
               {{end}}

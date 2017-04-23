@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/client"
 	"github.com/snagles/docker-registry-manager/models/manager"
 	"github.com/snagles/docker-registry-manager/utilities"
 )
@@ -16,20 +15,20 @@ func (c *RepositoriesController) GetRepositories() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
 
-	if r, ok := registry.Registries[registryName]; ok {
+	if r, ok := manager.AllRegistries.Registries[registryName]; ok {
 		c.Data["registryName"] = registryName
 		c.Data["repositories"] = r.Repositories
-		// Index template
-		c.TplName = "repositories.tpl"
 	}
+	// Index template
+	c.TplName = "repositories.tpl"
 }
 
 func (c *RepositoriesController) GetAllRepositoryCount() {
-	c.Data["registries"] = registry.Registries
+	c.Data["registries"] = manager.AllRegistries.Registries
 
 	var count int
-	for _, reg := range registry.Registries {
-		repositories, err := client.GetRepositories(reg.URI())
+	for _, reg := range manager.AllRegistries.Registries {
+		repositories, err := reg.Registry.Repositories()
 		if err != nil {
 			utils.Log.Error("Could not connect to registry to get the repository count. " + err.Error())
 		}
@@ -48,9 +47,9 @@ func (c *RepositoriesController) GetAllRepositoryCount() {
 // GetAllRepositories returns the template for the all registries page
 func (c *RepositoriesController) GetAllRepositories() {
 
-	repos := make(map[string][]*registry.Repository)
+	repos := make(map[string][]*manager.Repository)
 
-	for registryName, registry := range registry.Registries {
+	for registryName, registry := range manager.AllRegistries.Registries {
 		for _, repository := range registry.Repositories {
 			repos[registryName] = append(repos[registryName], repository)
 		}

@@ -19,19 +19,16 @@
           <thead>
             <th>Repository Name</th>
             <th>Tags</th>
-            <th>Last Modified</th>
           </thead>
           <tfoot>
             <th>Repository Name</th>
             <th>Tags</th>
-            <th>Last Modified</th>
           </tfoot>
           <tbody>
             {{range $key, $repository := .repositories}}
             <tr>
               <td><a href="/registries/{{$.registryName}}/repositories/{{urlquery $repository.Name}}/tags">{{$repository.Name}}</span></td>
               <td>{{len $repository.Tags}}</td>
-              <td>{{$repository.LastModifiedTimeAgo}}</td>
             </tr>
             {{end}}
           </tbody>

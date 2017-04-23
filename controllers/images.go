@@ -19,11 +19,11 @@ func (c *ImagesController) GetImages() {
 	repositoryNameEncode := url.QueryEscape(repositoryName)
 	c.Data["tagName"] = c.Ctx.Input.Param(":tagName")
 
-	registry, _ := registry.Registries[registryName]
+	registry, _ := manager.AllRegistries.Registries[registryName]
 	c.Data["registry"] = registry
 
-	image, _ := registry.Repositories[repositoryName].Tags[c.Ctx.Input.Param(":tagName")]
-	c.Data["image"] = image
+	tag, _ := registry.Repositories[repositoryName].Tags[c.Ctx.Input.Param(":tagName")]
+	c.Data["tag"] = tag
 
 	c.Data["registryName"] = registryName
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
