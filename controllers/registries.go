@@ -1,8 +1,11 @@
 package controllers
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/client"
+	client "github.com/heroku/docker-registry-client/registry"
 	"github.com/snagles/docker-registry-manager/models/manager"
 )
 
@@ -14,19 +17,19 @@ type RegistriesController struct {
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
 
-	c.Data["registries"] = registry.Registries
+	c.Data["registries"] = manager.AllRegistries.Registries
 
 	// Index template
 	c.TplName = "registries.tpl"
 }
 
 func (c *RegistriesController) GetRegistryCount() {
-	c.Data["registries"] = registry.Registries
+	c.Data["registries"] = manager.AllRegistries.Registries
 
 	registryCount := struct {
 		Count int
 	}{
-		len(registry.Registries),
+		len(manager.AllRegistries.Registries),
 	}
 	c.Data["json"] = &registryCount
 	c.ServeJSON()
@@ -41,7 +44,9 @@ func (c *RegistriesController) AddRegistry() {
 		c.CustomAbort(404, err.Error())
 	}
 
-	err = registry.AddRegistry(scheme, host, port)
+	ttl := 10 * time.Second
+
+	_, err = manager.AddRegistry(scheme, host, port, ttl)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -50,7 +55,6 @@ func (c *RegistriesController) AddRegistry() {
 
 // TestRegistryStatus responds with JSON containing the status of the registry
 func (c *RegistriesController) TestRegistryStatus() {
-
 	// Define the response
 	var res struct {
 		Error       string `json:"error, omitempty"`
@@ -69,14 +73,14 @@ func (c *RegistriesController) TestRegistryStatus() {
 		whenErr(err)
 		return
 	}
-	r, err := registry.NewRegistry(scheme, host, port)
+
+	url := fmt.Sprintf(fmt.Sprintf("%s://%s:%v", scheme, host, port))
+	temp, err := client.New(url, "", "")
 	if err != nil {
 		whenErr(err)
 		return
 	}
-
-	// run the health check
-	err = client.HealthCheck(r.URI())
+	err = temp.Ping()
 	if err != nil {
 		whenErr(err)
 		return
@@ -86,6 +90,7 @@ func (c *RegistriesController) TestRegistryStatus() {
 	res.IsAvailable = true
 	c.Data["json"] = &res
 	c.ServeJSON()
+
 }
 
 func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, err error) {

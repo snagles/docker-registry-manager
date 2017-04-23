@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
 	"regexp"
 	"strconv"
@@ -89,4 +91,9 @@ func StatToSeconds(stat string) (float64, error) {
 
 	return 0, errors.New("Failed to parse time string from beego")
 
+}
+
+func Dump(obj interface{}) {
+	b, _ := json.MarshalIndent(obj, "", "  ")
+	fmt.Println(string(b))
 }

@@ -14,12 +14,12 @@
         <ul class="boxes">
           {{range $key, $registry := .registries}}
           <li>
-          <a href="/registries/{{$registry.Host}}/repositories">
+          <a href="/registries/{{$registry.Name}}/repositories">
             <div class="white-bg box col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <div class="col-lg-12">
                 <div class="box-container">
                   <div class="box-header">
-                    <h2>{{$registry.Host}}<small> {{$registry.IP}}</small></h2>
+                    <h2>{{$registry.URL}}</h2>
                   </div>
                   <div class="box-body">
                     <div class="info">
@@ -40,7 +40,6 @@
                     </div>
                     <div class="info">
                       <div class="info-container">
-                        <h3 class="info-metric">{{$registry.DiskSize}}</h3>
                         <small>Total Size</small>
                       </div>
                     </div>
