@@ -2,3 +2,4 @@ docker-registry-manager
 logs/error.log
 *.log
 .remote-sync.json
+.git

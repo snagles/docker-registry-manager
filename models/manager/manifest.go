@@ -1,39 +1,7 @@
-package client
+package manager
 
 import "time"
 
-type list struct {
-	Name string
-	Tags []string
-}
-
-type catalog struct {
-	Repositories []string
-}
-
-// Image contains all information related to the image
-type Image struct {
-	Name           string
-	Tag            string
-	SchemaVersion  int
-	Architecture   string
-	TagID          uint
-	ContainsV1Size bool
-	History        []History `json:"history"`
-	FsLayers       []struct {
-		BlobSum string `json:"blobSum"`
-		Size    int64  `json:"-"`
-		SizeStr string `json:"-"`
-	} `json:"fsLayers"`
-}
-
-// History contains the v1 compatibility string and marshaled json
-type History struct {
-	V1CompatibilityStr string `json:"V1Compatibility"`
-	V1Compatibility    V1Compatibility
-}
-
-// V1Compatibility contains all information grabbed from the V1Compatibility field from registry v1
 type V1Compatibility struct {
 	ID              string    `json:"id"`
 	IDShort         string    `json:"-"`

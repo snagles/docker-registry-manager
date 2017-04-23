@@ -1,6 +1,6 @@
 # Start from an Alpine image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
-FROM golang:alpine
+FROM golang:1.8-alpine
 
 # Install git
 RUN apk add --no-cache git
@@ -11,8 +11,7 @@ ADD . /go/src/github.com/snagles/docker-registry-manager/
 # Install dependencies
 WORKDIR $GOPATH/src/github.com/snagles/docker-registry-manager/
 
-RUN go get -v -d ./...
-RUN go get -v github.com/smartystreets/goconvey
+RUN go get -v
 
 # Build the application inside the container.
 RUN go build .
