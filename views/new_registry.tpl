@@ -14,11 +14,11 @@
             </fieldset>
             <fieldset class="form-group">
               <label for="port-input">Port</label>
-              <input type="text" class="form-control" id="port-input" name="port" placeholder="ex: 5000">
+              <input type="text" class="form-control" id="port-input" name="port" placeholder="default: 5000">
             </fieldset>
             <fieldset class="form-group">
               <label for="scheme-input">Scheme</label>
-              <input type="text" class="form-control" id="scheme-input" name="scheme" placeholder="ex: https">
+              <input type="text" class="form-control" id="scheme-input" name="scheme" placeholder="default: https">
             </fieldset>
             <div class="modal-footer">
               <button style="float:left;" type="button" id="test" class="btn btn-warning">Test</button>
