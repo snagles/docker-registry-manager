@@ -1,4 +1,4 @@
-package utils
+package settings
 
 import (
 	"encoding/json"
@@ -32,21 +32,17 @@ func GetRemoteBranchSHA(branch string) (string, error) {
 	url := "https://api.github.com/repos/snagles/docker-registry-manager/git/refs/heads/" + branch
 	res, err := http.Get(url)
 	if err != nil {
-		Log.Error(err)
-		Log.Error("Failed to query githubs API for the remote branch with the url '" + url + "''")
 		return "", err
 	}
 	body, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
 	if err != nil {
-		Log.Error(err)
 		return "", err
 	}
 
 	r := Ref{}
 	err = json.Unmarshal(body, &r)
 	if err != nil {
-		Log.Error(err)
 		return string(body), err
 	}
 

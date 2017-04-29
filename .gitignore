@@ -1,4 +1,5 @@
 docker-registry-manager
 *.log
+*log.json
 .remote-sync.json
 .idea
