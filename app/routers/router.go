@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/controllers"
+	"github.com/snagles/docker-registry-manager/app/controllers"
 )
 
 func init() {
@@ -29,11 +29,12 @@ func init() {
 	beego.Router("/registries/:registryName/repositories/*/tags/:tagName/images", &controllers.ImagesController{}, "get:GetImages")
 
 	// Routers for logs
-	beego.Router("/logs", &controllers.SettingsController{}, "get:GetLogs")
-	beego.Router("/logs/clear", &controllers.SettingsController{}, "post:ClearLogs")
-	beego.Router("/logs/archive", &controllers.SettingsController{}, "post:ArchiveLogs")
-	beego.Router("/logs/toggle-debug", &controllers.SettingsController{}, "get:ToggleDebug")
-	beego.Router("/logs/level", &controllers.SettingsController{}, "get:GetLogLevel")
+	beego.Router("/logs", &controllers.LogsController{}, "get:Get")
+	beego.Router("/logs", &controllers.LogsController{}, "delete:Delete")
+	beego.Router("/logs/archive", &controllers.LogsController{}, "post:Archive")
+	//beego.Router("/logs/toggle-debug", &controllers.SettingsController{}, "get:ToggleDebug")
+	beego.Router("/logs/level", &controllers.LogsController{}, "get:GetLevel")
+	beego.Router("/logs/level/:level", &controllers.LogsController{}, "post:PostLevel")
 
 	// Routers for settings
 	beego.Router("/settings", &controllers.SettingsController{}, "get:Get")
