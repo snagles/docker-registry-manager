@@ -1,6 +1,10 @@
-package utils
+package settings
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/Sirupsen/logrus"
+)
 
 // ReleaseVersion contains the git tag version
 var ReleaseVersion string
@@ -8,8 +12,8 @@ var ReleaseVersion string
 func init() {
 	sha, err := GetAppSHA()
 	if err != nil {
-		Log.Error(err.Error())
-		Log.Error("Could not get git sha version")
+		logrus.Error(err.Error())
+		logrus.Error("Could not get git sha version")
 	}
 	ReleaseVersion = sha
 }
@@ -19,7 +23,6 @@ func UpdateApp() (bool, error) {
 
 	isUpToDate, err := IsAppUpToDate()
 	if err != nil {
-		Log.Error(err)
 		return false, err
 	}
 
@@ -39,25 +42,20 @@ func IsAppUpToDate() (bool, error) {
 	// Get the local branch info
 	localBranchName, err := GetAppBranch()
 	if err != nil {
-		Log.Error("Could not get app branch name from the local git copy")
 		return true, err
 	}
 	localBranchSHA, err := GetAppSHA()
 	if err != nil {
-		Log.Error("Could not get app branch SHA from the local git copy")
 		return true, err
 	}
 
 	// Get the remote info
 	remoteBaseSHA, err := GetBaseSHA()
 	if err != nil {
-		Log.Error("Could not get app branch SHA from the local git copy")
 		return true, err
 	}
 	remoteBranchSHA, err := GetRemoteBranchSHA(localBranchName)
 	if err != nil {
-		Log.Error("Could not get remote branch SHA for " + localBranchName)
-		Log.Error(err)
 		return true, err
 	}
 
@@ -71,6 +69,5 @@ func IsAppUpToDate() (bool, error) {
 	}
 
 	// If branch is diverged or you need to push
-	Log.Error("You have edited things locally with commits. Cannot autoresolve.")
 	return true, err
 }

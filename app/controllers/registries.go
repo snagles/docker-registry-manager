@@ -6,7 +6,7 @@ import (
 
 	"github.com/astaxie/beego"
 	client "github.com/heroku/docker-registry-client/registry"
-	"github.com/snagles/docker-registry-manager/models/manager"
+	"github.com/snagles/docker-registry-manager/app/models/manager"
 )
 
 // RegistriesController extends the beego.Controller type
