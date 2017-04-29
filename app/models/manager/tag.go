@@ -5,7 +5,7 @@ import (
 
 	manifestV1 "github.com/docker/distribution/manifest/schema1"
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
-	"github.com/snagles/docker-registry-manager/utilities"
+	"github.com/snagles/docker-registry-manager/settings"
 )
 
 type Tag struct {
@@ -28,7 +28,7 @@ func (t *Tag) LastModified() time.Time {
 
 func (t *Tag) LastModifiedTimeAgo() string {
 	lastModified := t.LastModified()
-	return utils.TimeAgo(lastModified)
+	return settings.TimeAgo(lastModified)
 }
 
 func (t *Tag) LayerCount() int {

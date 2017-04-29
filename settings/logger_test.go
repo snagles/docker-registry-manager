@@ -1,4 +1,4 @@
-package utils
+package settings
 
 import (
 	"io/ioutil"
@@ -16,7 +16,7 @@ import (
 func TestParseLog(t *testing.T) {
 
 	// Create an example log
-	Log.Error("test")
+	logrus.Error("test")
 
 	logs := ParseLogFile()
 	Convey("We should be able to parse the log file ", t, func() {
@@ -71,23 +71,23 @@ func TestArchiveLogFile(t *testing.T) {
 // TestToggleDebug tests the toggling of debug mode
 func TestToggleDebug(t *testing.T) {
 
-	currentLevel := Log.Level
+	currentLevel := logrus.Level
 	ToggleDebug()
 	if currentLevel == logrus.DebugLevel {
 		Convey("The log level should be toggled from debug to info", t, func() {
-			So(Log.Level, ShouldEqual, logrus.InfoLevel)
+			So(logrus.Level, ShouldEqual, logrus.InfoLevel)
 		})
 		ToggleDebug()
 		Convey("The log level should be toggled from info to debug", t, func() {
-			So(Log.Level, ShouldEqual, logrus.DebugLevel)
+			So(logrus.Level, ShouldEqual, logrus.DebugLevel)
 		})
 	} else {
 		Convey("The log level should be toggled from info to debug", t, func() {
-			So(Log.Level, ShouldEqual, logrus.DebugLevel)
+			So(logrus.Level, ShouldEqual, logrus.DebugLevel)
 		})
 		ToggleDebug()
 		Convey("The log level should be toggled from debug to info", t, func() {
-			So(Log.Level, ShouldEqual, logrus.InfoLevel)
+			So(logrus.Level, ShouldEqual, logrus.InfoLevel)
 		})
 	}
 

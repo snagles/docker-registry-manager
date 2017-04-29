@@ -5,8 +5,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
-	_ "github.com/snagles/docker-registry-manager/routers"
-	"github.com/snagles/docker-registry-manager/utilities"
+	_ "github.com/snagles/docker-registry-manager/app/routers"
 )
 
 var logLevel int
@@ -20,22 +19,20 @@ func init() {
 	// Set the log level of the program
 	switch {
 	case logLevel == 1:
-		utils.Log.Level = logrus.PanicLevel
+		logrus.SetLevel(logrus.PanicLevel)
 	case logLevel == 2:
-		utils.Log.Level = logrus.FatalLevel
+		logrus.SetLevel(logrus.FatalLevel)
 	case logLevel == 3:
-		utils.Log.Level = logrus.ErrorLevel
+		logrus.SetLevel(logrus.ErrorLevel)
 	case logLevel == 4:
-		utils.Log.Level = logrus.WarnLevel
+		logrus.SetLevel(logrus.WarnLevel)
 	case logLevel == 5:
-		utils.Log.Level = logrus.InfoLevel
+		logrus.SetLevel(logrus.InfoLevel)
 	case logLevel == 6:
-		utils.Log.Level = logrus.DebugLevel
+		logrus.SetLevel(logrus.DebugLevel)
 	}
 }
 
 func main() {
-
 	beego.Run()
-
 }
