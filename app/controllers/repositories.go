@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/manager"
-	"github.com/snagles/docker-registry-manager/utilities"
+	"github.com/snagles/docker-registry-manager/app/models/manager"
 )
 
 type RepositoriesController struct {
@@ -30,7 +30,7 @@ func (c *RepositoriesController) GetAllRepositoryCount() {
 	for _, reg := range manager.AllRegistries.Registries {
 		repositories, err := reg.Registry.Repositories()
 		if err != nil {
-			utils.Log.Error("Could not connect to registry to get the repository count. " + err.Error())
+			logrus.Error("Could not connect to registry to get the repository count. " + err.Error())
 		}
 		count += len(repositories)
 	}

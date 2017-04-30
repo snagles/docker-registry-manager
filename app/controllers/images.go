@@ -4,7 +4,7 @@ import (
 	"net/url"
 
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/models/manager"
+	"github.com/snagles/docker-registry-manager/app/models/manager"
 )
 
 type ImagesController struct {
