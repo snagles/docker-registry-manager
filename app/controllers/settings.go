@@ -4,6 +4,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/toolbox"
+	"github.com/snagles/docker-registry-manager/app/models/git"
 	"github.com/snagles/docker-registry-manager/settings"
 )
 
@@ -12,14 +13,14 @@ type SettingsController struct {
 }
 
 func (c *SettingsController) Get() {
-	c.Data["releaseVersion"] = settings.ReleaseVersion
+	c.Data["releaseVersion"] = git.ReleaseVersion
 	c.Data["activeLevel"] = logrus.GetLevel()
 	c.Data["allLevels"] = logrus.AllLevels
 	c.TplName = "settings.tpl"
 }
 
 func (c *SettingsController) GetReleaseVersion() {
-	currentRelease := settings.ReleaseVersion
+	currentRelease := git.ReleaseVersion
 	type ReleaseVersion struct {
 		ReleaseVersion string
 	}
