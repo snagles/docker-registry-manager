@@ -12,7 +12,6 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	client "github.com/heroku/docker-registry-client/registry"
-	"github.com/snagles/docker-registry-manager/utilities"
 )
 
 var AllRegistries Registries
@@ -48,7 +47,7 @@ func (r *Registry) Refresh() {
 	// Get the list of repositories
 	repoList, err := ur.Registry.Repositories()
 	if err != nil {
-		utils.Log.WithFields(logrus.Fields{
+		logrus.WithFields(logrus.Fields{
 			"Error": err.Error(),
 		}).Error("Failed to retrieve an updated list of repositories for " + ur.URL)
 	}
@@ -62,7 +61,7 @@ func (r *Registry) Refresh() {
 		// Get the list of tags for the repository
 		tagList, err := ur.Tags(repoName)
 		if err != nil {
-			utils.Log.WithFields(logrus.Fields{
+			logrus.WithFields(logrus.Fields{
 				"Error":           err.Error(),
 				"Repository Name": repoName,
 			}).Error("Failed to retrieve an updated list of tags for " + ur.URL)
@@ -74,7 +73,7 @@ func (r *Registry) Refresh() {
 			// Use v1 since it has a lot more information
 			man, err := ur.Manifest(repoName, tagName)
 			if err != nil {
-				utils.Log.WithFields(logrus.Fields{
+				logrus.WithFields(logrus.Fields{
 					"Error":           err.Error(),
 					"Repository Name": repoName,
 					"Tag Name":        tagName,
@@ -86,7 +85,7 @@ func (r *Registry) Refresh() {
 				v1JSON := V1Compatibility{}
 				err = json.Unmarshal([]byte(h.V1Compatibility), &v1JSON)
 				if err != nil {
-					utils.Log.Error(err)
+					logrus.Error(err)
 				}
 				v1JSON.SizeStr = bytefmt.ByteSize(uint64(v1JSON.Size))
 
