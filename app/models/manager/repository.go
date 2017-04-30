@@ -3,7 +3,7 @@ package manager
 import (
 	"time"
 
-	"github.com/snagles/docker-registry-manager/settings"
+	"github.com/snagles/docker-registry-manager/utils"
 )
 
 type Repository struct {
@@ -25,5 +25,5 @@ func (r *Repository) LastModified() time.Time {
 
 func (r *Repository) LastModifiedTimeAgo() string {
 	lastModified := r.LastModified()
-	return settings.TimeAgo(lastModified)
+	return utils.TimeAgo(lastModified)
 }
