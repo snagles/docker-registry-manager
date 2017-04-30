@@ -46,6 +46,7 @@
                   </div>
                   <div class="box-footer">
                     <span class="label label-success text-capitalize">{{$registry.Status}}</span>
+                    <span class="label label-info text-capitalize">v2</span>
                   </div>
                 </div>
               </div>
