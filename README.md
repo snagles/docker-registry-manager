@@ -1,4 +1,9 @@
-![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master) [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager) [![Release](https://img.shields.io/badge/Release-1.0.1-green.svg)](https://godoc.org/github.com/snagles/docker-registry-manager) [![Coverage Status](https://coveralls.io/repos/github/snagles/docker-registry-manager/badge.svg?branch=master)](https://coveralls.io/github/snagles/docker-registry-manager?branch=master)
+
+| Service   |  Master  | Develop  |   
+|---|---|---|
+| Status   | ![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master)  | ![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=develop)   |
+| Coverage  | [![Coverage Status](https://codecov.io/gh/snagles/docker-registry-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/snagles/docker-registry-manager)  | [![Coverage Status](https://codecov.io/gh/snagles/docker-registry-manager/branch/develop/graph/badge.svg)](https://codecov.io/gh/snagles/docker-registry-manager)  |
+| Documentation  | [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager)  | [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager)  | 
 
 # Docker Registry Manager
 
@@ -23,7 +28,7 @@ WARNING: This application is very much still a work in progress. Core functional
 ### Go
  ```bash
     git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
-    go build . && ./docker-registry-manager -verbosity 6
+    cd app && go build . && ./app -verbosity 6
     firefox localhost:8080
  ```
 

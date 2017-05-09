@@ -2,10 +2,10 @@ language: go
 sudo: false
 go:
   - tip
-before_install:
-  - go get github.com/go-playground/overalls
-  - go get github.com/mattn/goveralls
 install: true
+before_install:
+  - go get -v ./...
 script:
-  - overalls -project=github.com/snagles/docker-registry-manager -covermode=count -debug
-  - goveralls -coverprofile=overalls.coverprofile -service=travis-ci
+  - ./.travis-test.sh 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

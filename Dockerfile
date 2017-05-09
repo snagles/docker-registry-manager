@@ -1,6 +1,6 @@
 # Start from an Alpine image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
-FROM golang:1.8-alpine
+FROM golang:alpine
 
 # Install git
 RUN apk add --no-cache git
@@ -9,11 +9,12 @@ RUN apk add --no-cache git
 ADD . /go/src/github.com/snagles/docker-registry-manager/
 
 # Install dependencies
-WORKDIR $GOPATH/src/github.com/snagles/docker-registry-manager/
+WORKDIR $GOPATH/src/github.com/snagles/docker-registry-manager
 
-RUN go get -v
+RUN go get -v ./...
 
 # Build the application inside the container.
+WORKDIR $GOPATH/src/github.com/snagles/docker-registry-manager/app
 RUN go build .
 
 # Set env for verbose output (Default info level)
@@ -22,4 +23,4 @@ ENV VERBOSITY 5
 EXPOSE 8080
 
 # Run the app by default when the container starts.
-CMD /go/src/github.com/snagles/docker-registry-manager/docker-registry-manager -verbosity $VERBOSITY
+CMD /go/src/github.com/snagles/docker-registry-manager/app/app -verbosity $VERBOSITY
