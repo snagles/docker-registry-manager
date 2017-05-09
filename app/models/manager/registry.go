@@ -115,6 +115,16 @@ func (r *Registry) TagCount() int {
 	return count
 }
 
+func (r *Registry) LayerCount() int {
+	var count int
+	for _, repo := range r.Repositories {
+		for _, tag := range repo.Tags {
+			count += tag.LayerCount()
+		}
+	}
+	return count
+}
+
 func (r *Registry) Status() string {
 	if err := r.Ping(); err != nil {
 		return "DOWN"
