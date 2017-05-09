@@ -3,9 +3,10 @@ package registry
 import (
 	"crypto/tls"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
+
+	"github.com/Sirupsen/logrus"
 )
 
 type LogfCallback func(format string, args ...interface{})
@@ -21,7 +22,7 @@ func Quiet(format string, args ...interface{}) {
  * Pass log messages along to Go's "log" module.
  */
 func Log(format string, args ...interface{}) {
-	log.Printf(format, args...)
+	logrus.Infof(format, args...)
 }
 
 type Registry struct {

@@ -1,5 +1,6 @@
 docker-registry-manager
 *.log
+app/logs
 *log.json
 app/app
 app/logs/log.json
