@@ -33,6 +33,13 @@ func init() {
 	LogDir = appPath + "/logs/"
 	LogFile = LogDir + "/log.json"
 
+	// create log dir if needed
+	if _, err := os.Stat(LogDir); os.IsNotExist(err) {
+		if err = os.Mkdir(LogDir, 0755); err != nil {
+			logrus.Fatal(err)
+		}
+	}
+
 	// Create the log file if needed
 	if _, err := os.Stat(LogFile); os.IsNotExist(err) {
 		if _, err = os.Create(LogFile); err != nil {
