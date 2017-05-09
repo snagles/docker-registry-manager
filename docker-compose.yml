@@ -2,10 +2,9 @@ version: '2'
 
 services:
   docker-registry-manager:
-    build: .
+    build: app/*
     image: docker-registry-manager
     environment:
-      - VERBOSITY=6   # Log level of 6 is debug mode. See main.go init for log level details
+      - VERBOSITY=5   # Log level of 6 is debug mode. See main.go init for log level details
     ports:
       - "8080:8080" # manager GUI
-      - "8088:8088" # beego admin
