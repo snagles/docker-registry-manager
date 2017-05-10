@@ -88,6 +88,7 @@ func (r *Registry) Refresh() {
 					"Repository Name": repoName,
 					"Tag Name":        tagName,
 				}).Error("Failed to retrieve manifest information for " + ur.URL)
+				continue
 			}
 
 			var histories []V1Compatibility
