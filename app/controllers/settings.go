@@ -14,6 +14,8 @@ type SettingsController struct {
 
 func (c *SettingsController) Get() {
 	c.Data["releaseVersion"] = git.ReleaseVersion
+	branch, _ := git.GetAppBranch()
+	c.Data["branchName"] = branch
 	c.Data["activeLevel"] = logrus.GetLevel()
 	c.Data["allLevels"] = logrus.AllLevels
 	c.TplName = "settings.tpl"
