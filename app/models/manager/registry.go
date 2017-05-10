@@ -34,6 +34,7 @@ type Registry struct {
 	Name         string
 	Host         string
 	Scheme       string
+	Version      string
 	Port         int
 	sync.Mutex
 }
@@ -145,6 +146,7 @@ func AddRegistry(scheme, host string, port int, ttl time.Duration) (*Registry, e
 		Host:     host,
 		Scheme:   scheme,
 		Port:     port,
+		Version:  "v2",
 		Name:     host + ":" + strconv.Itoa(port),
 	}
 	r.Refresh()
