@@ -43,6 +43,7 @@
                     <span class="label label-success text-capitalize">{{$registry.Status}}</span>
                     <span class="label label-info text-capitalize">{{$registry.Version}}</span>
                     <span class="label label-info text-uppercase">{{$registry.Scheme}}</span>
+                    {{if ne $registry.IP "" }}<span class="label label-info">{{$registry.IP}}</span> {{ end }}
                   </div>
                 </div>
               </div>

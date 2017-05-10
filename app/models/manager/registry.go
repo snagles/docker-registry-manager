@@ -3,6 +3,7 @@ package manager
 import (
 	"encoding/json"
 	"fmt"
+	"net"
 	"strconv"
 	"strings"
 	"sync"
@@ -37,6 +38,14 @@ type Registry struct {
 	Version      string
 	Port         int
 	sync.Mutex
+}
+
+func (r *Registry) IP() string {
+	ip, _ := net.LookupHost(r.Host)
+	if len(ip) > 0 {
+		return ip[0]
+	}
+	return ""
 }
 
 // Refresh is called with the configured TTL time for the given registry
