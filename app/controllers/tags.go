@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/url"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
 	"github.com/snagles/docker-registry-manager/app/models/manager"
 )
@@ -40,8 +41,13 @@ func (c *TagsController) DeleteTags() {
 	digest, _ := manager.AllRegistries.Registries[registryName].ManifestDigest(repositoryName, tag)
 	err := registry.Registry.DeleteManifest(repositoryName, digest)
 	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"Digest": digest.String(),
+			"Error":  err.Error(),
+		}).Errorf("Failed to delete digest.")
 		c.CustomAbort(404, "Failure")
 	}
+	registry.Refresh()
 
 	c.CustomAbort(200, "Success")
 

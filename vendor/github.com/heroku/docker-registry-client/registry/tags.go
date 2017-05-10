@@ -23,3 +23,15 @@ func (registry *Registry) Tags(repository string) (tags []string, err error) {
 		}
 	}
 }
+
+func (registry *Registry) TagSize(repository, reference string) (size int64, err error) {
+	deserialized, err := registry.ManifestV2(repository, reference)
+	if err != nil {
+		return -1, err
+	}
+	size = int64(0)
+	for _, layer := range deserialized.Layers {
+		size += layer.Size
+	}
+	return size, nil
+}
