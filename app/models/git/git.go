@@ -1,6 +1,7 @@
 package git
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -73,6 +74,7 @@ func GetRemoteBranchSHA(branch string) (string, error) {
 func GetAppBranch() (string, error) {
 	cmdArgs := []string{"rev-parse", "--abbrev-ref", "HEAD"}
 	branchName, err := exec.Command("/usr/bin/git", cmdArgs...).Output()
+	branchName = bytes.Trim(branchName, "\n")
 	return string(branchName), err
 }
 
