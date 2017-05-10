@@ -1,9 +1,11 @@
 language: go
-
+sudo: false
 go:
   - tip
+install: true
 before_install:
-  - go get github.com/mattn/goveralls
-  - go get golang.org/x/tools/cmd/cover
+  - go get -v ./...
 script:
-- $HOME/gopath/bin/goveralls -service=travis-ci
+  - ./.travis-test.sh 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
