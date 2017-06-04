@@ -41,7 +41,7 @@
                 <td></td>
                 <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$key}}/images>{{$key}}</span></td>
                 <td>{{len $tag.V1.FSLayers}}</td>
-                <td data-order="">{{$tag.LastModifiedTimeAgo}}</td>
+                <td data-order="{{$tag.LastModified.Unix}}">{{$tag.LastModifiedTimeAgo}}</td>
               </tr>
               {{end}}
             </tbody>
