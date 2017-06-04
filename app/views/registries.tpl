@@ -11,7 +11,7 @@
     <div class="col-lg-12">
       <ul class="boxes">
         {{range $key, $registry := .registries}}
-        <li>
+        <li data-registry="{{$registry.Name}}">
           <a href="/registries/{{$registry.Name}}/repositories">
             <div class="white-bg box col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <div class="col-lg-12">
@@ -44,6 +44,8 @@
                     <span class="label label-info text-capitalize">{{$registry.Version}}</span>
                     <span class="label label-info text-uppercase">{{$registry.Scheme}}</span>
                     {{if ne $registry.IP "" }}<span class="label label-info">{{$registry.IP}}</span> {{ end }}
+                    {{if ne $registry.Pushes 0 }}<span class="label label-info">{{$registry.Pushes}} Pushes</span> {{ end }}
+                    {{if ne $registry.Pulls 0 }}<span class="label label-info">{{$registry.Pulls}} Pulls</span> {{ end }}
                   </div>
                 </div>
               </div>
