@@ -13,7 +13,6 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	client "github.com/heroku/docker-registry-client/registry"
-	"github.com/snagles/docker-registry-manager/utils"
 )
 
 var AllRegistries Registries
@@ -146,7 +145,8 @@ func (r *Registry) Pushes() int {
 
 	var pushes int
 	for _, e := range AllEvents.Events[r.Name] {
-		if e.Action == "push" {
+		// TODO: really need to find a better way to exclude the managers queries
+		if e.Action == "push" && e.Request.Useragent != "Go-http-client/1.1" && e.Request.Method != "HEAD" {
 			pushes++
 		}
 	}
@@ -163,11 +163,11 @@ func (r *Registry) Pulls() int {
 	var pulls int
 	for _, e := range AllEvents.Events[r.Name] {
 		// exclude heads since thats the method the manager uses for getting meta info
-		if e.Action == "pull" && e.Target.MediaType != "application/vnd.docker.distribution.manifest.v2+json" {
+		// TODO: really need to find a better way to exclude the managers queries
+		if e.Action == "pull" && e.Request.Useragent != "Go-http-client/1.1" && e.Request.Method != "HEAD" {
 			pulls++
 		}
 	}
-	utils.Dump(AllEvents.Events[r.Name])
 	return pulls
 }
 
