@@ -13,6 +13,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	client "github.com/heroku/docker-registry-client/registry"
+	"github.com/snagles/docker-registry-manager/utils"
 )
 
 var AllRegistries Registries
@@ -134,6 +135,40 @@ func (r *Registry) LayerCount() int {
 		}
 	}
 	return count
+}
+
+func (r *Registry) Pushes() int {
+	AllEvents.Lock()
+	defer AllEvents.Unlock()
+	if _, ok := AllEvents.Events[r.Name]; !ok {
+		return 0
+	}
+
+	var pushes int
+	for _, e := range AllEvents.Events[r.Name] {
+		if e.Action == "push" {
+			pushes++
+		}
+	}
+	return pushes
+}
+
+func (r *Registry) Pulls() int {
+	AllEvents.Lock()
+	defer AllEvents.Unlock()
+	if _, ok := AllEvents.Events[r.Name]; !ok {
+		return 0
+	}
+
+	var pulls int
+	for _, e := range AllEvents.Events[r.Name] {
+		// exclude heads since thats the method the manager uses for getting meta info
+		if e.Action == "pull" && e.Target.MediaType != "application/vnd.docker.distribution.manifest.v2+json" {
+			pulls++
+		}
+	}
+	utils.Dump(AllEvents.Events[r.Name])
+	return pulls
 }
 
 func (r *Registry) Status() string {
