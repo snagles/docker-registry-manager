@@ -40,7 +40,7 @@
                 <th>Command:</th>
               </thead>
               <tbody>
-                {{range $key, $img := .tag.Histories}}
+                {{range $key, $img := .tag.HistoriesOrdered}}
                 <tr>
                   <td>{{$img.IDShort}}</td>
                   <td>{{$img.ContainerConfig.CmdClean}}</td>

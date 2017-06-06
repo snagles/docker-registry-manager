@@ -34,3 +34,11 @@ func (t *Tag) LastModifiedTimeAgo() string {
 func (t *Tag) LayerCount() int {
 	return len(t.V1.FSLayers)
 }
+
+func (t *Tag) HistoriesOrdered() []V1Compatibility {
+	ordered := []V1Compatibility{}
+	for i := len(t.Histories) - 1; i >= 0; i-- {
+		ordered = append(ordered, t.Histories[i])
+	}
+	return ordered
+}
