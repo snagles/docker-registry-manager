@@ -105,7 +105,8 @@ func (r *Registry) Refresh() {
 
 				// Remove shell command
 				if len(v1JSON.ContainerConfig.Cmd) > 0 {
-					v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.Cmd[0], "/bin/sh -c #(nop)", "", -1)
+					v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.Cmd[0], "/bin/sh -c ", "", -1)
+					v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.CmdClean, "#(nop) ", "", -1)
 				}
 				histories = append(histories, v1JSON)
 			}
