@@ -29,6 +29,11 @@
                     <li>Layers: {{.tag.LayerCount}}</li>
                     <li>Last Updated: {{.tag.LastModifiedTimeAgo}}</li>
                   </ul>
+                    <h4>Push/Pull this Image</h4>
+                    <ul>
+                      <li>docker pull {{.registryName}}/{{.repositoryName}}:{{.tagName}}</li></li>
+                      <li>docker push {{.registryName}}/{{.repositoryName}}:{{.tagName}}</li></li>
+                    </ul>
                 </div>
               </div>
             </div>
