@@ -42,10 +42,12 @@ WARNING: This application is very much still a work in progress. Core functional
 ## Current Features
  1. Support for docker distribution registry v2 (https and http)
  2. Manage multiple registries with one web instance
- 3. Viewable image/tags stages, commands, and sizes. Refreshed every 45s
- 4. Bulk deletes of tags
- 5. Admin panel with logs, request tracking, and configurable log levels
+ 3. Viewable image/tags stages, commands, and sizes.
+ 4. Configurable refresh intervals
+ 5. Bulk deletes of tags
+ 6. Admin panel with logs, request tracking, and configurable log levels
+ 7. Registry envelope acceptance to allow for registry request tracking
 
 ## Planned Features
  1. Authentication for users with admin/read only rights
- 2. Registry event logs in "dashboard"
+ 2. Viewable activity logs 
