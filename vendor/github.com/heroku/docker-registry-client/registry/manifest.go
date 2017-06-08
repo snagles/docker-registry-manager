@@ -1,7 +1,6 @@
 package registry
 
 import (
-	"bytes"
 	"io/ioutil"
 	"net/http"
 
@@ -9,36 +8,6 @@ import (
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
 	digest "github.com/opencontainers/go-digest"
 )
-
-func (registry *Registry) Manifest(repository, reference string) (*manifestV1.SignedManifest, error) {
-	url := registry.url("/v2/%s/manifests/%s", repository, reference)
-	registry.Logf("registry.manifest.get url=%s repository=%s reference=%s", url, repository, reference)
-
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Accept", manifestV1.MediaTypeManifest)
-	resp, err := registry.Client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	signedManifest := &manifestV1.SignedManifest{}
-	err = signedManifest.UnmarshalJSON(body)
-	if err != nil {
-		return nil, err
-	}
-
-	return signedManifest, nil
-}
 
 func (registry *Registry) ManifestV2(repository, reference string) (*manifestV2.DeserializedManifest, error) {
 	url := registry.url("/v2/%s/manifests/%s", repository, reference)
@@ -108,19 +77,30 @@ func (registry *Registry) DeleteManifest(repository string, digest digest.Digest
 	return nil
 }
 
-func (registry *Registry) PutManifest(repository, reference string, signedManifest *manifestV1.SignedManifest) error {
+func (registry *Registry) PutManifest(repository, reference string) error {
 	url := registry.url("/v2/%s/manifests/%s", repository, reference)
 	registry.Logf("registry.manifest.put url=%s repository=%s reference=%s", url, repository, reference)
 
-	body, err := signedManifest.MarshalJSON()
+	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
 		return err
 	}
 
-	buffer := bytes.NewBuffer(body)
-	req, err := http.NewRequest("PUT", url, buffer)
+	req.Header.Set("Content-Type", manifestV2.MediaTypeManifest)
+	resp, err := registry.Client.Do(req)
+	if resp != nil {
+		defer resp.Body.Close()
+	}
+	return err
+}
+
+func (registry *Registry) ManifestMetadata(repository string, digest digest.Digest) ([]byte, error) {
+	url := registry.url("/v2/%s/blobs/%s", repository, digest.String())
+	registry.Logf("registry.layer.check url=%s repository=%s digest=%s", url, repository, digest)
+
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req.Header.Set("Content-Type", manifestV1.MediaTypeManifest)
@@ -128,5 +108,14 @@ func (registry *Registry) PutManifest(repository, reference string, signedManife
 	if resp != nil {
 		defer resp.Body.Close()
 	}
-	return err
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
 }
