@@ -16,14 +16,16 @@
       <div class="row">
         <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
           <thead>
-            <th>Repository:</th>
-            <th>Registry:</th>
-            <th>Tags:</th>
+            <th>Repository</th>
+            <th>Registry</th>
+            <th>Size <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Compressed tar.gz size"></i></th>
+            <th>Tags</th>
           </thead>
           <tfoot>
-            <th>Repository:</th>
-            <th>Registry:</th>
-            <th>Tags:</th>
+            <th>Repository</th>
+            <th>Registry</th>
+            <th>Size <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Compressed tar.gz size"></i></th>
+            <th>Tags</th>
           </tfoot>
           <tbody>
             {{range $registryName, $repositories := .repositories}}
@@ -31,6 +33,7 @@
               <tr>
                 <td><a href=/registries/{{$registryName}}/repositories/{{urlquery $repo.Name}}/tags>{{$repo.Name}}</span></td>
                 <td>{{$registryName}}</td>
+                <td data-order="{{$repo.Size}}">{{bytefmt $repo.Size}}</td>
                 <td>{{len $repo.Tags}}</td>
               </tr>
               {{end}}
