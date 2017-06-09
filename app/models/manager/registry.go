@@ -72,7 +72,7 @@ func (r *Registry) Refresh() {
 				"Error":           err.Error(),
 				"Repository Name": repoName,
 			}).Error("Failed to retrieve an updated list of tags for " + ur.URL)
-			return
+			continue
 		}
 
 		repo.Tags = map[string]*Tag{}
@@ -95,13 +95,13 @@ func (r *Registry) Refresh() {
 			v1Bytes, err := ur.ManifestMetadata(repoName, man.Config.Digest)
 			if err != nil {
 				logrus.Error(err)
-				return
+				continue
 			}
 			var v1 V1Compatibility
 			err = json.Unmarshal(v1Bytes, &v1)
 			if err != nil {
 				logrus.Error(err)
-				return
+				continue
 			}
 
 			// add the pointer for the history to its layer
@@ -109,7 +109,6 @@ func (r *Registry) Refresh() {
 			for i, history := range v1.History {
 				if !history.EmptyLayer {
 					v1.History[i].ManifestLayer = &man.Layers[layerIndex]
-				} else {
 					layerIndex++
 				}
 			}
@@ -118,7 +117,6 @@ func (r *Registry) Refresh() {
 			size, err := ur.TagSize(repoName, tagName)
 			if err != nil {
 				logrus.Error(err)
-				return
 			}
 
 			repo.Tags[tagName] = &Tag{Name: tagName, V1Compatibility: &v1, Size: int64(size), DeserializedManifest: man}
