@@ -14,7 +14,7 @@ type Repository struct {
 func (r *Repository) LastModified() time.Time {
 	var lastModified time.Time
 	for _, tag := range r.Tags {
-		for _, history := range tag.Histories {
+		for _, history := range tag.History {
 			if history.Created.After(lastModified) {
 				lastModified = history.Created
 			}
