@@ -42,8 +42,8 @@
             <table id="datatable" class="table" cellspacing="0" width="100%">
               <thead>
                 <th>Stage</th>
-                <th>Layer Command</th>
-                <th>Size</th>
+                <th>Command</th>
+                <th>Size <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Compressed tar.gz size"></i></th>
                 <th>Created</th>
               </thead>
               <tbody>

@@ -18,7 +18,7 @@
         <table id="datatable" class="table table-striped" cellspacing="0" width="100%">
           <thead>
             <th>Repository</th>
-            <th>Size</th>
+            <th>Size <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Compressed tar.gz size"></i></th>
             <th>Tags</th>
           </thead>
           <tbody>
