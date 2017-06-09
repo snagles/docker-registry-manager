@@ -4,7 +4,6 @@ import (
 	"time"
 
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
-	"github.com/snagles/docker-registry-manager/utils"
 )
 
 type Tag struct {
@@ -23,11 +22,6 @@ func (t *Tag) LastModified() time.Time {
 		}
 	}
 	return lastModified
-}
-
-func (t *Tag) LastModifiedTimeAgo() string {
-	lastModified := t.LastModified()
-	return utils.TimeAgo(lastModified)
 }
 
 func (t *Tag) LayerCount() int {

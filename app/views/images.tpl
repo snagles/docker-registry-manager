@@ -27,7 +27,7 @@
                   <h4>Image Overview</h4>
                   <ul>
                     <li>Layers: {{.tag.LayerCount}}</li>
-                    <li>Last Updated: {{.tag.LastModifiedTimeAgo}}</li>
+                    <li>Last Updated: {{timeAgo .tag.LastModified}}</li>
                   </ul>
                     <h4>Push/Pull this Image</h4>
                     <ul>
@@ -39,19 +39,27 @@
             </div>
           </div>
           <div role="tabpanel" class="tab-pane" id="stages">
-            <table class="table">
+            <table id="datatable" class="table" cellspacing="0" width="100%">
               <thead>
-                <th>Image ID:</th>
-                <th>Command:</th>
+                <th>Stage</th>
+                <th>Layer Command</th>
+                <th>Size</th>
+                <th>Created</th>
               </thead>
               <tbody>
-                {{range $key, $img := .tag.HistoriesOrdered}}
-                <tr>
-                  <td>{{$img.IDShort}}</td>
-                  <td>{{$img.ContainerConfig.CmdClean}}</td>
-                </tr>
-                {{end}}
-              </tbody>
+                {{range $i, $history := $.tag.History}}
+               <tr data-tag-name="">
+                 <td>{{oneIndex $i}}</td>
+                 <td>{{$history.CreatedBy}}</td>
+                {{if not $history.EmptyLayer}}
+                 <td>{{with index $.tag.DeserializedManifest.Layers $i}}{{bytefmt .Size}}{{end}}</td>
+                 {{else}}
+                 <td>{{bytefmt 0}}</td>
+                 {{end}}
+                 <td>{{timeAgo $history.Created}}</td>
+               </tr>
+               {{end}}
+             </tbody>
             </table>
           </div>
         </div>
@@ -66,6 +74,17 @@
     $(this).tab('show')
   })
 
+  $(document).ready(function() {
+      $('#datatable').DataTable( {
+          "order": [[ 0, "asc" ]],
+          "searching": false,
+          "info": false,
+          "paging": false
+      } );
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip({container: 'body'})
+      })
+  });
   </script>
 
 {{end}}
