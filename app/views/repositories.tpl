@@ -15,19 +15,17 @@
         <hr>
       </div>
       <div class="row">
-        <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <table id="datatable" class="table table-striped" cellspacing="0" width="100%">
           <thead>
-            <th>Repository Name</th>
+            <th>Repository</th>
+            <th>Size</th>
             <th>Tags</th>
           </thead>
-          <tfoot>
-            <th>Repository Name</th>
-            <th>Tags</th>
-          </tfoot>
           <tbody>
             {{range $key, $repository := .repositories}}
             <tr>
               <td><a href="/registries/{{$.registryName}}/repositories/{{urlquery $repository.Name}}/tags">{{$repository.Name}}</span></td>
+              <td data-order="{{$repository.Size}}">{{bytefmt $repository.Size}}</td>
               <td>{{len $repository.Tags}}</td>
             </tr>
             {{end}}
@@ -41,7 +39,7 @@
   $(document).ready(function() {
       $('#datatable').DataTable( {
           "order": [[ 1, "asc" ]],
-          "pageLength": 25
+          "info": false
       } );
       $(function () {
         $('[data-toggle="tooltip"]').tooltip({container: 'body'})
