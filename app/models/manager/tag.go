@@ -10,7 +10,7 @@ type Tag struct {
 	*manifestV2.DeserializedManifest
 	ID   string
 	Name string
-	V1Compatibility
+	*V1Compatibility
 	Size int64
 }
 

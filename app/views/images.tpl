@@ -52,9 +52,9 @@
                  <td>{{oneIndex $i}}</td>
                  <td>{{$history.CreatedBy}}</td>
                 {{if not $history.EmptyLayer}}
-                 <td>{{with index $.tag.DeserializedManifest.Layers $i}}{{bytefmt .Size}}{{end}}</td>
+                 <td data-order="{{$history.ManifestLayer.Size}}">{{bytefmt $history.ManifestLayer.Size}}</td>
                  {{else}}
-                 <td>{{bytefmt 0}}</td>
+                 <td data-order="0">0</td>
                  {{end}}
                  <td>{{timeAgo $history.Created}}</td>
                </tr>

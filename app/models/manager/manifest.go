@@ -1,6 +1,10 @@
 package manager
 
-import "time"
+import (
+	"time"
+
+	"github.com/docker/distribution"
+)
 
 type V1Compatibility struct {
 	Architecture string `json:"architecture"`
@@ -50,10 +54,11 @@ type V1Compatibility struct {
 	Created       time.Time `json:"created"`
 	DockerVersion string    `json:"docker_version"`
 	History       []struct {
-		Created        time.Time `json:"created"`
-		CreatedBy      string    `json:"created_by"`
-		CreatedByClean string    `json:"created_by_clean"`
-		EmptyLayer     bool      `json:"empty_layer,omitempty"`
+		Created        time.Time                `json:"created"`
+		CreatedBy      string                   `json:"created_by"`
+		CreatedByClean string                   `json:"created_by_clean"`
+		EmptyLayer     bool                     `json:"empty_layer,omitempty"`
+		ManifestLayer  *distribution.Descriptor `json:"manifest_layer"`
 	} `json:"history"`
 	Os     string `json:"os"`
 	Rootfs struct {
