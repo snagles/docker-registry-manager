@@ -54,15 +54,17 @@ type V1Compatibility struct {
 	Created       time.Time `json:"created"`
 	DockerVersion string    `json:"docker_version"`
 	History       []struct {
-		Created        time.Time                `json:"created"`
-		CreatedBy      string                   `json:"created_by"`
-		CreatedByClean string                   `json:"created_by_clean"`
-		EmptyLayer     bool                     `json:"empty_layer,omitempty"`
-		ManifestLayer  *distribution.Descriptor `json:"manifest_layer"`
+		Created       time.Time                `json:"created"`
+		Author        string                   `json:"author,omitempty"`
+		CreatedBy     string                   `json:"created_by,omitempty"`
+		Comment       string                   `json:"comment,omitempty"`
+		EmptyLayer    bool                     `json:"empty_layer,omitempty"`
+		ManifestLayer *distribution.Descriptor `json:"manifest_layer"`
 	} `json:"history"`
 	Os     string `json:"os"`
 	Rootfs struct {
-		Type    string   `json:"type"`
-		DiffIds []string `json:"diff_ids"`
+		Type      string   `json:"type"`
+		DiffIDs   []string `json:"diff_ids,omitempty"`
+		BaseLayer string   `json:"base_layer,omitempty"`
 	} `json:"rootfs"`
 }
