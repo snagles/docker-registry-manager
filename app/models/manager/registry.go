@@ -104,6 +104,16 @@ func (r *Registry) Refresh() {
 				return
 			}
 
+			// add the pointer for the history to its layer
+			layerIndex := 0
+			for i, history := range v1.History {
+				if !history.EmptyLayer {
+					v1.History[i].ManifestLayer = &man.Layers[layerIndex]
+				} else {
+					layerIndex++
+				}
+			}
+
 			// Get the tag size information
 			size, err := ur.TagSize(repoName, tagName)
 			if err != nil {
@@ -111,7 +121,7 @@ func (r *Registry) Refresh() {
 				return
 			}
 
-			repo.Tags[tagName] = &Tag{Name: tagName, V1Compatibility: v1, Size: int64(size), DeserializedManifest: man}
+			repo.Tags[tagName] = &Tag{Name: tagName, V1Compatibility: &v1, Size: int64(size), DeserializedManifest: man}
 		}
 		ur.Repositories[repoName] = &repo
 	}
