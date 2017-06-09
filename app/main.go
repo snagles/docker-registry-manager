@@ -6,6 +6,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
 	_ "github.com/snagles/docker-registry-manager/app/routers"
+	"github.com/snagles/docker-registry-manager/utils"
 )
 
 var logLevel int
@@ -34,5 +35,8 @@ func init() {
 }
 
 func main() {
+	beego.AddFuncMap("bytefmt", utils.ByteFmt)
+	beego.AddFuncMap("timeAgo", utils.TimeAgo)
+	beego.AddFuncMap("oneIndex", func(i int) int { return i + 1 })
 	beego.Run()
 }

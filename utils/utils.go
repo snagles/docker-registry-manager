@@ -8,7 +8,13 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+
+	"code.cloudfoundry.org/bytefmt"
 )
+
+func ByteFmt(bytes int64) string {
+	return bytefmt.ByteSize(uint64(bytes))
+}
 
 // TimeAgo returns the rounded form of amount of time elapsed between now and the passed time
 func TimeAgo(passedTime time.Time) string {
