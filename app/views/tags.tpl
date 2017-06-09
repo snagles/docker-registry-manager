@@ -18,30 +18,24 @@
       </div>
       <div class="row">
         <form id="delete-tags">
-          <table id="datatable" class="table table-striped table-bordered display select" cellspacing="0" width="100%" cellspacing="0" width="100%">
+          <table id="datatable" class="table table-striped display select" cellspacing="0" width="100%" cellspacing="0" width="100%">
              <thead>
                 <tr>
                   <th><input name="select_all" value="1" type="checkbox"></th>
-                  <th>Tags:</th>
-                  <th>Layers:</th>
-                  <th>Updated:</th>
+                  <th>Tags</th>
+                  <th>Layers</th>
+                  <th>Size</th>
+                  <th>Updated</th>
                 </tr>
              </thead>
-             <tfoot>
-                <tr>
-                  <th></th>
-                  <th>Tags:</th>
-                  <th>Layers:</th>
-                  <th>Updated:</th>
-                </tr>
-             </tfoot>
              <tbody>
                {{range $key, $tag := .tags}}
               <tr data-tag-name="{{$key}}">
                 <td></td>
                 <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$key}}/images>{{$key}}</span></td>
-                <td>{{len $tag.V1.FSLayers}}</td>
-                <td data-order="{{$tag.LastModified.Unix}}">{{$tag.LastModifiedTimeAgo}}</td>
+                <td>{{$tag.LayerCount}}</td>
+                <td>{{bytefmt $tag.Size}}</td>
+                <td data-order="{{$tag.LastModified.Unix}}">{{timeAgo $tag.LastModified}}</td>
               </tr>
               {{end}}
             </tbody>

@@ -1,10 +1,6 @@
 package manager
 
-import (
-	"time"
-
-	"github.com/snagles/docker-registry-manager/utils"
-)
+import "time"
 
 type Repository struct {
 	Name string
@@ -21,9 +17,4 @@ func (r *Repository) LastModified() time.Time {
 		}
 	}
 	return lastModified
-}
-
-func (r *Repository) LastModifiedTimeAgo() string {
-	lastModified := r.LastModified()
-	return utils.TimeAgo(lastModified)
 }
