@@ -5,11 +5,8 @@ import (
 	"fmt"
 	"net"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
-
-	"code.cloudfoundry.org/bytefmt"
 
 	"github.com/Sirupsen/logrus"
 	client "github.com/heroku/docker-registry-client/registry"
@@ -75,13 +72,16 @@ func (r *Registry) Refresh() {
 				"Error":           err.Error(),
 				"Repository Name": repoName,
 			}).Error("Failed to retrieve an updated list of tags for " + ur.URL)
+			return
 		}
 
 		repo.Tags = map[string]*Tag{}
 		// Get the manifest for each of the tags
 		for _, tagName := range tagList {
-			// Use v1 since it has a lot more information
-			man, err := ur.Manifest(repoName, tagName)
+
+			// Using v2 required getting the manifest then retrieving the blob
+			// for the config digest
+			man, err := ur.ManifestV2(repoName, tagName)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"Error":           err.Error(),
@@ -91,26 +91,37 @@ func (r *Registry) Refresh() {
 				continue
 			}
 
-			var histories []V1Compatibility
-			for _, h := range man.History {
-				v1JSON := V1Compatibility{}
-				err = json.Unmarshal([]byte(h.V1Compatibility), &v1JSON)
-				if err != nil {
-					logrus.Error(err)
-				}
-				v1JSON.SizeStr = bytefmt.ByteSize(uint64(v1JSON.Size))
-
-				// Get first 8 characters for the short ID
-				v1JSON.IDShort = v1JSON.ID[0:7]
-
-				// Remove shell command
-				if len(v1JSON.ContainerConfig.Cmd) > 0 {
-					v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.Cmd[0], "/bin/sh -c ", "", -1)
-					v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.CmdClean, "#(nop) ", "", -1)
-				}
-				histories = append(histories, v1JSON)
+			// Get the v1 config information
+			v1Bytes, err := ur.ManifestMetadata(repoName, man.Config.Digest)
+			if err != nil {
+				logrus.Error(err)
+				return
 			}
-			repo.Tags[tagName] = &Tag{Name: tagName, V1: man, Histories: histories}
+			var v1 V1Compatibility
+			err = json.Unmarshal(v1Bytes, &v1)
+			if err != nil {
+				logrus.Error(err)
+				return
+			}
+
+			// add the pointer for the history to its layer
+			layerIndex := 0
+			for i, history := range v1.History {
+				if !history.EmptyLayer {
+					v1.History[i].ManifestLayer = &man.Layers[layerIndex]
+				} else {
+					layerIndex++
+				}
+			}
+
+			// Get the tag size information
+			size, err := ur.TagSize(repoName, tagName)
+			if err != nil {
+				logrus.Error(err)
+				return
+			}
+
+			repo.Tags[tagName] = &Tag{Name: tagName, V1Compatibility: &v1, Size: int64(size), DeserializedManifest: man}
 		}
 		ur.Repositories[repoName] = &repo
 	}
