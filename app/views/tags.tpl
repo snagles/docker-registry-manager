@@ -24,7 +24,7 @@
                   <th><input name="select_all" value="1" type="checkbox"></th>
                   <th>Tags</th>
                   <th>Layers</th>
-                  <th>Size</th>
+                  <th>Size <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Compressed tar.gz size"></i></th>
                   <th>Updated</th>
                 </tr>
              </thead>
