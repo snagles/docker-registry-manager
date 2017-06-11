@@ -213,3 +213,66 @@ ul
   pointer-events: none;
   cursor: not-allowed;
 }
+
+/*
+  Keyword labels and their classes
+  Colors taken from https://github.com/file-icons/atom
+  and altered for lighter displays
+*/
+.keyword-label {
+  display:inline-block;
+}
+
+.lighter-red {background-color: #d08384;}
+.light-red {background-color: #c97071;}
+.medium-red {background-color: #ac4142;}
+.dark-red {background-color: #742c2d;}
+.darker-red {background-color: #4f1e1e;}
+
+.lighter-green {background-color: #bdcc9c;}
+.light-green {background-color: #b2c38b;}
+.medium-green {background-color: #90a959;}
+.dark-green {background-color: #66783e;}
+.darker-green {background-color: #49562d;}
+
+.lighter-yellow {background-color: #fcebd3;}
+.light-yellow {background-color: #fae0bc;}
+.medium-yellow {background-color: #f4bf75;}
+.dark-yellow {background-color: #ee9e2e;}
+.darker-yellow {background-color: #d88511;}
+
+.lighter-blue {background-color: #aecbd7;}
+.light-blue {background-color: #9dc0ce;}
+.medium-blue {background-color: #6a9fb5;}
+.dark-blue {background-color: #46788d;}
+.darker-blue {background-color: #355b6b;}
+
+.lighter-maroon {background-color: #c58766;}
+.light-maroon {background-color: #be7953;}
+.medium-maroon {background-color: #8f5536;}
+.dark-maroon {background-color: #573421;}
+.darker-maroon {background-color: #321e13;}
+
+.lighter-purple {background-color: #d1b4cb;}
+.light-purple {background-color: #c7a4c0;}
+.medium-purple {background-color: #aa759f;}
+.dark-purple {background-color: #825078;}
+.darker-purple {background-color: #633d5b;}
+
+.lighter-orange {background-color: #e6ba97;}
+.light-orange {background-color: #e1ad83;}
+.medium-orange {background-color: #d28445;}
+.dark-orange {background-color: #a35f27;}
+.darker-orange {background-color: #7a471e;}
+
+.lighter-cyan {background-color: #b7d9d3;}
+.light-cyan {background-color: #a7d0c9;}
+.medium-cyan {background-color: #75b5aa;}
+.dark-cyan {background-color: #4d9085;}
+.darker-cyan {background-color: #3c6f66;}
+
+.lighter-pink {background-color: #ff66e0;}
+.light-pink {background-color: #ff4ddb;}
+.medium-pink {background-color: #ff00cc;}
+.dark-pink {background-color: #b3008f;}
+.darker-pink {background-color: #800066;}

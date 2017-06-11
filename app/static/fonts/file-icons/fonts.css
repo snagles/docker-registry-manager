@@ -1,0 +1,20 @@
+@font-face {
+	font-family: Mfizz;
+	font-weight: normal;
+	font-style: normal;
+	src: url(mfixx.woff2);
+}
+
+@font-face {
+	font-family: Devicons;
+	font-weight: normal;
+	font-style: normal;
+	src: url(devopicons.woff2) format('woff2');
+}
+
+@font-face {
+	font-family: file-icons;
+	src: url(file-icons.woff2) format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
