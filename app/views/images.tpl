@@ -22,7 +22,7 @@
       <div class="col-md-8">
         <div id="keywords" style="float:right;">
           {{range $keyword, $keywordInfo := .labels}}
-          <a class="label keyword-label {{$keywordInfo.Color}}"><i style="font-size:10px" class="fa {{$keywordInfo.Icon}}"></i> {{$keyword}}</a> {{end}}
+          <a class="label keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}"><i style="font-size:10px" class="fa {{$keywordInfo.Icon}}"></i>  {{$keyword}}</a> {{end}}
         </div>
       </div>
     </div>
@@ -63,7 +63,11 @@
                 {{else}} <td data-order="0">N/A</td> {{end}}
                 <td>
                   {{range $i, $cmd := $history.Commands}}
+                  {{ if ne (len $cmd.Keywords) 0 }}
                   <div data-keywords="{{$cmd.KeywordTags}}">{{$cmd.Cmd}}</div>
+                  {{ else }}
+                  <div>{{$cmd.Cmd}}</div>
+                  {{end}}
                   {{end}}
                 </td>
                 {{if not $history.EmptyLayer}} <td data-order="{{$history.ManifestLayer.Size}}"></i>{{bytefmt $history.ManifestLayer.Size}}</td>
@@ -112,6 +116,16 @@
         container: 'body'
       })
     })
+    $(".keyword-label").click(function () {
+      $('.nav-tabs a[href="#stages"]').tab('show')
+      var labelColor = $(this).data("label-color");
+      var keyword = $(this).data("keyword");
+      $('div[data-keywords~="'+keyword+'"]').each(function () {
+        $(this).addClass(labelColor).css("color", "white").delay(5000).queue(function(){
+          $(this).removeClass(labelColor).css("color", "").dequeue()
+        });
+      })
+    });
   });
 </script>
 
