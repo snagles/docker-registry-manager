@@ -19,7 +19,8 @@ func Keywords(s string) []string {
 		for _, regex := range info.Regexp {
 			// don't check again if the keyword has already been added
 			if _, ok := keywordMap[key]; !ok {
-				r := regexp.MustCompile(regex)
+				// add i flag to make case insenstive
+				r := regexp.MustCompile(`(?i)` + regex)
 				if r.Match([]byte(s)) {
 					keywordMap[key] = struct{}{}
 				}
