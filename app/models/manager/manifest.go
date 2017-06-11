@@ -1,6 +1,7 @@
 package manager
 
 import (
+	"strings"
 	"time"
 
 	"github.com/docker/distribution"
@@ -60,6 +61,8 @@ type V1Compatibility struct {
 		Comment       string                   `json:"comment,omitempty"`
 		EmptyLayer    bool                     `json:"empty_layer,omitempty"`
 		ManifestLayer *distribution.Descriptor `json:"manifest_layer"`
+		ShellType     string
+		Commands      []Command
 	} `json:"history"`
 	Os     string `json:"os"`
 	Rootfs struct {
@@ -67,4 +70,13 @@ type V1Compatibility struct {
 		DiffIDs   []string `json:"diff_ids,omitempty"`
 		BaseLayer string   `json:"base_layer,omitempty"`
 	} `json:"rootfs"`
+}
+
+type Command struct {
+	Cmd      string
+	Keywords []string
+}
+
+func (c *Command) KeywordTags() string {
+	return strings.Join(c.Keywords, " ")
 }
