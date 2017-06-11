@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"net"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/Sirupsen/logrus"
 	client "github.com/heroku/docker-registry-client/registry"
+	"github.com/snagles/docker-registry-manager/utils"
 )
 
 var AllRegistries Registries
@@ -110,6 +112,14 @@ func (r *Registry) Refresh() {
 				if !history.EmptyLayer {
 					v1.History[i].ManifestLayer = &man.Layers[layerIndex]
 					layerIndex++
+				}
+				sh := strings.Split(history.CreatedBy, "/bin/sh -c")
+				if len(sh) > 1 {
+					v1.History[i].ShellType = "/bin/sh -c"
+					commands := strings.SplitAfter(sh[1], "&&")
+					for _, cmd := range commands {
+						v1.History[i].Commands = append(v1.History[i].Commands, Command{Cmd: cmd, Keywords: utils.Keywords(cmd)})
+					}
 				}
 			}
 
