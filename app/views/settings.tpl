@@ -27,9 +27,6 @@
             <th>Service</th>
             <th>Master</th>
             <th>Develop</th>
-            {{if and (ne .branchName "develop") (ne .branchName "master")}}
-            <th class="text-capitalize">{{.branchName }} </th>
-            {{ end }}
           </tr>
         </thead>
         <tbody>
@@ -41,11 +38,6 @@
             <td>
               <a href="https://github.com/snagles/docker-registry-manager/tree/develop"><img src="https://travis-ci.org/snagles/docker-registry-manager.svg?branch=develop" alt="Build Status" /></a>
             </td>
-            {{if and (ne .branchName "develop") (ne .branchName "master")}}
-            <td>
-              <a href="https://github.com/snagles/docker-registry-manager/tree/{{.branchName}}"><img src="https://travis-ci.org/snagles/docker-registry-manager.svg?branch={{.branchName}}" alt="Build Status" /></a>
-            </td>
-            {{ end }}
           </tr>
           <tr>
             <td>Coverage</td>
@@ -57,12 +49,6 @@
               <a href="https://codecov.io/gh/snagles/docker-registry-manager">
                 <img src="https://codecov.io/gh/snagles/docker-registry-manager/branch/develop/graph/badge.svg" alt="Coverage Status"></a>
             </td>
-            {{if and (ne .branchName "develop") (ne .branchName "master")}}
-            <td>
-              <a href="https://codecov.io/gh/snagles/docker-registry-manager">
-                <img src="https://codecov.io/gh/snagles/docker-registry-manager/branch/{{.branchName}}/graph/badge.svg" alt="Coverage Status"></a>
-            </td>
-            {{ end }}
           </tr>
           <tr>
             <td>Documentation</td>
@@ -74,12 +60,6 @@
               <a href="https://godoc.org/github.com/snagles/docker-registry-manager">
                 <img src="https://godoc.org/github.com/snagles/docker-registry-manager?status.svg" alt="GoDoc"></a>
             </td>
-            {{if and (ne .branchName "develop") (ne .branchName "master")}}
-            <td>
-              <a href="https://godoc.org/github.com/snagles/docker-registry-manager">
-                <img src="https://godoc.org/github.com/snagles/docker-registry-manager?status.svg" alt="GoDoc"></a>
-            </td>
-            {{ end }}
           </tr>
         </tbody>
       </table>
