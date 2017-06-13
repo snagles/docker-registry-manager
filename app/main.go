@@ -76,24 +76,21 @@ WEBSITE:
 			if registry != "" {
 				url, err := url.Parse(registry)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"error":    err.Error(),
-						"registry": registry,
-					}).Fatal("Failed to add registry, unable to parse!")
+					fmt.Print("Failed to parse registry from the passed url.\n\n")
+					cli.ShowAppHelp(c)
+					return
 				}
 				port, err := strconv.Atoi(url.Port())
 				if err != nil || port == 0 {
-					logrus.WithFields(logrus.Fields{
-						"error":    err.Error(),
-						"registry": registry,
-					}).Fatal("Failed to add registry, invalid port!")
+					fmt.Print("Failed to add registry, invalid port!\n\n")
+					cli.ShowAppHelp(c)
+					return
 				}
 				duration, err := time.ParseDuration(refreshRate)
 				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"error":    err.Error(),
-						"registry": registry,
-					}).Fatal("Failed to add registry, invalid duration!")
+					fmt.Print("Failed to add registry, invalid duration!\n\n")
+					cli.ShowAppHelp(c)
+					return
 				}
 				manager.AddRegistry(url.Scheme, url.Hostname(), port, duration)
 			}
