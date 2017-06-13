@@ -147,13 +147,15 @@ func (r *Registry) TagCount() int {
 }
 
 func (r *Registry) LayerCount() int {
-	var count int
+	layerDigests := make(map[string]struct{})
 	for _, repo := range r.Repositories {
 		for _, tag := range repo.Tags {
-			count += tag.LayerCount()
+			for _, layer := range tag.Layers {
+				layerDigests[layer.Digest.String()] = struct{}{}
+			}
 		}
 	}
-	return count
+	return len(layerDigests)
 }
 
 func (r *Registry) Pushes() int {
