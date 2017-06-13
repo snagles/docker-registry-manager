@@ -12,8 +12,34 @@ import (
 	"code.cloudfoundry.org/bytefmt"
 )
 
-func ByteFmt(bytes int64) string {
-	return bytefmt.ByteSize(uint64(bytes))
+func ByteFmt(v interface{}) string {
+	switch u := v.(type) {
+	case string:
+		val, _ := strconv.Atoi(u)
+		return bytefmt.ByteSize(uint64(val))
+	case int:
+		return bytefmt.ByteSize(uint64(u))
+	case int8:
+		return bytefmt.ByteSize(uint64(u))
+	case int16:
+		return bytefmt.ByteSize(uint64(u))
+	case int32:
+		return bytefmt.ByteSize(uint64(u))
+	case int64:
+		return bytefmt.ByteSize(uint64(u))
+	case uint:
+		return bytefmt.ByteSize(uint64(u))
+	case uint8:
+		return bytefmt.ByteSize(uint64(u))
+	case uint16:
+		return bytefmt.ByteSize(uint64(u))
+	case uint32:
+		return bytefmt.ByteSize(uint64(u))
+	case uint64:
+		return bytefmt.ByteSize(u)
+	default:
+		return ""
+	}
 }
 
 // TimeAgo returns the rounded form of amount of time elapsed between now and the passed time
