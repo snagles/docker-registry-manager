@@ -46,6 +46,7 @@
                     {{if ne $registry.IP "" }}<span class="label label-info">{{$registry.IP}}</span> {{ end }}
                     {{if ne $registry.Pushes 0 }}<span class="label label-info">{{$registry.Pushes}} Pushes</span> {{ end }}
                     {{if ne $registry.Pulls 0 }}<span class="label label-info">{{$registry.Pulls}} Pulls</span> {{ end }}
+                    {{if ne $registry.TTL 0 }}<span class="label label-info">Refresh: {{$registry.TTL}}</span> {{ end }}
                   </div>
                 </div>
               </div>
