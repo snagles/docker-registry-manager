@@ -37,7 +37,7 @@ func init() {
 
 	// Routers for events
 	beego.Router("/envelope", &controllers.EventsController{}, "post:PostEnvelope")
-	beego.Router("/events", &controllers.EventsController{}, "get:GetEvents")
+	beego.Router("/events", &controllers.EventsController{}, "get:Get")
 	beego.Router("/events/:registryName", &controllers.EventsController{}, "get:GetRegistryEvents")
 	beego.Router("/events/:registryName/:eventID", &controllers.EventsController{}, "get:GetRegistryEventID")
 
