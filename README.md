@@ -29,13 +29,12 @@ WARNING: This application is very much still a work in progress. Core functional
 ### Go
  ```bash
     git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
-    cd app && go build . && ./app -verbosity 6
+    cd app && go build . && ./app --port 8080 --log warn --ttl 2m
     firefox localhost:8080
  ```
 
 ### Dockerfile
  ```bash
-    docker build -t docker-registry-manager .
     docker run --detach --name docker-registry-manager -p 8080:8080 docker-registry-manager
  ```
 
@@ -50,4 +49,4 @@ WARNING: This application is very much still a work in progress. Core functional
 
 ## Planned Features
  1. Authentication for users with admin/read only rights
- 2. Viewable activity logs 
+ 2. Viewable activity logs
