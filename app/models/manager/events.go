@@ -28,11 +28,13 @@ type Envelope struct {
 func (e *Envelope) Process() {
 	AllEvents.Lock()
 	for _, event := range e.Events {
-		if _, ok := AllEvents.Events[event.Request.Host]; !ok {
-			AllEvents.Events[event.Request.Host] = make(map[string]Event)
+		if event.Action == "push" && event.Request.Useragent != "Go-http-client/1.1" && event.Request.Method != "HEAD" {
+			if _, ok := AllEvents.Events[event.Request.Host]; !ok {
+				AllEvents.Events[event.Request.Host] = make(map[string]Event)
+			}
+			// Add the event
+			AllEvents.Events[event.Request.Host][event.ID] = event
 		}
-		// Add the event
-		AllEvents.Events[event.Request.Host][event.ID] = event
 	}
 	AllEvents.Unlock()
 }
