@@ -1,4 +1,4 @@
-{{template "base/base.html" .}} {{define "body"}} {{template "new_registry.tpl" .}}
+{{template "base/base.html" .}} {{define "body"}} {{template "newregistry.tpl" .}}
 <div class="right-content-container">
   <div class="header">
     <ol class="breadcrumb">
