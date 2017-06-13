@@ -14,6 +14,13 @@ type EventsController struct {
 	beego.Controller
 }
 
+func (c *EventsController) Get() {
+	manager.AllEvents.Lock()
+	defer manager.AllEvents.Unlock()
+	c.Data["events"] = manager.AllEvents.Events
+	c.TplName = "events.tpl"
+}
+
 // GetRegistryEvents returns the JSON representation of all events for the given registry
 func (c *EventsController) GetRegistryEvents() {
 	// Get the registry
