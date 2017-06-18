@@ -40,6 +40,12 @@ func (c *ImagesController) GetImages() {
 	c.Data["labels"] = labels
 
 	// build the js chart dataset
+	type segmentInfo struct {
+		Stage    int      `json:"stage"`
+		Cmd      string   `json:"cmd"`
+		Keywords []string `json:"keywords"`
+		Size     string
+	}
 
 	type dataset struct {
 		Label            string   `json:"label"`
@@ -48,25 +54,34 @@ func (c *ImagesController) GetImages() {
 		BorderColor      []string `json:"borderColor"`
 		BorderWidth      int64    `json:"borderWidth"`
 		CutoutPercentage int64    `json:"cutoutPercentage"`
-		TestProperty     string   `json:"testProperty"`
+
+		// Custom data fields
+		Info []segmentInfo `json:"info"`
 	}
+
 	var chart []dataset
 	colors := []string{"#43A19E", "#7B43A1", "#F2317A", "#FF9824", "#58CF6C"}
-	for _, history := range tag.History {
+	for i, history := range tag.History {
 		ds := dataset{}
 		for _, cmd := range history.Commands {
 			ds.Data = append(ds.Data, 10)
 			color := colors[0]
 			colors = append(colors[:0], colors[1:]...)
 			ds.BackgroundColor = append(ds.BackgroundColor, color)
+			// add stage tooltip info
+			ds.Info = append(ds.Info, segmentInfo{Stage: i + 1, Keywords: cmd.Keywords, Cmd: cmd.Cmd})
 			colors = append(colors, color)
-			ds.Label = cmd.Cmd
 			if len(history.Commands) != 1 {
 				ds.BorderColor = []string{"#FFF"}
 				ds.BorderWidth = 1
 			}
 		}
 		chart = append(chart, ds)
+	}
+
+	for i := len(chart)/2 - 1; i >= 0; i-- {
+		opp := len(chart) - 1 - i
+		chart[i], chart[opp] = chart[opp], chart[i]
 	}
 
 	c.Data["chart"] = chart
