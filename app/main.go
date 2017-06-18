@@ -67,7 +67,9 @@ WEBSITE:
 
 	app.Action = func(c *cli.Context) {
 		setlevel(logLevel)
+		beego.AddFuncMap("shortenDigest", utils.DigestShortener)
 		beego.AddFuncMap("bytefmt", utils.ByteFmt)
+		beego.AddFuncMap("bytefmtdiff", utils.ByteDiffFmt)
 		beego.AddFuncMap("timeAgo", utils.TimeAgo)
 		beego.AddFuncMap("oneIndex", func(i int) int { return i + 1 })
 

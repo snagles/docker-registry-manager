@@ -73,6 +73,9 @@ ul
   margin-right:10px;
 }
 
+.nav-tabs {
+  margin-bottom:20px;
+}
 /*
  * Header
  */
@@ -94,7 +97,8 @@ ul
  */
 .right-content-container{
   position: relative;
-  margin-left: 200px;
+  margin-left: 225px;
+  margin-right: 25px;
   background-color: #f1f4f8;
   min-height: 100vh;
   padding-top: 50px;
@@ -102,13 +106,12 @@ ul
   transition: -webkit-transform .5s;
   transition: transform .5s;
 }
+
 .content-block {
   border-radius: 3px 3px 0 0;
   border: 1px solid #E7E9ED;
   border-bottom: 0;
   padding: 35px 40px;
-  margin-left: 25px;
-  margin-right: 25px;
   counter-reset: section;
   transition: color .5s .3s;
   margin-bottom: 25px;
@@ -118,6 +121,11 @@ ul
   padding: 35px 40px;
   margin-left: 25px;
   margin-right: 25px;
+}
+
+.content-block-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
 }
 
 .grey-bg{
@@ -217,10 +225,29 @@ ul
 /*
   Keyword labels and their classes
   Colors taken from https://github.com/file-icons/atom
-  and altered for lighter displays
 */
 .keyword-label {
   display:inline-block;
+  font-size: 11px;
+  margin-top:13px;
+}
+
+div.tooltip-inner {
+    max-width: 600px;
+}
+
+.border-between > [class*='col-']:before {
+   background: #ddd;
+   bottom: 0;
+   content: " ";
+   left: 0;
+   position: absolute;
+   width: 1px;
+   top: 0;
+}
+
+.border-between > [class*='col-']:first-child:before {
+   display: none;
 }
 
 .lighter-red {background-color: #d08384;}

@@ -7,10 +7,23 @@ import (
 	"math"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"code.cloudfoundry.org/bytefmt"
 )
+
+func DigestShortener(s string) string {
+	shortener := strings.SplitAfter(s, "sha256:")
+	return string(shortener[1][0:8])
+}
+
+func ByteDiffFmt(val1 int64, val2 int64) string {
+	if val1 > val2 {
+		return ByteFmt(val2 - val1)
+	}
+	return ByteFmt(val2 - val1)
+}
 
 func ByteFmt(v interface{}) string {
 	switch u := v.(type) {
