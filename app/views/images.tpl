@@ -203,9 +203,9 @@
           callbacks: {
               label: function(tooltipItems, data) {
                 var data = data.datasets[tooltipItems.datasetIndex].info[tooltipItems.index]
-                var label =  "Stage: " + data.stage
+                var label =  "Stage: " + data.stage + ", Command #"+tooltipItems.index;
                 if (data.keywords != null) {
-                  label += ' Keywords: '+data.keywords;
+                  label += ', Keywords: '+data.keywords;
                 }
                 return label
               }
