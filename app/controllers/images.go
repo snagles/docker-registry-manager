@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 
@@ -91,32 +92,42 @@ func (c *ImagesController) GetImages() {
 
 	// Compare the two manifest layers
 	hubManifest, err := manager.HubGetManifest(repositoryName, tag.Name)
-	diffLayers := make(map[string]struct{})
-	var size int64
-	if err == nil {
-		for _, layer := range tag.DeserializedManifest.Layers {
-			diffLayers[layer.Digest.String()] = struct{}{}
-		}
-		for _, layer := range hubManifest.Layers {
-			size += layer.Size
-			if _, ok := diffLayers[layer.Digest.String()]; ok {
-				delete(diffLayers, layer.Digest.String())
+	if hubManifest.SchemaVersion == tag.SchemaVersion {
+		diffLayers := make(map[string]struct{})
+		var size int64
+		if err == nil {
+			for _, layer := range tag.DeserializedManifest.Layers {
+				diffLayers[layer.Digest.String()] = struct{}{}
+			}
+			for _, layer := range hubManifest.Layers {
+				size += layer.Size
+				if _, ok := diffLayers[layer.Digest.String()]; ok {
+					delete(diffLayers, layer.Digest.String())
+				}
 			}
 		}
-	}
 
-	c.Data["dockerHub"] = struct {
-		DiffLayers map[string]struct{}
-		Manifest   *manifestV2.DeserializedManifest
-		ImageURL   string
-		Error      error
-		Size       int64
-	}{
-		diffLayers,
-		hubManifest,
-		fmt.Sprintf("https://hub.docker.com/r/library/%s/tags/%s/", repositoryName, tag.Name),
-		err,
-		size,
+		c.Data["dockerHub"] = struct {
+			DiffLayers map[string]struct{}
+			Manifest   *manifestV2.DeserializedManifest
+			ImageURL   string
+			Error      error
+			Size       int64
+		}{
+			diffLayers,
+			hubManifest,
+			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags/%s/", repositoryName, tag.Name),
+			err,
+			size,
+		}
+	} else {
+		c.Data["dockerHub"] = struct {
+			Error    error
+			ImageURL string
+		}{
+			errors.New("Different manifest scheme versions"),
+			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags/%s/", repositoryName, tag.Name),
+		}
 	}
 
 	// Index template
