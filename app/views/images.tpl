@@ -203,7 +203,11 @@
           callbacks: {
               label: function(tooltipItems, data) {
                 var data = data.datasets[tooltipItems.datasetIndex].info[tooltipItems.index]
-                return "Stage:" + data.stage + ' Keywords: '+data.keywords;
+                var label =  "Stage: " + data.stage
+                if (data.keywords != null) {
+                  label += ' Keywords: '+data.keywords;
+                }
+                return label
               }
           }
       }
