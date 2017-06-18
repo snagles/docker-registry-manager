@@ -118,6 +118,41 @@
       <li role="presentation" class="active"><a href="#actions" aria-controls="actions" role="tab" data-toggle="tab">Actions</a></li>
       <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">Activity</a></li>
     </ul>
+    <div role="tabpanel" class="tab-pane active" id="actions">
+      <div class="row col-md-12">
+        <h4>Pull</h4>
+        <ul class="well well-md">
+          <code>
+            docker pull {{.registryName}}/{{.repositoryName}}:{{.tagName}}
+          </code>
+        </ul>
+      </div>
+      <div class="row col-md-12">
+        <h4>Push</h4>
+        <ul class="well well-md">
+          <code>
+            docker tag {{.repositoryName}}:{{.tagName}} {{.registryName}}/{{.repositoryName}}:{{.tagName}}
+            <br>
+            docker push {{.registryName}}/{{.repositoryName}}:{{.tagName}}
+          </code>
+        </ul>
+      </div>
+      <div class="row col-md-12">
+        <h4>Compare to Local Image</h4>
+        <ul class="well well-md">
+          <code class="bash">
+            docker save {{.registryName}}/{{.repositoryName}}:{{.tagName}} -o registry.tar.gz <br>
+            tar tv -f registry.tar.gz > registry.txt
+            <br>
+            docker save {{.repositoryName}}:{{.tagName}} -o local.tar.gz
+            <br>
+            tar -tv -f local.tar.gz > local.txt
+            <br>
+            diff registry.txt local.txt
+          </code>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -129,6 +164,10 @@
 
   $(document).ready(function() {
     $('td code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+
+    $('ul code').each(function(i, block) {
       hljs.highlightBlock(block);
     });
 
