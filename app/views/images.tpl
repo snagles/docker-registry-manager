@@ -72,7 +72,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <canvas id="layers-chart" width="400px" height="400px"></canvas>
+            <canvas id="stages-chart" width="400px" height="400px"></canvas>
           </div>
         </div>
         <div role="tabpanel" class="tab-pane table-responsive" id="build">
@@ -179,7 +179,7 @@
     });
   });
 
-  var ctx = document.getElementById("layers-chart");
+  var ctx = document.getElementById("stages-chart");
   var pieChart = new Chart(ctx, {
     type: 'pie',
     options: {
@@ -190,13 +190,26 @@
       },
       title: {
         display: true,
-        text: "Layers",
+        fontSize: 18,
+        fontStyle: "normal",
+        fontColor: "#212121",
+        text: "{{len .tag.History}} Build Stages",
         position: "top"
+      },
+      tooltips: {
+          enabled: true,
+          mode: 'single',
+          callbacks: {
+              label: function(tooltipItems, data) {
+                var data = data.datasets[tooltipItems.datasetIndex].info[tooltipItems.index]
+                return "Stage:" + data.stage + ' Keywords: '+data.keywords;
+              }
+          }
       }
     },
     data: {
       datasets: {{.chart}}
-    },
+    }
   })
 </script>
 
