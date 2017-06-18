@@ -49,6 +49,7 @@
               <div class="well well-md">
                 {{if .dockerHub.Error }}
                 <strong>Unable to compare image to Dockerhub</strong> <small>{{.hubErr}}</small>
+                <div><span>{{.dockerHub.Error}}</span></div>
                 {{else}}
                   {{ $length := len .dockerHub.DiffLayers }}
                   {{ if eq $length 0 }}
