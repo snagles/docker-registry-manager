@@ -21,7 +21,7 @@
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
         <li role="presentation"><a href="#build" aria-controls="build" role="tab" data-toggle="tab">Build</a></li>
-        <li role="presentation"><a href="#inspect" aria-controls="inspect" role="tab" data-toggle="tab">Inspect</a></li>
+        <li role="presentation" class="disabled"><a href="#inspect" aria-controls="inspect" role="tab" data-toggle="tab">Inspect</a></li>
         <div id="keywords" style="float:right;">
           {{range $keyword, $keywordInfo := .labels}}
           <a class="label keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}"><i style="font-size:10px" class="fa {{$keywordInfo.Icon}}"></i>  {{$keyword}}</a> {{end}}
@@ -116,7 +116,7 @@
   <div class="content-block white-bg col-md-4 col-md-offset-1 col-sm-12">
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation" class="active"><a href="#actions" aria-controls="actions" role="tab" data-toggle="tab">Actions</a></li>
-      <li role="presentation"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">Activity</a></li>
+      <li role="presentation" class="disabled"><a href="#timeline" aria-controls="timeline" role="tab" data-toggle="tab">Activity</a></li>
     </ul>
     <div role="tabpanel" class="tab-pane active" id="actions">
       <div class="row col-md-12">
