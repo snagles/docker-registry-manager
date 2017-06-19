@@ -8,11 +8,12 @@
         <li class="active">Repositories</li>
       </ol>
     </div>
-    <div class="content-block white-bg">
-      <div class="row">
+    <div class="row">
+      <div class="col-md-12">
         <h1>All Repositories</h1>
-        <hr>
       </div>
+    </div>
+    <div class="content-block white-bg">
       <div class="row">
         <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
           <thead>

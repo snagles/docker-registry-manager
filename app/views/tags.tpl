@@ -11,11 +11,12 @@
         <li class="active">Tags</li>
       </ol>
     </div>
-    <div class="content-block white-bg">
-      <div class="row">
-        <h1>{{.repositoryName}}</h1>
-        <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <h1>{{.repositoryName}}<small> {{.registryName}}</small></h1>
       </div>
+    </div>
+    <div class="content-block white-bg">
       <div class="row">
         <form id="delete-tags">
           <table id="datatable" class="table table-striped display select" cellspacing="0" width="100%" cellspacing="0" width="100%">

@@ -6,11 +6,12 @@
       <li class="active">Events</li>
     </ol>
   </div>
-  <div class="row content-block white-bg" id="logs">
-    <div class="row">
-      <h1>Events</h1>
-      <hr>
-    </div>
+  <div class="row">
+    <div class="col-md-12">
+    <h1>Events</h1>
+    <div>
+  </div>
+  <div class="content-block white-bg col-md-12" id="logs">
     <table id="events-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
       <thead>
         <tr>
