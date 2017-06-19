@@ -9,11 +9,12 @@
         <li class="active">Repositories</li>
       </ol>
     </div>
-    <div class="content-block white-bg">
-      <div class="row">
-        <h1>Repositories</h1>
-        <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <h1>{{.registryName}}</h1>
       </div>
+    </div>
+    <div class="content-block white-bg">
       <div class="row">
         <table id="datatable" class="table table-striped" cellspacing="0" width="100%">
           <thead>
