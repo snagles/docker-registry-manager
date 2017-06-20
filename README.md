@@ -46,7 +46,11 @@ WARNING: This application is very much still a work in progress. Core functional
  5. Bulk deletes of tags
  6. Admin panel with logs, request tracking, and configurable log levels
  7. Registry envelope acceptance to allow for registry request tracking
+ 8. Viewable activity logs when registry configured to forward
+ 9. Compares to dockerhub public repository and notifies of differences
 
 ## Planned Features
  1. Authentication for users with admin/read only rights
- 2. Viewable activity logs
+ 2. Global search
+ 3. Notification on push
+ 4. List shared layers
