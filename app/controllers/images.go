@@ -91,15 +91,18 @@ func (c *ImagesController) GetImages() {
 	c.Data["repositoryName"] = repositoryName
 
 	// Compare the two manifest layers
+	c.TplName = "images.tpl"
 	hubManifest, err := manager.HubGetManifest(repositoryName, tag.Name)
 	if hubManifest == nil || err != nil {
 		c.Data["dockerHub"] = struct {
-			Error error
+			Error    error
+			ImageURL string
 		}{
-			errors.New("Unable to retrieve information from dockerhub: " + err.Error()),
+			errors.New("Unable to retrieve information from dockerhub"),
+			"",
 		}
-	}
-	if hubManifest.SchemaVersion == tag.SchemaVersion {
+		return
+	} else if hubManifest.SchemaVersion == tag.SchemaVersion {
 		diffLayers := make(map[string]struct{})
 		var size int64
 		if err == nil {
@@ -136,7 +139,4 @@ func (c *ImagesController) GetImages() {
 			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags/%s/", repositoryName, tag.Name),
 		}
 	}
-
-	// Index template
-	c.TplName = "images.tpl"
 }
