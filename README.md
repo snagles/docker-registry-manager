@@ -54,3 +54,5 @@ WARNING: This application is very much still a work in progress. Core functional
  2. Global search
  3. Notification on push
  4. List shared layers
+ 5. Event timeline
+ 6. Curl command generator for json inspection in other programs
