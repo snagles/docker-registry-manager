@@ -92,6 +92,13 @@ func (c *ImagesController) GetImages() {
 
 	// Compare the two manifest layers
 	hubManifest, err := manager.HubGetManifest(repositoryName, tag.Name)
+	if hubManifest == nil || err != nil {
+		c.Data["dockerHub"] = struct {
+			Error error
+		}{
+			errors.New("Unable to retrieve information from dockerhub: " + err.Error()),
+		}
+	}
 	if hubManifest.SchemaVersion == tag.SchemaVersion {
 		diffLayers := make(map[string]struct{})
 		var size int64
