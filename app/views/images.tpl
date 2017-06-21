@@ -1,4 +1,4 @@
-{{template "base/base.html" .}} {{define "body"}} {{template "modal.tpl" .}}
+{{template "base/base.html" .}} {{define "body"}}
 <div class="right-content-container">
   <div class="header">
     <ol class="breadcrumb">
