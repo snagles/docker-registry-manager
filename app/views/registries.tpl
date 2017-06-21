@@ -19,24 +19,18 @@
                   <div class="box-header">
                     <h2>{{$registry.Name}}</h2>
                   </div>
-                  <div class="box-body">
-                    <div class="info">
-                      <div class="info-container">
-                        <h3 class="info-metric">{{len $registry.Repositories}}</h3>
-                        <small>{{ $repoCount := len $registry.Repositories }} {{ if eq $repoCount 1 }} Repository {{else}} Repositories {{ end }}</small>
-                      </div>
+                  <div class="box-body col-md-12 border-between">
+                    <div class="col-md-4 metric">
+                      <h3 class="metric-value">{{len $registry.Repositories}}</h3>
+                      <small>{{ $repoCount := len $registry.Repositories }} {{ if eq $repoCount 1 }} Repository {{else}} Repositories {{ end }}</small>
                     </div>
-                    <div class="info">
-                      <div class="info-container">
-                        <h3 class="info-metric">{{$registry.TagCount}}</h3>
-                        <small>{{ $tagCount := $registry.TagCount }} {{ if eq $tagCount 1 }} Tag {{else}} Tags {{ end }}</small>
-                      </div>
+                    <div class="col-md-4 metric">
+                      <h3 class="metric-value">{{$registry.TagCount}}</h3>
+                      <small>{{ $tagCount := $registry.TagCount }} {{ if eq $tagCount 1 }} Tag {{else}} Tags {{ end }}</small>
                     </div>
-                    <div class="info">
-                      <div class="info-container">
-                        <h3 class="info-metric">{{$registry.LayerCount}}</h4>
-                        <small>{{ $layerCount := $registry.LayerCount }} {{ if eq $layerCount 1 }} Layer {{else}} Layers {{ end }}</small>
-                      </div>
+                    <div class="col-md-4 metric">
+                      <h3 class="metric-value">{{$registry.LayerCount}}</h4>
+                      <small>{{ $layerCount := $registry.LayerCount }} {{ if eq $layerCount 1 }} Layer {{else}} Layers {{ end }}</small>
                     </div>
                   </div>
                   <div class="box-footer">
