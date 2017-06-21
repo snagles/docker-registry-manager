@@ -12,7 +12,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/snagles/docker-registry-manager/app/models/manager"
 	_ "github.com/snagles/docker-registry-manager/app/routers"
-	"github.com/snagles/docker-registry-manager/utils"
+	funcs "github.com/snagles/docker-registry-manager/app/templatefuncs"
 	"github.com/urfave/cli"
 )
 
@@ -67,10 +67,10 @@ WEBSITE:
 
 	app.Action = func(c *cli.Context) {
 		setlevel(logLevel)
-		beego.AddFuncMap("shortenDigest", utils.DigestShortener)
-		beego.AddFuncMap("bytefmt", utils.ByteFmt)
-		beego.AddFuncMap("bytefmtdiff", utils.ByteDiffFmt)
-		beego.AddFuncMap("timeAgo", utils.TimeAgo)
+		beego.AddFuncMap("shortenDigest", funcs.DigestShortener)
+		beego.AddFuncMap("bytefmt", funcs.ByteFmt)
+		beego.AddFuncMap("bytefmtdiff", funcs.ByteDiffFmt)
+		beego.AddFuncMap("timeAgo", funcs.TimeAgo)
 		beego.AddFuncMap("oneIndex", func(i int) int { return i + 1 })
 
 		registries := strings.Split(c.String("registries"), ",")

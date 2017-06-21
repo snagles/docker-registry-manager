@@ -8,7 +8,6 @@ import (
 	"github.com/astaxie/beego"
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
 	"github.com/snagles/docker-registry-manager/app/models/manager"
-	"github.com/snagles/docker-registry-manager/utils"
 )
 
 type ImagesController struct {
@@ -29,12 +28,12 @@ func (c *ImagesController) GetImages() {
 	tag, _ := registry.Repositories[repositoryName].Tags[c.Ctx.Input.Param(":tagName")]
 	c.Data["tag"] = tag
 
-	labels := make(map[string]utils.KeywordInfo)
+	labels := make(map[string]manager.KeywordInfo)
 	for _, h := range tag.History {
 		// run each command through the keyword lookup
 		for _, cmd := range h.Commands {
 			for _, keyword := range cmd.Keywords {
-				labels[keyword] = utils.KeywordMapping[keyword]
+				labels[keyword] = manager.KeywordMapping[keyword]
 			}
 		}
 	}
