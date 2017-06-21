@@ -4,7 +4,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/toolbox"
-	"github.com/snagles/docker-registry-manager/utils"
+	funcs "github.com/snagles/docker-registry-manager/app/templatefuncs"
 )
 
 type SettingsController struct {
@@ -26,19 +26,19 @@ func (c *SettingsController) GetLiveStatistics() {
 	// Convert beego times to seconds for sorted
 	for _, req := range rs {
 		var err error
-		req["min_s"], err = utils.StatToSeconds(req["min_time"].(string))
+		req["min_s"], err = funcs.StatToSeconds(req["min_time"].(string))
 		if err != nil {
 			logrus.Error(err)
 		}
-		req["max_s"], err = utils.StatToSeconds(req["max_time"].(string))
+		req["max_s"], err = funcs.StatToSeconds(req["max_time"].(string))
 		if err != nil {
 			logrus.Error(err)
 		}
-		req["avg_s"], err = utils.StatToSeconds(req["avg_time"].(string))
+		req["avg_s"], err = funcs.StatToSeconds(req["avg_time"].(string))
 		if err != nil {
 			logrus.Error(err)
 		}
-		req["total_s"], err = utils.StatToSeconds(req["total_time"].(string))
+		req["total_s"], err = funcs.StatToSeconds(req["total_time"].(string))
 		if err != nil {
 			logrus.Error(err)
 		}

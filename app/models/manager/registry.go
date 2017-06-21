@@ -11,7 +11,6 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	client "github.com/heroku/docker-registry-client/registry"
-	"github.com/snagles/docker-registry-manager/utils"
 )
 
 var AllRegistries Registries
@@ -118,7 +117,7 @@ func (r *Registry) Refresh() {
 					v1.History[i].ShellType = "/bin/sh -c"
 					commands := strings.SplitAfter(sh[1], "&&")
 					for _, cmd := range commands {
-						v1.History[i].Commands = append(v1.History[i].Commands, Command{Cmd: cmd, Keywords: utils.Keywords(cmd)})
+						v1.History[i].Commands = append(v1.History[i].Commands, Command{Cmd: cmd, Keywords: Keywords(cmd)})
 					}
 				}
 			}
