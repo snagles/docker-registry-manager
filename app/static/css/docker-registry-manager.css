@@ -6,10 +6,8 @@ body {
   font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-weight: 300;
 }
-ul
-{
-    list-style-type: none;
-}
+
+ul {list-style-type: none;}
 
 /*
  * Navigation
@@ -128,9 +126,6 @@ ul
   margin-bottom: 20px;
 }
 
-.grey-bg{
-  background: transparent;
-}
 .white-bg{
   background-color: #FFF;
 }
@@ -176,37 +171,22 @@ ul
 }
 
 .box-header{
-  height:50px;
+  height:60px;
   color:black;
 }
 
 .box-body{
-  height:150px;
+  height:140px;
 }
 
-.info {
-  margin-top: 15px;
-  width: 126px;
-  display: inline-block;
-  border-right: solid 1px #e5e5e5;
-}
-
-.info:last-child {
-  border-right: none;
-}
-
-.info-container {
-  text-align: center;
-  color: #737373;
-}
-
-.info-metric{
-  font-size:40px;
+.metric-value {
+  font-size: 40px;
   color:#FF5722;
 }
 
-.box-footer{
-  height:25px;
+.metric{
+  text-align: center;
+  color: #737373;
 }
 
 .well-box {
