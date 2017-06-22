@@ -21,7 +21,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "Docker Registry Manager"
 	app.Usage = "Connect to, view, and manage multiple private Docker registries"
-	app.Version = "1.0.0"
+	app.Version = "2.0.0"
 	var logLevel string
 	var refreshRate string
 
