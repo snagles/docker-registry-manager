@@ -2,6 +2,7 @@ package manager
 
 import "regexp"
 
+// KeywordInfo contains information used by the front end to build the label
 type KeywordInfo struct {
 	Icon   string
 	Color  string
@@ -10,11 +11,11 @@ type KeywordInfo struct {
 
 // Keywords takes in any meta information strings and returns the keywordMapping key
 // by testing the string against any regex in the KeywordMapping map
-func Keywords(s string) []string {
+func Keywords(s string) (keywords []string) {
 	// use the keyword map to deduplicate keywords for same line
 	keywordMap := make(map[string]struct{})
-	for key, info := range KeywordMapping {
 
+	for key, info := range KeywordMapping {
 		// compare the passed string against every regexp possibility
 		for _, regex := range info.Regexp {
 			// don't check again if the keyword has already been added
@@ -29,7 +30,6 @@ func Keywords(s string) []string {
 	}
 
 	// return the slice of keys for the keyword map
-	var keywords []string
 	for keyword := range keywordMap {
 		keywords = append(keywords, keyword)
 	}

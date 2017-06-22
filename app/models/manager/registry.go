@@ -53,7 +53,7 @@ func (r *Registry) Refresh() {
 	ur := *r
 
 	// Get the list of repositories
-	repoList, err := ur.Registry.Repositories()
+	repos, err := ur.Registry.Repositories()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Error": err.Error(),
@@ -61,13 +61,10 @@ func (r *Registry) Refresh() {
 	}
 	// Get the repository information
 	ur.Repositories = make(map[string]*Repository)
-	for _, repoName := range repoList {
-
-		// Build a repository object
-		repo := Repository{Name: repoName}
+	for _, repoName := range repos {
 
 		// Get the list of tags for the repository
-		tagList, err := ur.Tags(repoName)
+		tags, err := ur.Tags(repoName)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"Error":           err.Error(),
@@ -76,9 +73,9 @@ func (r *Registry) Refresh() {
 			continue
 		}
 
-		repo.Tags = map[string]*Tag{}
+		repo := Repository{Name: repoName, Tags: make(map[string]*Tag)}
 		// Get the manifest for each of the tags
-		for _, tagName := range tagList {
+		for _, tagName := range tags {
 
 			// Using v2 required getting the manifest then retrieving the blob
 			// for the config digest
@@ -105,7 +102,7 @@ func (r *Registry) Refresh() {
 				continue
 			}
 
-			// add the pointer for the history to its layer
+			// add the pointer for the history to its layer using its index
 			layerIndex := 0
 			for i, history := range v1.History {
 				if !history.EmptyLayer {
@@ -137,8 +134,7 @@ func (r *Registry) Refresh() {
 	AllRegistries.Unlock()
 }
 
-func (r *Registry) TagCount() int {
-	var count int
+func (r *Registry) TagCount() (count int) {
 	for _, repo := range r.Repositories {
 		count += len(repo.Tags)
 	}
@@ -157,14 +153,13 @@ func (r *Registry) LayerCount() int {
 	return len(layerDigests)
 }
 
-func (r *Registry) Pushes() int {
+func (r *Registry) Pushes() (pushes int) {
 	AllEvents.Lock()
 	defer AllEvents.Unlock()
 	if _, ok := AllEvents.Events[r.Name]; !ok {
 		return 0
 	}
 
-	var pushes int
 	for _, e := range AllEvents.Events[r.Name] {
 		// TODO: really need to find a better way to exclude the managers queries
 		if e.Action == "push" && e.Request.Useragent != "Go-http-client/1.1" && e.Request.Method != "HEAD" {
@@ -174,14 +169,13 @@ func (r *Registry) Pushes() int {
 	return pushes
 }
 
-func (r *Registry) Pulls() int {
+func (r *Registry) Pulls() (pulls int) {
 	AllEvents.Lock()
 	defer AllEvents.Unlock()
 	if _, ok := AllEvents.Events[r.Name]; !ok {
 		return 0
 	}
 
-	var pulls int
 	for _, e := range AllEvents.Events[r.Name] {
 		// exclude heads since thats the method the manager uses for getting meta info
 		// TODO: really need to find a better way to exclude the managers queries
@@ -199,6 +193,8 @@ func (r *Registry) Status() string {
 	return "UP"
 }
 
+// AddRegistry adds the new registry for viewing in the interface and sets up
+// the go routine for automatic refreshes
 func AddRegistry(scheme, host string, port int, ttl time.Duration) (*Registry, error) {
 	url := fmt.Sprintf(fmt.Sprintf("%s://%s:%v", scheme, host, port))
 	hub, err := client.New(url, "", "")
