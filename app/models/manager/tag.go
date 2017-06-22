@@ -22,7 +22,3 @@ func (t *Tag) LastModified() (lastModified time.Time) {
 	}
 	return lastModified
 }
-
-func (t *Tag) LayerCount() int {
-	return len(t.DeserializedManifest.Layers)
-}

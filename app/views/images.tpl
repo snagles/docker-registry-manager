@@ -35,7 +35,7 @@
             <div class="row col-md-10">
               <h4>Overview</h4>
               <ul class="well well-md">
-                <li><strong>Layers:</strong> {{.tag.LayerCount}}</li>
+                <li><strong>Layers:</strong> {{len .tag.DeserializedManifest.Layers}}</li>
                 <li><strong>Size:</strong> {{bytefmt .tag.Size}}</li>
                 <li><strong>OS:</strong> {{.tag.Os}}</li>
                 <li><strong>Architecture:</strong> {{.tag.Architecture}}</li>
@@ -54,10 +54,10 @@
                   {{ $length := len .dockerHub.DiffLayers }}
                   {{ if eq $length 0 }}
                     <strong>Image is up to date.</strong>
-                    <div><span>Both local and remote images have {{.tag.LayerCount}} layers and are {{bytefmt .tag.Size}}.</span></div>
+                    <div><span>Both local and remote images have {{len .tag.DeserializedManifest.Layers}} layers and are {{bytefmt .tag.Size}}.</span></div>
                   {{else}}
                     <div><strong>Image is not up to date.</strong></div>
-                    <div><span>There are {{len .dockerHub.DiffLayers}} different layers out of {{.tag.LayerCount}} total layers.</span></div>
+                    <div><span>There are {{len .dockerHub.DiffLayers}} different layers out of {{len .tag.DeserializedManifest.Layers}} total layers.</span></div>
                     {{if ne .tag.Size .dockerHub.Size}}
                       {{if gt .tag.Size .dockerHub.Size}}
                       <div><span>The Dockerhub image is {{bytefmtdiff .dockerHub.Size .tag.Size}} smaller</span></div>

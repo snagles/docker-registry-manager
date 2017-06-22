@@ -34,7 +34,7 @@
               <tr data-tag-name="{{$key}}">
                 <td></td>
                 <td ><a href=/registries/{{$.registryName}}/repositories/{{$.repositoryName}}/tags/{{$key}}/images>{{$key}}</span></td>
-                <td>{{$tag.LayerCount}}</td>
+                <td>{{len $tag.DeserializedManifest.Layers}}</td>
                 <td>{{bytefmt $tag.Size}}</td>
                 <td data-order="{{$tag.LastModified.Unix}}">{{timeAgo $tag.LastModified}}</td>
               </tr>
