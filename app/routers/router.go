@@ -7,7 +7,6 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.RegistriesController{})
-	beego.Router("/.release", &controllers.SettingsController{})
 
 	// Routers for registries
 	beego.Router("/registries", &controllers.RegistriesController{})
