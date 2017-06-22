@@ -14,8 +14,7 @@ type Tag struct {
 	Size int64
 }
 
-func (t *Tag) LastModified() time.Time {
-	var lastModified time.Time
+func (t *Tag) LastModified() (lastModified time.Time) {
 	for _, history := range t.History {
 		if history.Created.After(lastModified) {
 			lastModified = history.Created

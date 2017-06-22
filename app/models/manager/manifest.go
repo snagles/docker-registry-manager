@@ -7,6 +7,8 @@ import (
 	"github.com/docker/distribution"
 )
 
+// V1Compatibility contains meta information for when each layer contained
+// its own configuration for each stage
 type V1Compatibility struct {
 	Architecture string `json:"architecture"`
 	Config       struct {
