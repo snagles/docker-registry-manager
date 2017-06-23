@@ -105,7 +105,7 @@ func (output *BeegoOutput) Cookie(name string, value string, others ...interface
 		switch {
 		case maxAge > 0:
 			fmt.Fprintf(&b, "; Expires=%s; Max-Age=%d", time.Now().Add(time.Duration(maxAge)*time.Second).UTC().Format(time.RFC1123), maxAge)
-		case maxAge <= 0:
+		case maxAge < 0:
 			fmt.Fprintf(&b, "; Max-Age=0")
 		}
 	}
@@ -166,6 +166,19 @@ var cookieValueSanitizer = strings.NewReplacer("\n", " ", "\r", " ", ";", " ")
 
 func sanitizeValue(v string) string {
 	return cookieValueSanitizer.Replace(v)
+}
+
+func jsonRenderer(value interface{}) Renderer {
+	return rendererFunc(func(ctx *Context) {
+		ctx.Output.JSON(value, false, false)
+	})
+}
+
+func errorRenderer(err error) Renderer {
+	return rendererFunc(func(ctx *Context) {
+		ctx.Output.SetStatus(500)
+		ctx.WriteString(err.Error())
+	})
 }
 
 // JSON writes json to response body.
@@ -330,9 +343,8 @@ func (output *BeegoOutput) IsServerError() bool {
 }
 
 func stringsToJSON(str string) string {
-	rs := []rune(str)
 	var jsons bytes.Buffer
-	for _, r := range rs {
+	for _, r := range str {
 		rint := int(r)
 		if rint < 128 {
 			jsons.WriteRune(r)
