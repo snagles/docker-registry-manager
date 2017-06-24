@@ -90,7 +90,19 @@
               <th>Request Count</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            {{range $i, $stat := .stats}}
+            <tr>
+              <td>{{index $stat "method"}}</td>
+              <td>{{index $stat "request_url"}}</td>
+              <td data-order="{{statToSeconds (index $stat `avg_time`)}}">{{index $stat "avg_time"}}</td>
+              <td data-order="{{statToSeconds (index $stat `max_time`)}}">{{index $stat "max_time"}}</td>
+              <td data-order="{{statToSeconds (index $stat `min_time`)}}">{{index $stat "min_time"}}</td>
+              <td data-order="{{statToSeconds (index $stat `total_time`)}}">{{index $stat "total_time"}}</td>
+              <td>{{index $stat "times"}}</td>
+            </tr>
+            {{end}}
+          </tbody>
           <tfoot>
             <tr>
               <th>Method</th>
@@ -152,17 +164,11 @@
 <script>
   $(document).ready(function() {
     // Get the stats data table stats
-    $.getJSON("/settings/stats", function(data) {
-      $.each(data, function(i, item) {
-        var $tr = $('<tr>').append($("<td>").text(item.method), $('<td>').text(item.request_url), $('<td data-order=' + item.avg_s + '>').text(item.avg_time), $('<td data-order=' + item.max_s + '>').text(item.max_time), $(
-          '<td data-order=' + item.min_s + '>').text(item.min_time), $('<td data-order=' + item.total_s + '>').text(item.total_time), $('<td>').text(item.times)).appendTo('#stats-datatable');
-      });
-      $('#stats-datatable').DataTable({
-        "order": [
-          [2, "desc"]
-        ],
-        "pageLength": 10
-      });
+    $('#stats-datatable').DataTable({
+      "order": [
+        [2, "desc"]
+      ],
+      "pageLength": 10
     });
 
     var table = $('#log-table').DataTable({

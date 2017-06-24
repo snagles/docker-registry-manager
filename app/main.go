@@ -76,6 +76,7 @@ WEBSITE:
 
 		// add template functions
 		beego.AddFuncMap("shortenDigest", funcs.DigestShortener)
+		beego.AddFuncMap("statToSeconds", funcs.StatToSeconds)
 		beego.AddFuncMap("bytefmt", funcs.ByteFmt)
 		beego.AddFuncMap("bytefmtdiff", funcs.ByteDiffFmt)
 		beego.AddFuncMap("timeAgo", funcs.TimeAgo)
