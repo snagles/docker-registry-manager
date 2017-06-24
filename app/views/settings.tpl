@@ -15,10 +15,12 @@
     </div>
   </div>
   <div class="content-block white-bg">
-    <div class="pull-right">
-      <a href="https://github.com/snagles/docker-registry-manager"><img src="https://img.shields.io/github/stars/snagles/docker-registry-manager.svg?style=social&amp;label=Star" alt="GitHub stars"/></a>
-      <a href="https://github.com/snagles/docker-registry-manager/issues"><img src="https://img.shields.io/github/issues-raw/snagles/docker-registry-manager.svg" alt="GitHub issues"/></a>
-      <a href="https://raw.githubusercontent.com/snagles/docker-registry-manager/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license"></a>
+    <div class="row" style="height:25px;">
+      <div class="pull-right">
+        <a href="https://github.com/snagles/docker-registry-manager"><img src="https://img.shields.io/github/stars/snagles/docker-registry-manager.svg?style=social&amp;label=Star" alt="GitHub stars"/></a>
+        <a href="https://github.com/snagles/docker-registry-manager/issues"><img src="https://img.shields.io/github/issues-raw/snagles/docker-registry-manager.svg" alt="GitHub issues"/></a>
+        <a href="https://raw.githubusercontent.com/snagles/docker-registry-manager/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license"></a>
+      </div>
     </div>
     <div class="row">
       <table class="table table-striped table-bordered">
