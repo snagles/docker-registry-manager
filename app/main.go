@@ -67,6 +67,14 @@ WEBSITE:
 
 	app.Action = func(c *cli.Context) {
 		setlevel(logLevel)
+
+		// set default beego config
+		beego.BConfig.AppName = "docker-registry-manager"
+		beego.BConfig.RunMode = "dev"
+		beego.BConfig.Listen.EnableAdmin = true
+		beego.BConfig.CopyRequestBody = true
+
+		// add template functions
 		beego.AddFuncMap("shortenDigest", funcs.DigestShortener)
 		beego.AddFuncMap("bytefmt", funcs.ByteFmt)
 		beego.AddFuncMap("bytefmtdiff", funcs.ByteDiffFmt)
