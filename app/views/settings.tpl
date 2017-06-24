@@ -163,6 +163,15 @@
 
 <script>
   $(document).ready(function() {
+    // use local storage for alerting success/failures after page loads
+    if (localStorage.getItem("alert")) {
+      $(".right-content-container").prepend(localStorage.getItem("alert"));
+      $(".alert").alert();
+      window.setTimeout(function() {
+        $(".alert").alert('close');
+      }, 5000);
+      localStorage.clear();
+    }
     // Get the stats data table stats
     $('#stats-datatable').DataTable({
       "order": [
@@ -186,13 +195,13 @@
           $.ajax({
             type: "POST",
             url: "/logs/archive",
-            success: function(result) {
-              table.ajax.reload();
-              $("#logs").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Archived logs in /logs. </div>");
-              $(".alert").alert();
-              window.setTimeout(function() {
-                $(".alert").alert('close');
-              }, 5000);
+            success: function(response) {
+              if (response.Error == null) {
+                window.location.reload(true)
+                $('html, body').animate({ scrollTop: 0 }, 0);
+                localStorage.setItem("alert","<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Archived logs. </div>")
+                location.reload()
+              }
             }
           });
         }
@@ -205,13 +214,12 @@
           $.ajax({
             type: "DELETE",
             url: "/logs",
-            success: function(result) {
-              table.ajax.reload();
-              $("#logs").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Cleared logs. </div>");
-              $(".alert").alert();
-              window.setTimeout(function() {
-                $(".alert").alert('close');
-              }, 5000);
+            success: function(response) {
+              if (response.Error == null) {
+                $('html, body').animate({ scrollTop: 0 }, 0);
+                localStorage.setItem("alert","<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Cleared logs. </div>")
+                location.reload()
+              }
             }
           });
         }
@@ -223,17 +231,16 @@
       $.ajax({
         type: "POST",
         url: "/logs/level/" + level,
-        success: function(result) {
-          $("#logs").append("<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Updated log level to "+level+". </div>");
-          $("#active-level").text(level +" ");
-          $(".alert").alert();
-          window.setTimeout(function() {
-            $(".alert").alert('close');
-          }, 5000);
+        success: function(response) {
+          if (response.Error == null) {
+            window.location.reload(true)
+            $('html, body').animate({ scrollTop: 0 }, 0);
+            localStorage.setItem("alert","<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Updated log level to {{.activeLevel}}</div>")
+            location.reload()
+          }
         }
       });
     });
   });
-
 </script>
 {{ end }}
