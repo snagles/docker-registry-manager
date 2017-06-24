@@ -14,6 +14,7 @@ type SettingsController struct {
 func (c *SettingsController) Get() {
 	c.Data["activeLevel"] = logrus.GetLevel()
 	c.Data["allLevels"] = logrus.AllLevels
+	c.Data["logs"] = parseLogs()
 	c.TplName = "settings.tpl"
 }
 

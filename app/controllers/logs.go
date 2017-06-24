@@ -17,7 +17,7 @@ type LogsController struct {
 }
 
 func (c *LogsController) Get() {
-	c.Data["json"] = parse()
+	c.Data["json"] = parseLogs()
 	c.ServeJSON()
 }
 
@@ -63,7 +63,7 @@ func (c *LogsController) GetLevel() {
 	c.ServeJSON()
 }
 
-// parse parses the locally stored flat log file that was logged to by logrus
+// parseLogs parseLogss the locally stored flat log file that was logged to by logrus
 //{"file":"log.go","level":"warning","line":588,"msg":"test","source":"beego","time":"2017-04-29T20:37:09-04:00"}
 
 type Entry struct {
@@ -75,7 +75,7 @@ type Entry struct {
 	Time    time.Time `json:"time"`
 }
 
-func parse() []Entry {
+func parseLogs() []Entry {
 	file, err := os.Open(conf.LogFile)
 	defer file.Close()
 	if err != nil {
@@ -101,7 +101,7 @@ func parse() []Entry {
 	if err := scanner.Err(); err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Error": err.Error(),
-		}).Error("Failed to parse log file line")
+		}).Error("Failed to parseLogs log file line")
 	}
 	return es
 }

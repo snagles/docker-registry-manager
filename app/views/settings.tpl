@@ -119,6 +119,7 @@
           <th>Message</th>
           <th>File</th>
           <th>Line</th>
+          <th>Source</th>
           <th>Time</th>
         </tr>
       </thead>
@@ -128,9 +129,22 @@
           <th>Message</th>
           <th>File</th>
           <th>Line</th>
+          <th>Source</th>
           <th>Time</th>
         </tr>
       </tfoot>
+      <tbody>
+        {{range $i, $entry := .logs}}
+        <tr>
+          <td>{{$entry.Level}}</td>
+          <td>{{$entry.Message}}</td>
+          <td>{{$entry.File}}</td>
+          <td>{{$entry.Line}}</td>
+          <td>{{$entry.Source}}</td>
+          <td>{{$entry.Time}}</td>
+        </tr>
+        {{end}}
+      </tbody>
     </table>
   </div>
 </div>
@@ -152,25 +166,10 @@
     });
 
     var table = $('#log-table').DataTable({
-      "ajax": {
-        url: '/logs',
-        dataSrc: ''
-      },
       "order": [
         [2, "desc"]
       ],
       "pageLength": 10,
-      "columns": [{
-        "data": "level"
-      }, {
-        "data": "msg"
-      }, {
-        "data": "file"
-      }, {
-        "data": "line"
-      }, {
-        "data": "time"
-      }],
       dom: "<'row'<'col-sm-3'l><'col-sm-6'B><'col-sm-3'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
       buttons: [{
         text: '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-edit"></i> Log Level: <span id="active-level">{{.activeLevel}} </span><span class="caret"> </span></button> <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> {{ range $i, $level :=.allLevels }} <li><a class="dropdown-item" data-level="{{$level}}" href="#">{{$level}}</a></li> {{ end }} </ul>',
