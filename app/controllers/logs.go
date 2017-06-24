@@ -12,6 +12,11 @@ import (
 	"github.com/snagles/docker-registry-manager/app/conf"
 )
 
+type logResponse struct {
+	Error   error  `json:"error,omitempty"`
+	Message string `json:"message,omitempty"`
+}
+
 type LogsController struct {
 	beego.Controller
 }
@@ -23,18 +28,32 @@ func (c *LogsController) Get() {
 
 func (c *LogsController) Delete() {
 	if err := deleteLog(); err != nil {
-		c.CustomAbort(404, "Failed to clear log: "+err.Error())
+		c.Data["json"] = logResponse{
+			Error:   err,
+			Message: "Failed to clear log",
+		}
+	} else {
+		logrus.Warn("Cleared log file.")
+		c.Data["json"] = logResponse{
+			Message: "Cleared log.",
+		}
 	}
-	logrus.Warn("Cleared log file.")
-	c.CustomAbort(200, "Success")
+	c.ServeJSON()
 }
 
 func (c *LogsController) Archive() {
 	if err := archiveLog(); err != nil {
-		c.CustomAbort(404, "Failed to clear log: "+err.Error())
+		c.Data["json"] = logResponse{
+			Error:   err,
+			Message: "Failed to archive log",
+		}
+	} else {
+		logrus.Warn("Archived log file.")
+		c.Data["json"] = logResponse{
+			Message: "Archived log",
+		}
 	}
-	logrus.Warn("Archived log file.")
-	c.CustomAbort(200, "Success")
+	c.ServeJSON()
 }
 
 func (c *LogsController) PostLevel() {
@@ -53,9 +72,17 @@ func (c *LogsController) PostLevel() {
 	case level == "debug":
 		logrus.SetLevel(logrus.DebugLevel)
 	default:
-		c.CustomAbort(404, "Unrecognized log level")
+		c.Data["json"] = logResponse{
+			Message: "Failed to archive log",
+		}
+		c.ServeJSON()
+		return
 	}
-	c.CustomAbort(200, "Success")
+	logrus.Warn("Changed log level to " + level)
+	c.Data["json"] = logResponse{
+		Message: "Changed log level to " + level,
+	}
+	c.ServeJSON()
 }
 
 func (c *LogsController) GetLevel() {
@@ -63,7 +90,7 @@ func (c *LogsController) GetLevel() {
 	c.ServeJSON()
 }
 
-// parseLogs parseLogss the locally stored flat log file that was logged to by logrus
+// parseLogs parses the locally stored flat log file that was logged to by logrus
 //{"file":"log.go","level":"warning","line":588,"msg":"test","source":"beego","time":"2017-04-29T20:37:09-04:00"}
 
 type Entry struct {
