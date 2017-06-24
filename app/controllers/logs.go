@@ -154,18 +154,3 @@ func archiveLog() error {
 	logrus.SetOutput(f)
 	return nil
 }
-
-// ToggleDebug toggles the debug level on or off depending on the current state
-func ToggleDebug() {
-	if logrus.GetLevel() == logrus.DebugLevel {
-		logrus.WithFields(logrus.Fields{
-			"Test": "Test",
-		}).Info("Turned off debug logging...")
-		logrus.SetLevel(logrus.InfoLevel)
-	} else {
-		logrus.WithFields(logrus.Fields{
-			"Test": "Test",
-		}).Info("Turned on debug logging...")
-		logrus.SetLevel(logrus.DebugLevel)
-	}
-}
