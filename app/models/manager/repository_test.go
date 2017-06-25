@@ -56,6 +56,6 @@ func TestRepoLastModifiedTime(t *testing.T) {
 		},
 	}
 	Convey("Last modified time should be "+setTime.AddDate(0, 0, -1).String(), t, func(c C) {
-		So(repo.LastModified(), ShouldResemble, setTime.AddDate(0, 0, -1))
+		c.So(repo.LastModified(), ShouldResemble, setTime.AddDate(0, 0, -1))
 	})
 }
