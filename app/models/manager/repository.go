@@ -1,10 +1,6 @@
 package manager
 
-import (
-	"time"
-
-	"github.com/snagles/docker-registry-manager/utils"
-)
+import "time"
 
 type Repository struct {
 	Name string
@@ -14,7 +10,7 @@ type Repository struct {
 func (r *Repository) LastModified() time.Time {
 	var lastModified time.Time
 	for _, tag := range r.Tags {
-		for _, history := range tag.Histories {
+		for _, history := range tag.History {
 			if history.Created.After(lastModified) {
 				lastModified = history.Created
 			}
@@ -23,7 +19,15 @@ func (r *Repository) LastModified() time.Time {
 	return lastModified
 }
 
-func (r *Repository) LastModifiedTimeAgo() string {
-	lastModified := r.LastModified()
-	return utils.TimeAgo(lastModified)
+func (r *Repository) Size() (size int64) {
+	dedup := make(map[string]struct{})
+	for _, tag := range r.Tags {
+		for _, layer := range tag.Layers {
+			if _, ok := dedup[layer.Digest.String()]; !ok {
+				dedup[layer.Digest.String()] = struct{}{}
+				size += layer.Size
+			}
+		}
+	}
+	return size
 }

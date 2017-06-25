@@ -7,7 +7,6 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.RegistriesController{})
-	beego.Router("/.release", &controllers.SettingsController{})
 
 	// Routers for registries
 	beego.Router("/registries", &controllers.RegistriesController{})
@@ -32,9 +31,14 @@ func init() {
 	beego.Router("/logs", &controllers.LogsController{}, "get:Get")
 	beego.Router("/logs", &controllers.LogsController{}, "delete:Delete")
 	beego.Router("/logs/archive", &controllers.LogsController{}, "post:Archive")
-	//beego.Router("/logs/toggle-debug", &controllers.SettingsController{}, "get:ToggleDebug")
 	beego.Router("/logs/level", &controllers.LogsController{}, "get:GetLevel")
 	beego.Router("/logs/level/:level", &controllers.LogsController{}, "post:PostLevel")
+
+	// Routers for events
+	beego.Router("/envelope", &controllers.EventsController{}, "post:PostEnvelope")
+	beego.Router("/events", &controllers.EventsController{}, "get:Get")
+	beego.Router("/events/:registryName", &controllers.EventsController{}, "get:GetRegistryEvents")
+	beego.Router("/events/:registryName/:eventID", &controllers.EventsController{}, "get:GetRegistryEventID")
 
 	// Routers for settings
 	beego.Router("/settings", &controllers.SettingsController{}, "get:Get")
