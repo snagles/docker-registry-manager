@@ -8,7 +8,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestLastModifiedTime(t *testing.T) {
+func TestTagLastModifiedTime(t *testing.T) {
 	setTime := time.Now().UTC()
 	tag := Tag{
 		V1Compatibility: new(V1Compatibility),
