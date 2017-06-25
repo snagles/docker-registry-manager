@@ -9,8 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"code.cloudfoundry.org/bytefmt"
-
 	"github.com/Sirupsen/logrus"
 	client "github.com/heroku/docker-registry-client/registry"
 )
@@ -55,7 +53,7 @@ func (r *Registry) Refresh() {
 	ur := *r
 
 	// Get the list of repositories
-	repoList, err := ur.Registry.Repositories()
+	repos, err := ur.Registry.Repositories()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Error": err.Error(),
@@ -63,25 +61,25 @@ func (r *Registry) Refresh() {
 	}
 	// Get the repository information
 	ur.Repositories = make(map[string]*Repository)
-	for _, repoName := range repoList {
-
-		// Build a repository object
-		repo := Repository{Name: repoName}
+	for _, repoName := range repos {
 
 		// Get the list of tags for the repository
-		tagList, err := ur.Tags(repoName)
+		tags, err := ur.Tags(repoName)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"Error":           err.Error(),
 				"Repository Name": repoName,
 			}).Error("Failed to retrieve an updated list of tags for " + ur.URL)
+			continue
 		}
 
-		repo.Tags = map[string]*Tag{}
+		repo := Repository{Name: repoName, Tags: make(map[string]*Tag)}
 		// Get the manifest for each of the tags
-		for _, tagName := range tagList {
-			// Use v1 since it has a lot more information
-			man, err := ur.Manifest(repoName, tagName)
+		for _, tagName := range tags {
+
+			// Using v2 required getting the manifest then retrieving the blob
+			// for the config digest
+			man, err := ur.ManifestV2(repoName, tagName)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"Error":           err.Error(),
@@ -91,25 +89,43 @@ func (r *Registry) Refresh() {
 				continue
 			}
 
-			var histories []V1Compatibility
-			for _, h := range man.History {
-				v1JSON := V1Compatibility{}
-				err = json.Unmarshal([]byte(h.V1Compatibility), &v1JSON)
-				if err != nil {
-					logrus.Error(err)
-				}
-				v1JSON.SizeStr = bytefmt.ByteSize(uint64(v1JSON.Size))
-
-				// Get first 8 characters for the short ID
-				v1JSON.IDShort = v1JSON.ID[0:7]
-
-				// Remove shell command
-				if len(v1JSON.ContainerConfig.Cmd) > 0 {
-					v1JSON.ContainerConfig.CmdClean = strings.Replace(v1JSON.ContainerConfig.Cmd[0], "/bin/sh -c #(nop)", "", -1)
-				}
-				histories = append(histories, v1JSON)
+			// Get the v1 config information
+			v1Bytes, err := ur.ManifestMetadata(repoName, man.Config.Digest)
+			if err != nil {
+				logrus.Error(err)
+				continue
 			}
-			repo.Tags[tagName] = &Tag{Name: tagName, V1: man, Histories: histories}
+			var v1 V1Compatibility
+			err = json.Unmarshal(v1Bytes, &v1)
+			if err != nil {
+				logrus.Error(err)
+				continue
+			}
+
+			// add the pointer for the history to its layer using its index
+			layerIndex := 0
+			for i, history := range v1.History {
+				if !history.EmptyLayer {
+					v1.History[i].ManifestLayer = &man.Layers[layerIndex]
+					layerIndex++
+				}
+				sh := strings.Split(history.CreatedBy, "/bin/sh -c")
+				if len(sh) > 1 {
+					v1.History[i].ShellType = "/bin/sh -c"
+					commands := strings.SplitAfter(sh[1], "&&")
+					for _, cmd := range commands {
+						v1.History[i].Commands = append(v1.History[i].Commands, Command{Cmd: cmd, Keywords: Keywords(cmd)})
+					}
+				}
+			}
+
+			// Get the tag size information
+			size, err := ur.TagSize(repoName, tagName)
+			if err != nil {
+				logrus.Error(err)
+			}
+
+			repo.Tags[tagName] = &Tag{Name: tagName, V1Compatibility: &v1, Size: int64(size), DeserializedManifest: man}
 		}
 		ur.Repositories[repoName] = &repo
 	}
@@ -118,8 +134,7 @@ func (r *Registry) Refresh() {
 	AllRegistries.Unlock()
 }
 
-func (r *Registry) TagCount() int {
-	var count int
+func (r *Registry) TagCount() (count int) {
 	for _, repo := range r.Repositories {
 		count += len(repo.Tags)
 	}
@@ -127,13 +142,48 @@ func (r *Registry) TagCount() int {
 }
 
 func (r *Registry) LayerCount() int {
-	var count int
+	layerDigests := make(map[string]struct{})
 	for _, repo := range r.Repositories {
 		for _, tag := range repo.Tags {
-			count += tag.LayerCount()
+			for _, layer := range tag.Layers {
+				layerDigests[layer.Digest.String()] = struct{}{}
+			}
 		}
 	}
-	return count
+	return len(layerDigests)
+}
+
+func (r *Registry) Pushes() (pushes int) {
+	AllEvents.Lock()
+	defer AllEvents.Unlock()
+	if _, ok := AllEvents.Events[r.Name]; !ok {
+		return 0
+	}
+
+	for _, e := range AllEvents.Events[r.Name] {
+		// TODO: really need to find a better way to exclude the managers queries
+		if e.Action == "push" && e.Request.Useragent != "Go-http-client/1.1" && e.Request.Method != "HEAD" {
+			pushes++
+		}
+	}
+	return pushes
+}
+
+func (r *Registry) Pulls() (pulls int) {
+	AllEvents.Lock()
+	defer AllEvents.Unlock()
+	if _, ok := AllEvents.Events[r.Name]; !ok {
+		return 0
+	}
+
+	for _, e := range AllEvents.Events[r.Name] {
+		// exclude heads since thats the method the manager uses for getting meta info
+		// TODO: really need to find a better way to exclude the managers queries
+		if e.Action == "pull" && e.Request.Useragent != "Go-http-client/1.1" && e.Request.Method != "HEAD" {
+			pulls++
+		}
+	}
+	return pulls
 }
 
 func (r *Registry) Status() string {
@@ -143,6 +193,8 @@ func (r *Registry) Status() string {
 	return "UP"
 }
 
+// AddRegistry adds the new registry for viewing in the interface and sets up
+// the go routine for automatic refreshes
 func AddRegistry(scheme, host string, port int, ttl time.Duration) (*Registry, error) {
 	url := fmt.Sprintf(fmt.Sprintf("%s://%s:%v", scheme, host, port))
 	hub, err := client.New(url, "", "")

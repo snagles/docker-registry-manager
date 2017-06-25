@@ -10,7 +10,7 @@
 
 Docker Registry Manager is a golang written, beego driven, web interface for interacting with multiple docker registries (one to many).
 
-![Example](https://github.com/snagles/resources/blob/master/docker-registry-manager.gif)
+![Example](https://github.com/snagles/resources/blob/master/docker-registry-manager-updated.gif)
 
 WARNING: This application is very much still a work in progress. Core functionality exists, but polish and features are still being worked on.
 
@@ -29,23 +29,30 @@ WARNING: This application is very much still a work in progress. Core functional
 ### Go
  ```bash
     git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
-    cd app && go build . && ./app -verbosity 6
+    cd app && go build . && ./app --port 8080 --log warn --ttl 2m
     firefox localhost:8080
  ```
 
 ### Dockerfile
  ```bash
-    docker build -t docker-registry-manager .
     docker run --detach --name docker-registry-manager -p 8080:8080 docker-registry-manager
  ```
 
 ## Current Features
  1. Support for docker distribution registry v2 (https and http)
  2. Manage multiple registries with one web instance
- 3. Viewable image/tags stages, commands, and sizes. Refreshed every 45s
- 4. Bulk deletes of tags
- 5. Admin panel with logs, request tracking, and configurable log levels
+ 3. Viewable image/tags stages, commands, and sizes.
+ 4. Configurable refresh intervals
+ 5. Bulk deletes of tags
+ 6. Admin panel with logs, request tracking, and configurable log levels
+ 7. Registry envelope acceptance to allow for registry request tracking
+ 8. Viewable activity logs when registry configured to forward
+ 9. Compares to dockerhub public repository and notifies of differences
 
 ## Planned Features
  1. Authentication for users with admin/read only rights
- 2. Registry event logs in "dashboard"
+ 2. Global search
+ 3. Notification on push
+ 4. List shared layers
+ 5. Event timeline
+ 6. Curl command generator for json inspection in other programs

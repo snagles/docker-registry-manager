@@ -1,0 +1,313 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  background-color: #f3f5f6;
+  color: #212121;
+  font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight: 300;
+}
+
+ul {list-style-type: none;}
+
+/*
+ * Navigation
+ */
+.left-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    background-color:#009688;
+    color: #FFF;
+    z-index: 101;
+    padding-bottom: 50px;
+}
+.left-nav > .nav-header{
+  background-color: #00796B;
+  height:50px;
+}
+.left-nav > .nav-header > a{
+  color: #FFF
+}
+
+.nav-menu {
+  margin-top: 40px;
+}
+
+.nav-menu > hr {
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 0px;
+}
+
+.nav-menu > h5 {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.nav-menu > ul {
+  padding-left: 0px;
+}
+
+.nav-menu > ul >li:hover {
+  background-color: #00796B;
+  border-left: 5px solid #FF5722;
+}
+.nav-menu > ul >li >a {
+  padding-left: 25px;
+  color: #FFF;
+  display: block;
+  line-height: 40px;
+  transition: all .2s;
+  font-size: 15px;
+  text-decoration: none;
+  position: relative;
+}
+.nav-menu > ul > li > span {
+  padding-left: 5px;
+}
+.nav-menu > ul > li > a > i {
+  margin-right:10px;
+}
+
+.nav-tabs {
+  margin-bottom:20px;
+}
+/*
+ * Header
+ */
+.header{
+  height: 50px;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.06);
+  padding: 0 27px;
+  position: fixed;
+  top: 0px;
+  left: 200px;
+  z-index: 101;
+  transition: left .0001s .48s;
+  width: calc(100vw - 200px);
+}
+
+/*
+ * Content
+ */
+.right-content-container{
+  position: relative;
+  margin-left: 225px;
+  margin-right: 25px;
+  background-color: #f1f4f8;
+  min-height: 100vh;
+  padding-top: 50px;
+  z-index: 90;
+  transition: -webkit-transform .5s;
+  transition: transform .5s;
+}
+
+.content-block {
+  border-radius: 3px 3px 0 0;
+  border: 1px solid #E7E9ED;
+  border-bottom: 0;
+  padding: 35px 40px;
+  counter-reset: section;
+  transition: color .5s .3s;
+  margin-bottom: 25px;
+}
+
+.content-block-empty {
+  padding: 35px 40px;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.content-block-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.white-bg{
+  background-color: #FFF;
+}
+
+.breadcrumb {
+  background-color: #FFF;
+  margin-top: 10px;
+}
+
+.badge {
+  background-color:#FF5722;
+}
+
+.add-new {
+  background-color: white;
+  border: 1px solid #e3e3e3;
+  height: 150px;
+  margin-top: 50px;
+  cursor: pointer;
+  width: 150px;
+  margin-left: 115px;
+  border-radius: 4px
+}
+
+.add-new-icon {
+  display: inline-block!important;
+  font-size: 140px!important;
+  line-height: 160px!important;
+  height: 150px;
+  width:150px;
+  text-align: center;
+  vertical-align: bottom;
+  color: #adadad;
+}
+
+.box {
+  border: 1px solid #e3e3e3;
+  cursor: pointer;
+  display: inline-block;
+  height: 250px;
+  width:450px!important;
+  margin: 20px;
+}
+
+.box-header{
+  height:60px;
+  color:black;
+}
+
+.box-body{
+  height:140px;
+}
+
+.metric-value {
+  font-size: 40px;
+  color:#FF5722;
+}
+
+.metric{
+  text-align: center;
+  color: #737373;
+}
+
+.well-box {
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
+}
+
+.unclickable {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+table.dataTable thead th {
+    position: relative;
+    background-image: none !important;
+}
+
+table.dataTable thead th.sorting:after,
+table.dataTable thead th.sorting_asc:after,
+table.dataTable thead th.sorting_desc:after {
+    position: absolute;
+    top: 12px;
+    right: 8px;
+    display: block;
+    font-family: FontAwesome;
+}
+
+table.dataTable thead th.sorting:after {
+    content: "\f0dc";
+    color: #ddd;
+    font-size: 0.8em;
+    padding-top: 0.12em;
+}
+table.dataTable thead th.sorting_asc:after {
+    content: "\f0de";
+}
+table.dataTable thead th.sorting_desc:after {
+    content: "\f0dd";
+}
+
+/*
+  Keyword labels and their classes
+  Colors taken from https://github.com/file-icons/atom
+*/
+.keyword-label {
+  display:inline-block;
+  font-size: 11px;
+  margin-top:13px;
+}
+
+div.tooltip-inner {
+    max-width: 600px;
+}
+
+.border-between > [class*='col-']:before {
+   background: #ddd;
+   bottom: 0;
+   content: " ";
+   left: 0;
+   position: absolute;
+   width: 1px;
+   top: 0;
+}
+
+.border-between > [class*='col-']:first-child:before {
+   display: none;
+}
+
+.lighter-red {background-color: #d08384;}
+.light-red {background-color: #c97071;}
+.medium-red {background-color: #ac4142;}
+.dark-red {background-color: #742c2d;}
+.darker-red {background-color: #4f1e1e;}
+
+.lighter-green {background-color: #bdcc9c;}
+.light-green {background-color: #b2c38b;}
+.medium-green {background-color: #90a959;}
+.dark-green {background-color: #66783e;}
+.darker-green {background-color: #49562d;}
+
+.lighter-yellow {background-color: #fcebd3;}
+.light-yellow {background-color: #fae0bc;}
+.medium-yellow {background-color: #f4bf75;}
+.dark-yellow {background-color: #ee9e2e;}
+.darker-yellow {background-color: #d88511;}
+
+.lighter-blue {background-color: #aecbd7;}
+.light-blue {background-color: #9dc0ce;}
+.medium-blue {background-color: #6a9fb5;}
+.dark-blue {background-color: #46788d;}
+.darker-blue {background-color: #355b6b;}
+
+.lighter-maroon {background-color: #c58766;}
+.light-maroon {background-color: #be7953;}
+.medium-maroon {background-color: #8f5536;}
+.dark-maroon {background-color: #573421;}
+.darker-maroon {background-color: #321e13;}
+
+.lighter-purple {background-color: #d1b4cb;}
+.light-purple {background-color: #c7a4c0;}
+.medium-purple {background-color: #aa759f;}
+.dark-purple {background-color: #825078;}
+.darker-purple {background-color: #633d5b;}
+
+.lighter-orange {background-color: #e6ba97;}
+.light-orange {background-color: #e1ad83;}
+.medium-orange {background-color: #d28445;}
+.dark-orange {background-color: #a35f27;}
+.darker-orange {background-color: #7a471e;}
+
+.lighter-cyan {background-color: #b7d9d3;}
+.light-cyan {background-color: #a7d0c9;}
+.medium-cyan {background-color: #75b5aa;}
+.dark-cyan {background-color: #4d9085;}
+.darker-cyan {background-color: #3c6f66;}
+
+.lighter-pink {background-color: #ff66e0;}
+.light-pink {background-color: #ff4ddb;}
+.medium-pink {background-color: #ff00cc;}
+.dark-pink {background-color: #b3008f;}
+.darker-pink {background-color: #800066;}

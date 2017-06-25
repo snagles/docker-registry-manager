@@ -58,5 +58,5 @@ func (c *RepositoriesController) GetAllRepositories() {
 	c.Data["repositories"] = repos
 
 	// Index template
-	c.TplName = "all_repositories.tpl"
+	c.TplName = "allrepositories.tpl"
 }
