@@ -30,7 +30,7 @@ func TestTagLastModifiedTime(t *testing.T) {
 		{Created: setTime.AddDate(0, 0, -6)},
 	}
 	Convey("Last modified time should be "+setTime.AddDate(0, 0, -1).String(), t, func(c C) {
-		So(tag.LastModified(), ShouldResemble, setTime.AddDate(0, 0, -1))
+		c.So(tag.LastModified(), ShouldResemble, setTime.AddDate(0, 0, -1))
 	})
 
 }
