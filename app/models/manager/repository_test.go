@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/docker/distribution"
+	"github.com/docker/distribution/manifest/schema2"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -48,7 +49,6 @@ func TestRepoLastModifiedTime(t *testing.T) {
 		{Created: setTime.AddDate(0, 0, -8)},
 		{Created: setTime.AddDate(0, 0, -9)},
 	}
-
 	repo := Repository{
 		Tags: map[string]*Tag{
 			"tag1": &tag1,
@@ -57,5 +57,38 @@ func TestRepoLastModifiedTime(t *testing.T) {
 	}
 	Convey("Last modified time should be "+setTime.AddDate(0, 0, -1).String(), t, func(c C) {
 		c.So(repo.LastModified(), ShouldResemble, setTime.AddDate(0, 0, -1))
+	})
+}
+
+func TestRepoSize(t *testing.T) {
+	tag1 := Tag{
+		DeserializedManifest: new(schema2.DeserializedManifest),
+	}
+	tag1.Layers = []distribution.Descriptor{
+		{Size: 500, Digest: "sha256:unique1"},
+		{Size: 600, Digest: "sha256:unique2"},
+		{Size: 700, Digest: "sha256:unique3"},
+		{Size: 800, Digest: "sha256:unique4"},
+		{Size: 900, Digest: "sha256:dup1"},
+	}
+
+	tag2 := Tag{
+		DeserializedManifest: new(schema2.DeserializedManifest),
+	}
+	tag2.Layers = []distribution.Descriptor{
+		{Size: 500, Digest: "sha256:unique5"},
+		{Size: 600, Digest: "sha256:unique6"},
+		{Size: 700, Digest: "sha256:unique7"},
+		{Size: 800, Digest: "sha256:unique8"},
+		{Size: 900, Digest: "sha256:dup1"},
+	}
+	repo := Repository{
+		Tags: map[string]*Tag{
+			"tag1": &tag1,
+			"tag2": &tag2,
+		},
+	}
+	Convey("Total size should be 6100", t, func(c C) {
+		c.So(repo.Size(), ShouldEqual, 6100)
 	})
 }
