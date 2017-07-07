@@ -17,6 +17,9 @@ WARNING: This application is very much still a work in progress. Core functional
 ## Quickstart
  The below steps assume you have a docker registry currently running (with delete mode enabled (https://docs.docker.com/registry/configuration/).
 
+ Note: If using basic authentication add the registry via command line in the format: `--registries http://testuser:testpassword@localhost:5000`. Adding from the
+interface is not currently supported since the username and password would be sent in cleartext. TLS is a WIP.
+
 ### Docker-Compose (Recommended)
  Install compose (https://docs.docker.com/compose/install/)
 
@@ -56,3 +59,4 @@ WARNING: This application is very much still a work in progress. Core functional
  4. List shared layers
  5. Event timeline
  6. Curl command generator for json inspection in other programs
+ 7. TLS
