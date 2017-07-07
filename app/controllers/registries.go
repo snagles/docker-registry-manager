@@ -51,7 +51,7 @@ func (c *RegistriesController) AddRegistry() {
 
 	ttl := time.Duration(interval) * time.Second
 
-	_, err = manager.AddRegistry(scheme, host, port, ttl)
+	_, err = manager.AddRegistry(scheme, host, "", "", port, ttl)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
