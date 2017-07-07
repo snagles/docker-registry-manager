@@ -19,11 +19,19 @@ http:
     addr: :5000
     debug:
         addr: :5001
+    tls:
+      clientcas:
+        - /auth/private.pem
+        - /auth/public.pem
+auth:
+  htpasswd:
+    realm: basic-realm
+    path: /auth/htpasswd
 notifications:
   endpoints:
     - name: docker-registry-manager
       disabled: false
-      url: http://192.168.245.128:8080/envelope
+      url: http://localhost:8080/envelope
       timeout: 500ms
       threshold: 2
       backoff: 1s
