@@ -50,7 +50,7 @@ WEBSITE:
 		},
 		cli.StringFlag{
 			Name:   "registries, r",
-			Usage:  "comma separated list of registry url's to connect to `http://url:5000,https://url:6000`",
+			Usage:  "comma separated list of registry url's to connect to `http://url:5000,https://url:6000,http://username:password@url:5000`",
 			EnvVar: "MANAGER_REGISTRIES",
 		},
 		cli.StringFlag{
@@ -107,7 +107,15 @@ WEBSITE:
 					cli.ShowAppHelp(c)
 					return
 				}
-				manager.AddRegistry(url.Scheme, url.Hostname(), port, duration)
+				// If basic auth is set in the format http://testuser:testpassword@localhost:5000
+				// user authentication
+				if url.User != nil {
+					if pw, ok := url.User.Password(); ok && url.User.Username() != "" {
+						manager.AddRegistry(url.Scheme, url.Hostname(), url.User.Username(), pw, port, duration)
+					}
+				} else {
+					manager.AddRegistry(url.Scheme, url.Hostname(), "", "", port, duration)
+				}
 			}
 		}
 		beego.Run()
