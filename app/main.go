@@ -107,8 +107,15 @@ WEBSITE:
 					cli.ShowAppHelp(c)
 					return
 				}
-				pw, _ := url.User.Password()
-				manager.AddRegistry(url.Scheme, url.Hostname(), url.User.Username(), pw, port, duration)
+				// If basic auth is set in the format http://testuser:testpassword@localhost:5000
+				// user authentication
+				if url.User != nil {
+					if pw, ok := url.User.Password(); ok && url.User.Username() != "" {
+						manager.AddRegistry(url.Scheme, url.Hostname(), url.User.Username(), pw, port, duration)
+					}
+				} else {
+					manager.AddRegistry(url.Scheme, url.Hostname(), "", "", port, duration)
+				}
 			}
 		}
 		beego.Run()

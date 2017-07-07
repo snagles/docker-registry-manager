@@ -199,6 +199,7 @@ func AddRegistry(scheme, host, user, password string, port int, ttl time.Duratio
 	url := fmt.Sprintf(fmt.Sprintf("%s://%s:%v", scheme, host, port))
 	hub, err := client.New(url, user, password)
 	if err != nil {
+		logrus.Error("Failed to connect to registry: " + err.Error())
 		return nil, err
 	}
 	r := Registry{
