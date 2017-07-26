@@ -39,7 +39,7 @@ func (c *RegistriesController) GetRegistryCount() {
 func (c *RegistriesController) AddRegistry() {
 	// Registry contains all identifying information for communicating with a registry
 
-	scheme, host, port, err := c.sanitizeForm()
+	scheme, host, port, skipTLS, err := c.sanitizeForm()
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -51,7 +51,7 @@ func (c *RegistriesController) AddRegistry() {
 
 	ttl := time.Duration(interval) * time.Second
 
-	_, err = manager.AddRegistry(scheme, host, "", "", port, ttl)
+	_, err = manager.AddRegistry(scheme, host, "", "", port, ttl, skipTLS)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -73,14 +73,19 @@ func (c *RegistriesController) TestRegistryStatus() {
 		c.ServeJSON()
 	}
 
-	scheme, host, port, err := c.sanitizeForm()
+	scheme, host, port, skipTLS, err := c.sanitizeForm()
 	if err != nil {
 		whenErr(err)
 		return
 	}
 
 	url := fmt.Sprintf(fmt.Sprintf("%s://%s:%v", scheme, host, port))
-	temp, err := client.New(url, "", "")
+	var temp *client.Registry
+	if skipTLS {
+		temp, err = client.NewInsecure(url, "", "")
+	} else {
+		temp, err = client.New(url, "", "")
+	}
 	if err != nil {
 		whenErr(err)
 		return
@@ -98,9 +103,13 @@ func (c *RegistriesController) TestRegistryStatus() {
 
 }
 
-func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, err error) {
+func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, skipTLS bool, err error) {
 	host = c.GetString("host")
 	port, err = c.GetInt("port", 5000)
 	scheme = c.GetString("scheme", "https")
+	skipTLSOn := c.GetString("skip-tls", "off")
+	if skipTLSOn == "on" {
+		skipTLS = true
+	}
 	return
 }
