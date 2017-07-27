@@ -28,6 +28,7 @@ func main() {
 	app.Version = "2.0.0"
 	var logLevel string
 	var refreshRate string
+	var skipTLS bool
 
 	cli.AppHelpTemplate = fmt.Sprintf(`%s
 WEBSITE:
@@ -66,6 +67,12 @@ WEBSITE:
 			Value:       "30s",
 			EnvVar:      "MANAGER_REFRESH_RATE",
 			Destination: &refreshRate,
+		},
+		cli.BoolFlag{
+			Name:        "skip-tls",
+			Usage:       "skip-tls",
+			EnvVar:      "MANAGER_SKIP_TLS",
+			Destination: &skipTLS,
 		},
 	}
 
@@ -111,10 +118,18 @@ WEBSITE:
 				// user authentication
 				if url.User != nil {
 					if pw, ok := url.User.Password(); ok && url.User.Username() != "" {
-						manager.AddRegistry(url.Scheme, url.Hostname(), url.User.Username(), pw, port, duration)
+						_, err := manager.AddRegistry(url.Scheme, url.Hostname(), url.User.Username(), pw, port, duration, skipTLS)
+						if err != nil {
+							fmt.Println(err)
+							os.Exit(1)
+						}
 					}
 				} else {
-					manager.AddRegistry(url.Scheme, url.Hostname(), "", "", port, duration)
+					_, err := manager.AddRegistry(url.Scheme, url.Hostname(), "", "", port, duration, skipTLS)
+					if err != nil {
+						fmt.Println(err)
+						os.Exit(1)
+					}
 				}
 			}
 		}
