@@ -195,9 +195,15 @@ func (r *Registry) Status() string {
 
 // AddRegistry adds the new registry for viewing in the interface and sets up
 // the go routine for automatic refreshes
-func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration) (*Registry, error) {
+func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration, skipTLS bool) (*Registry, error) {
 	url := fmt.Sprintf(fmt.Sprintf("%s://%s:%v", scheme, host, port))
-	hub, err := client.New(url, user, password)
+	var hub *client.Registry
+	var err error
+	if skipTLS {
+		hub, err = client.NewInsecure(url, user, password)
+	} else {
+		hub, err = client.New(url, user, password)
+	}
 	if err != nil {
 		logrus.Error("Failed to connect to registry: " + err.Error())
 		return nil, err
