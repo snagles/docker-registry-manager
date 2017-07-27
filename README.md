@@ -20,6 +20,8 @@ WARNING: This application is very much still a work in progress. Core functional
  Note: If using basic authentication add the registry via command line in the format: `--registries http://testuser:testpassword@localhost:5000`. Adding from the
 interface is not currently supported since the username and password would be sent in cleartext. TLS is a WIP.
 
+To skip tls verification use the --skip-tls command line flag or check the box in the interface.
+
 ### Docker-Compose (Recommended)
  Install compose (https://docs.docker.com/compose/install/)
 
