@@ -1,0 +1,35 @@
+version: 0.1
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+    maxthreads: 100
+  delete:
+    enabled: true
+  redirect:
+    disable: false
+  maintenance:
+    uploadpurging:
+      enabled: true
+      age: 168h
+      interval: 24h
+      dryrun: false
+    readonly:
+      enabled: false
+http:
+    addr: :5000
+    debug:
+        addr: :5001
+    certificate: /auth/public.pem
+    key: /auth/private.pem
+notifications:
+  endpoints:
+    - name: docker-registry-manager
+      disabled: false
+      url: http://localhost:8080/envelope
+      timeout: 500ms
+      threshold: 2
+      backoff: 1s
+##proxy:
+#  remoteurl: https://registry-1.docker.io
+#  username: [username]
+#  password: [password]
