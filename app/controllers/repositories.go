@@ -30,7 +30,7 @@ func (c *RepositoriesController) GetAllRepositoryCount() {
 	for _, reg := range manager.AllRegistries.Registries {
 		repositories, err := reg.Registry.Repositories()
 		if err != nil {
-			logrus.Error("Could not connect to registry to get the repository count. " + err.Error())
+			logrus.Errorf("Could not connect to registry (%s) to get the repository count: %s ", reg.Registry.URL, err.Error())
 		}
 		count += len(repositories)
 	}
