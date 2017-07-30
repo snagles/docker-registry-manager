@@ -1,11 +1,13 @@
 language: go
-sudo: false
+sudo: required
+services:
+  - docker
 go:
   - tip
 install: true
 before_install:
   - go get -v ./...
 script:
-  - ./.travis-test.sh 
+  - ./.travis-test.sh
 after_success:
   - bash <(curl -s https://codecov.io/bash)
