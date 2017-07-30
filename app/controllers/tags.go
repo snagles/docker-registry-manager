@@ -5,7 +5,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/app/models/manager"
+	"github.com/snagles/docker-registry-manager/app/models"
 )
 
 type TagsController struct {

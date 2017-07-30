@@ -15,7 +15,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/app/models/manager"
+	"github.com/snagles/docker-registry-manager/app/models"
 	_ "github.com/snagles/docker-registry-manager/app/routers"
 	"github.com/urfave/cli"
 )
