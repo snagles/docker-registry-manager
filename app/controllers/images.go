@@ -7,7 +7,7 @@ import (
 
 	"github.com/astaxie/beego"
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
-	"github.com/snagles/docker-registry-manager/app/models/manager"
+	"github.com/snagles/docker-registry-manager/app/models"
 )
 
 type ImagesController struct {

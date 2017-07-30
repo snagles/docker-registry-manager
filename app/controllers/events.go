@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/app/models/manager"
+	"github.com/snagles/docker-registry-manager/app/models"
 )
 
 // EventsController handles all posting of envelopes from the registries configured endpoints
