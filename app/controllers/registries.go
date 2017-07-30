@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -110,6 +112,18 @@ func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, sk
 	skipTLSOn := c.GetString("skip-tls", "off")
 	if skipTLSOn == "on" {
 		skipTLS = true
+	}
+
+	switch {
+	case scheme == "":
+		err = errors.New("Invalid scheme: " + scheme)
+		return
+	case host == "":
+		err = errors.New("Invalid host: " + host)
+		return
+	case port == 0:
+		err = errors.New("Invalid port: " + strconv.Itoa(port))
+		return
 	}
 	return
 }

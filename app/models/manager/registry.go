@@ -2,6 +2,7 @@ package manager
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"strconv"
@@ -52,6 +53,7 @@ func (r *Registry) Refresh() {
 	// Copy the registry information to a new object, and update it
 	ur := *r
 
+	logrus.Info("Refreshing " + r.URL)
 	// Get the list of repositories
 	repos, err := ur.Registry.Repositories()
 	if err != nil {
@@ -196,18 +198,32 @@ func (r *Registry) Status() string {
 // AddRegistry adds the new registry for viewing in the interface and sets up
 // the go routine for automatic refreshes
 func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration, skipTLS bool) (*Registry, error) {
+	switch {
+	case scheme == "":
+		return nil, errors.New("Invalid scheme: " + scheme)
+	case host == "":
+		return nil, errors.New("Invalid host: " + host)
+	case port == 0:
+		return nil, errors.New("Invalid port: " + strconv.Itoa(port))
+	}
+
 	url := fmt.Sprintf(fmt.Sprintf("%s://%s:%v", scheme, host, port))
 	var hub *client.Registry
 	var err error
 	if skipTLS {
 		hub, err = client.NewInsecure(url, user, password)
+		if err != nil {
+			logrus.Error("Failed to connect to unvalidated TLS registry: " + err.Error())
+			return nil, err
+		}
 	} else {
 		hub, err = client.New(url, user, password)
+		if err != nil {
+			logrus.Error("Failed to connect to validated registry: " + err.Error())
+			return nil, err
+		}
 	}
-	if err != nil {
-		logrus.Error("Failed to connect to registry: " + err.Error())
-		return nil, err
-	}
+
 	r := Registry{
 		Registry: hub,
 		TTL:      ttl,
