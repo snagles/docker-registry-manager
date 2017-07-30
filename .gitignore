@@ -6,4 +6,5 @@ app/app
 app/logs/log.json
 .remote-sync.json
 .idea
-tests/auth
+test/registry/auth/*
+test/registry/storage/*
