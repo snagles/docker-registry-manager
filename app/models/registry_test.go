@@ -5,9 +5,25 @@ import (
 	"os"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/Sirupsen/logrus"
+	tr "github.com/snagles/docker-registry-manager/test/registry"
 )
+
+func TestAddRegistry(t *testing.T) {
+	tr.Start("../../test/registry/config-tls-no-auth.yml")
+	time.Sleep(2 * time.Second)
+
+	// Test valid form
+	r, err := AddRegistry("http", "localhost", "", "", 5000, 10*time.Second, true)
+	if err != nil {
+		t.Error("Failed to add registry: " + err.Error())
+	}
+	if r == nil {
+		t.Error("Returned registry does not contain expected values")
+	}
+}
 
 func TestTagCount(t *testing.T) {
 	registry := createTestRegistry()
