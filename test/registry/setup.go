@@ -22,9 +22,7 @@ var stop chan struct{}
 
 // Repositories contains a list of test repos
 var Repositories = map[string][]string{
-	"ubuntu": []string{"16.04", "14.04", "12.04"},
-	"alpine": []string{"3.6", "3.5", "3.4"},
-	"golang": []string{"1.7", "1.6", "alpine"},
+	"golang": []string{"1.7", "alpine"},
 }
 
 // Start creates and executes a test registry running with the
