@@ -24,7 +24,7 @@
         <li role="presentation" class="disabled"><a href="#inspect" aria-controls="inspect" role="tab" data-toggle="tab">Inspect</a></li>
         <div id="keywords" style="float:right;">
           {{range $keyword, $keywordInfo := .labels}}
-          <a class="label keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}"><i style="font-size:10px" class="fa {{$keywordInfo.Icon}}"></i>  {{$keyword}}</a> {{end}}
+          <a class="label keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}"><i class="fa {{$keywordInfo.Icon}}"></i>  {{$keyword}}</a> {{end}}
         </div>
       </ul>
     </div>
