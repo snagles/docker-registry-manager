@@ -240,6 +240,10 @@ table.dataTable thead th.sorting_desc:after {
   margin-top:13px;
 }
 
+.keyword-label i{
+  font-size: 17px;
+}
+
 div.tooltip-inner {
     max-width: 600px;
 }

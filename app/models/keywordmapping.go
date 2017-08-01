@@ -49,7 +49,7 @@ var KeywordMapping = map[string]KeywordInfo{
 	`Emacs`:         {`emacs-icon`, `medium-purple`, []string{`\.emacs`}},
 	`Framework`:     {`dylib-icon`, `medium-yellow`, []string{`\.framework`}},
 	`Git`:           {`git-icon`, `medium-red`, []string{`\.git`, `git`}},
-	`Github`:        {`github-icon`, `medium-orange`, []string{`\.github`}},
+	`Github`:        {`fa-github`, `medium-orange`, []string{`\.github`}},
 	`Gitlab`:        {`gitlab-icon`, `medium-orange`, []string{`\.gitlab`, `\.gitlab-ci\.yml`}},
 	`Meteor`:        {`meteor-icon`, `dark-orange`, []string{`\.meteor`}},
 	`Mercurial`:     {`hg-icon`, `dark-orange`, []string{`\.hg`, `mercurial`}},
