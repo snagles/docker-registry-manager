@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/url"
 
 	"github.com/Sirupsen/logrus"
@@ -45,7 +46,7 @@ func (c *TagsController) DeleteTags() {
 			"Digest": digest.String(),
 			"Error":  err.Error(),
 		}).Errorf("Failed to delete digest.")
-		c.CustomAbort(404, "Failure")
+		c.CustomAbort(404, fmt.Sprintf("Failure to delete Digest: %v Error: %v", digest.String(), err))
 	}
 	registry.Refresh()
 
