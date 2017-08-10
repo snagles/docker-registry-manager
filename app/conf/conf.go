@@ -49,7 +49,11 @@ func init() {
 
 	// Setup logrus
 	f, _ := os.OpenFile(LogFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0755)
+
+	// log to file and stdout
 	logrus.SetOutput(f)
+	logrus.SetOutput(os.Stdout)
+
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 	logrus.AddHook(ContextHook{})
 
