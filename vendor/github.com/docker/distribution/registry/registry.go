@@ -68,7 +68,7 @@ var ServeCmd = &cobra.Command{
 type Registry struct {
 	config *configuration.Configuration
 	app    *handlers.App
-	server *http.Server
+	Server *http.Server
 }
 
 // NewRegistry creates a new registry from a context and configuration struct.
@@ -102,7 +102,7 @@ func NewRegistry(ctx context.Context, config *configuration.Configuration) (*Reg
 	return &Registry{
 		app:    app,
 		config: config,
-		server: server,
+		Server: server,
 	}, nil
 }
 
@@ -183,7 +183,7 @@ func (registry *Registry) ListenAndServe() error {
 		context.GetLogger(registry.app).Infof("listening on %v", ln.Addr())
 	}
 
-	return registry.server.Serve(ln)
+	return registry.Server.Serve(ln)
 }
 
 func configureReporting(app *handlers.App) http.Handler {
