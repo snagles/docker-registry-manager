@@ -1,14 +1,19 @@
-package registry
+package registrytest
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
 	// Used to add profiling for the registry if debug is enabled
 	_ "net/http/pprof"
 	"os/exec"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/docker/distribution/registry"
 	// Setup auth and storage drivers
+	"github.com/docker/distribution/configuration"
+	"github.com/docker/distribution/registry"
 	_ "github.com/docker/distribution/registry/auth/htpasswd"
 	_ "github.com/docker/distribution/registry/auth/silly"
 	_ "github.com/docker/distribution/registry/auth/token"
@@ -18,40 +23,56 @@ import (
 	_ "github.com/docker/distribution/registry/storage/driver/inmemory"
 )
 
-var stop chan struct{}
-
 // Repositories contains a list of test repos
 var Repositories = map[string][]string{
 	"golang": []string{"1.7", "alpine"},
 }
 
 // Start creates and executes a test registry running with the
-// specified parameters passing in the config
-func Start(config string) {
-	// Use the same configuration and setup run when using the registry binary
-	// from the command line
-	cmd := registry.ServeCmd
-	stop = make(chan struct{})
-	go func() {
-		go cmd.Run(cmd, []string{config})
-		for {
-			select {
-			case <-stop:
-				break
-			}
-		}
-	}()
+// specified parameters passed in the config
+func New(configType string) *registry.Registry {
+	GOPATH := os.Getenv("GOPATH")
+	if GOPATH == "" {
+		GOPATH = defaultGOPATH()
+	}
+	r, err := os.Open(GOPATH + "/src/github.com/snagles/docker-registry-manager/test/registrytest/configs/" + configType)
+	if err != nil {
+		logrus.Fatalf("Failed to open %v configuration file: %v", configType, err)
+	}
+	c, err := configuration.Parse(r)
+	if err != nil {
+		logrus.Fatalf("Failed to parse %v configuration file: %v", c, err)
+	}
+
+	registry, err := registry.NewRegistry(context.Background(), c)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	return registry
 }
 
-// Stop signals the currently running test registry to quit
-func Stop() {
-	stop <- struct{}{}
-	close(stop)
+func Start(r *registry.Registry) error {
+	var err error
+	go func(err error) {
+		if err = r.ListenAndServe(); err != nil {
+			logrus.Error(err)
+		}
+	}(err)
+	return err
+}
+
+// Stop shutsdown the passed registry
+func Stop(r *registry.Registry) error {
+	return r.Server.Shutdown(context.Background())
 }
 
 // Seed adds a subset of repositories for testing
-func Seed(url string) error {
-
+func Seed(r *registry.Registry) error {
+	var url string
+	if r.Config.HTTP.Host+":"+r.Config.HTTP.Addr == "::5000" {
+		url = "localhost:5000"
+	}
 	for repo, tags := range Repositories {
 		for _, tag := range tags {
 
@@ -78,4 +99,23 @@ func Seed(url string) error {
 		}
 	}
 	return nil
+}
+
+func defaultGOPATH() string {
+	env := "HOME"
+	if runtime.GOOS == "windows" {
+		env = "USERPROFILE"
+	} else if runtime.GOOS == "plan9" {
+		env = "home"
+	}
+	if home := os.Getenv(env); home != "" {
+		def := filepath.Join(home, "go")
+		if filepath.Clean(def) == filepath.Clean(runtime.GOROOT()) {
+			// Don't set the default GOPATH to GOROOT,
+			// as that will trigger warnings from the go tool.
+			return ""
+		}
+		return def
+	}
+	return ""
 }

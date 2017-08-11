@@ -8,11 +8,12 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	tr "github.com/snagles/docker-registry-manager/test/registry"
+	"github.com/snagles/docker-registry-manager/test/registrytest"
 )
 
 func TestAddRegistry(t *testing.T) {
-	tr.Start("../../test/registry/config-tls-no-auth.yml")
+	tr := registrytest.New("https.yml")
+	registrytest.Start(tr)
 	time.Sleep(2 * time.Second)
 
 	// Test valid form
@@ -23,6 +24,7 @@ func TestAddRegistry(t *testing.T) {
 	if r == nil {
 		t.Error("Returned registry does not contain expected values")
 	}
+	registrytest.Stop(tr)
 }
 
 func TestTagCount(t *testing.T) {
