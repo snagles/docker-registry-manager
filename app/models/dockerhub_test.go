@@ -3,7 +3,7 @@ package manager
 import (
 	"testing"
 
-	test "github.com/snagles/docker-registry-manager/test/registry"
+	test "github.com/snagles/docker-registry-manager/test/registrytest"
 )
 
 func TestHubGetManifest(t *testing.T) {

@@ -5,14 +5,6 @@ storage:
     maxthreads: 100
   delete:
     enabled: true
-  maintenance:
-    uploadpurging:
-      enabled: true
-      age: 168h
-      interval: 24h
-      dryrun: false
-    readonly:
-      enabled: false
 http:
     addr: :5000
     debug:
@@ -22,9 +14,9 @@ http:
         - ./auth/private.pem
         - ./auth/public.pem
 auth:
-  htpasswd:
-    realm: basic-realm
-    path: ./auth/htpasswd
+  silly:
+    realm: silly-realm
+    service: silly-service
 notifications:
   endpoints:
     - name: docker-registry-manager

@@ -28,7 +28,7 @@ type Envelope struct {
 func (e *Envelope) Process() {
 	AllEvents.Lock()
 	for _, event := range e.Events {
-		if event.Action == "push" && event.Request.Useragent != "Go-http-client/1.1" && event.Request.Method != "HEAD" {
+		if (event.Action == "push" || event.Action == "pull") && event.Request.Useragent != "Go-http-client/1.1" && event.Request.Method != "HEAD" {
 			if _, ok := AllEvents.Events[event.Request.Host]; !ok {
 				AllEvents.Events[event.Request.Host] = make(map[string]Event)
 			}

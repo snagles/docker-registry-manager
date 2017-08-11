@@ -7,14 +7,6 @@ storage:
     enabled: true
   redirect:
     disable: false
-  maintenance:
-    uploadpurging:
-      enabled: true
-      age: 168h
-      interval: 24h
-      dryrun: false
-    readonly:
-      enabled: false
 http:
     addr: :5000
     debug:

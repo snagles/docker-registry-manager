@@ -66,9 +66,9 @@ var ServeCmd = &cobra.Command{
 // A Registry represents a complete instance of the registry.
 // TODO(aaronl): It might make sense for Registry to become an interface.
 type Registry struct {
-	config *configuration.Configuration
+	Config *configuration.Configuration
 	app    *handlers.App
-	server *http.Server
+	Server *http.Server
 }
 
 // NewRegistry creates a new registry from a context and configuration struct.
@@ -101,14 +101,14 @@ func NewRegistry(ctx context.Context, config *configuration.Configuration) (*Reg
 
 	return &Registry{
 		app:    app,
-		config: config,
-		server: server,
+		Config: config,
+		Server: server,
 	}, nil
 }
 
 // ListenAndServe runs the registry's HTTP server.
 func (registry *Registry) ListenAndServe() error {
-	config := registry.config
+	config := registry.Config
 
 	ln, err := listener.NewListener(config.HTTP.Net, config.HTTP.Addr)
 	if err != nil {
@@ -183,7 +183,7 @@ func (registry *Registry) ListenAndServe() error {
 		context.GetLogger(registry.app).Infof("listening on %v", ln.Addr())
 	}
 
-	return registry.server.Serve(ln)
+	return registry.Server.Serve(ln)
 }
 
 func configureReporting(app *handlers.App) http.Handler {
