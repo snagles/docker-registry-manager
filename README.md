@@ -17,7 +17,7 @@ WARNING: This application is very much still a work in progress. Core functional
 ## Quickstart
  The below steps assume you have a docker registry currently running (with delete mode enabled (https://docs.docker.com/registry/configuration/).
 
- Note: If using basic authentication add the registry via command line in the format: `--registries http://testuser:testpassword@localhost:5000`. Adding from the
+ Note: If using basic authentication add the registry in the config file and give the location via the environment variable DOCKER_REGISTRIES_CONFIG or cli via -registries-config. Adding from the
 interface is not currently supported since the username and password would be sent in cleartext. TLS is a WIP.
 
 To skip tls verification use the --skip-tls command line flag or check the box in the interface.
