@@ -6,6 +6,7 @@ import (
 	"math"
 	"net/url"
 	"os"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -15,8 +16,10 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/astaxie/beego"
+	"github.com/snagles/docker-registry-manager/app/conf"
 	"github.com/snagles/docker-registry-manager/app/models"
 	_ "github.com/snagles/docker-registry-manager/app/routers"
+	"github.com/spf13/viper"
 	"github.com/urfave/cli"
 )
 
@@ -25,10 +28,12 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "Docker Registry Manager"
 	app.Usage = "Connect to, view, and manage multiple private Docker registries"
-	app.Version = "2.0.0"
+	app.Version = "2.0.1"
 	var logLevel string
 	var refreshRate string
 	var skipTLS bool
+	var passedRegistries string
+	var configFile string
 
 	cli.AppHelpTemplate = fmt.Sprintf(`%s
 WEBSITE:
@@ -50,9 +55,16 @@ WEBSITE:
 			EnvVar:      "MANAGER_PORT",
 		},
 		cli.StringFlag{
-			Name:   "registries, r",
-			Usage:  "comma separated list of registry url's to connect to `http://url:5000,https://url:6000,http://username:password@url:5000`",
-			EnvVar: "MANAGER_REGISTRIES",
+			Name:        "registries, r",
+			Usage:       "comma separated list of registry url's to connect to `http://url:5000,https://url:6000`",
+			EnvVar:      "MANAGER_REGISTRIES",
+			Destination: &passedRegistries,
+		},
+		cli.StringFlag{
+			Name:        "registries-config, rc",
+			Usage:       "file location of the config.yml `~/config.yml`",
+			EnvVar:      "MANAGER_REGISTRIES_CONFIG",
+			Destination: &configFile,
 		},
 		cli.StringFlag{
 			Name:        "log, l",
@@ -93,36 +105,41 @@ WEBSITE:
 		beego.AddFuncMap("timeAgo", TimeAgo)
 		beego.AddFuncMap("oneIndex", func(i int) int { return i + 1 })
 
-		registries := strings.Split(c.String("registries"), ",")
-		for _, registry := range registries {
-			if registry != "" {
-				url, err := url.Parse(registry)
+		confs := make(map[string]config)
+		if configFile != "" {
+			confs = parseConfigs(configFile)
+		} else {
+			registries := strings.Split(passedRegistries, ",")
+			for _, registry := range registries {
+				confs[registry] = config{URL: registry}
+			}
+		}
+
+		for _, conf := range confs {
+			if conf.URL != "" {
+				url, err := url.Parse(conf.URL)
 				if err != nil {
-					fmt.Print("Failed to parse registry from the passed url.\n\n")
+					fmt.Printf("Failed to parse registry from the passed url: %s \n\n", err)
 					cli.ShowAppHelp(c)
 					return
 				}
 				port, err := strconv.Atoi(url.Port())
 				if err != nil || port == 0 {
-					fmt.Print("Failed to add registry, invalid port!\n\n")
+					fmt.Printf("Failed to add registry, invalid port: %s\n\n", err)
 					cli.ShowAppHelp(c)
 					return
 				}
 				duration, err := time.ParseDuration(refreshRate)
 				if err != nil {
-					fmt.Print("Failed to add registry, invalid duration!\n\n")
+					fmt.Printf("Failed to add registry, invalid duration: %s \n\n", err)
 					cli.ShowAppHelp(c)
 					return
 				}
-				// If basic auth is set in the format http://testuser:testpassword@localhost:5000
-				// user authentication
-				if url.User != nil {
-					if pw, ok := url.User.Password(); ok && url.User.Username() != "" {
-						_, err := manager.AddRegistry(url.Scheme, url.Hostname(), url.User.Username(), pw, port, duration, skipTLS)
-						if err != nil {
-							fmt.Println(err)
-							os.Exit(1)
-						}
+				if conf.Password != "" && conf.Username != "" {
+					_, err := manager.AddRegistry(url.Scheme, url.Hostname(), conf.Username, conf.Password, port, duration, skipTLS)
+					if err != nil {
+						fmt.Println(err)
+						os.Exit(1)
 					}
 				} else {
 					_, err := manager.AddRegistry(url.Scheme, url.Hostname(), "", "", port, duration, skipTLS)
@@ -277,5 +294,37 @@ func StatToSeconds(stat string) (float64, error) {
 	}
 
 	return 0, errors.New("Failed to parse time string from beego")
+}
 
+type config struct {
+	URL      string
+	Username string
+	Password string
+}
+
+// parseConfigs parses the yaml databases config and add them to the Configs map
+func parseConfigs(configPath string) map[string]config {
+	var c = viper.New()
+
+	// If the config path is not passed use the default project dir
+	if configPath != "" {
+		c.AddConfigPath(path.Dir(configPath))
+		base := path.Base(configPath)
+		ext := path.Ext(configPath)
+		c.SetConfigName(base[0 : len(base)-len(ext)])
+	} else {
+		// use the default tree
+		c.AddConfigPath(conf.GOPATH + "/src/github.com/snagles/docker-registry-manager")
+		c.SetConfigName("config")
+	}
+
+	if err := c.ReadInConfig(); err != nil {
+		logrus.Fatalf("Fatal error config file: %v", err)
+	}
+
+	var confs map[string]config
+	if err := c.Unmarshal(&confs); err != nil {
+		logrus.Fatalf("unable to decode into struct, %v", err)
+	}
+	return confs
 }

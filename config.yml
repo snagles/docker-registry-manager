@@ -1,0 +1,6 @@
+# Instead of using the command line or environment variables, you can add the configuration here in the format below.
+
+#exampleRegistry:
+#  url: https://example.com:5000
+#  username: exampleUser
+#  password: examplePassword
