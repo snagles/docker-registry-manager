@@ -13,3 +13,5 @@ services:
       - MANAGER_LOG_LEVEL=5
       - MANAGER_REFRESH_RATE=1m
     #  - MANAGER_SKIP_TLS=true
+    volumes:
+      - `pwd`/config.yml:/opt/config.yml
