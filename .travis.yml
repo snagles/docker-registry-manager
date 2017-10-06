@@ -16,3 +16,8 @@ after_success:
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push snagles/docker-registry-manager;
     fi
+  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+    docker build -t snagles/docker-registry-manager:develop .;
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push snagles/docker-registry-manager:develop;
+    fi
