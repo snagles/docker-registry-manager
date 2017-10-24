@@ -3,6 +3,10 @@ package schema1
 import (
 	"crypto/x509"
 
+<<<<<<< e92f10ae507e72db9910b4de55c170515c11ed98
+=======
+	"github.com/sirupsen/logrus"
+>>>>>>> Rename sirupsen/logrus to lower case
 	"github.com/docker/libtrust"
 	"github.com/sirupsen/logrus"
 )

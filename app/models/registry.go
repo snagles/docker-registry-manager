@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
+	client "github.com/heroku/docker-registry-client/registry"
 	"github.com/sirupsen/logrus"
-	client "github.com/snagles/docker-registry-client/registry"
 )
 
 var AllRegistries Registries
