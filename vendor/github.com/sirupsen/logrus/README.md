@@ -1,4 +1,13 @@
 # Logrus <img src="http://i.imgur.com/hTeVwmJ.png" width="40" height="40" alt=":walrus:" class="emoji" title=":walrus:"/>&nbsp;[![Build Status](https://travis-ci.org/sirupsen/logrus.svg?branch=master)](https://travis-ci.org/sirupsen/logrus)&nbsp;[![GoDoc](https://godoc.org/github.com/sirupsen/logrus?status.svg)](https://godoc.org/github.com/sirupsen/logrus)
+<<<<<<< e92f10ae507e72db9910b4de55c170515c11ed98:vendor/github.com/sirupsen/logrus/README.md
+=======
+
+**Seeing weird case-sensitive problems?** See [this
+issue](https://github.com/sirupsen/logrus/issues/451#issuecomment-264332021).
+This change has been reverted. I apologize for causing this. I greatly
+underestimated the impact this would have. Logrus strives for stability and
+backwards compatibility and failed to provide that.
+>>>>>>> Rename sirupsen/logrus to lower case:vendor/github.com/sirupsen/logrus/README.md
 
 Logrus is a structured logger for Go (golang), completely API compatible with
 the standard library logger.
@@ -284,7 +293,10 @@ Note: Syslog hook also support connecting to local syslog (Ex. "/dev/log" or "/v
 | [Stackdriver](https://github.com/knq/sdhook) | Hook for logging to [Google Stackdriver](https://cloud.google.com/logging/) |
 | [Sumorus](https://github.com/doublefree/sumorus) | Hook for logging to [SumoLogic](https://www.sumologic.com/)|
 | [Syslog](https://github.com/sirupsen/logrus/blob/master/hooks/syslog/syslog.go) | Send errors to remote syslog server. Uses standard library `log/syslog` behind the scenes. |
+<<<<<<< e92f10ae507e72db9910b4de55c170515c11ed98:vendor/github.com/sirupsen/logrus/README.md
 | [Syslog TLS](https://github.com/shinji62/logrus-syslog-ng) | Send errors to remote syslog server with TLS support. |
+=======
+>>>>>>> Rename sirupsen/logrus to lower case:vendor/github.com/sirupsen/logrus/README.md
 | [TraceView](https://github.com/evalphobia/logrus_appneta) | Hook for logging to [AppNeta TraceView](https://www.appneta.com/products/traceview/) |
 | [Typetalk](https://github.com/dragon3/logrus-typetalk-hook) | Hook for logging to [Typetalk](https://www.typetalk.in/) |
 | [logz.io](https://github.com/ripcurld00d/logrus-logzio-hook) | Hook for logging to [logz.io](https://logz.io), a Log as a Service using Logstash |
