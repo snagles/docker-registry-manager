@@ -41,7 +41,8 @@
               {{end}}
             </tbody>
         </table>
-        <p><button class="btn btn-danger">Delete</button></p>
+        <p><button class="btn btn-danger">Delete  <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Delete will make the tag inaccessible. To free disk space, run the garbage collection utility."></i></button></p>
+
 
 </form>
       </div>
