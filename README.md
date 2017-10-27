@@ -15,7 +15,7 @@ Docker Registry Manager is a golang written, beego driven, web interface for int
 WARNING: This application is very much still a work in progress. Core functionality exists, but polish and features are still being worked on.
 
 ## Quickstart
- The below steps assume you have a docker registry currently running (with delete mode enabled (https://docs.docker.com/registry/configuration/).
+ The below steps assume you have a docker registry currently running (with delete mode enabled) (https://docs.docker.com/registry/configuration/).
 
  Note: If using basic authentication add the registry in the config file and give the location via the environment variable DOCKER_REGISTRIES_CONFIG or cli via -registries-config. Adding from the
 interface is not currently supported since the username and password would be sent in cleartext. TLS is a WIP.
