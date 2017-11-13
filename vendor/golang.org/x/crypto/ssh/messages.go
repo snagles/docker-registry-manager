@@ -23,6 +23,13 @@ const (
 	msgUnimplemented = 3
 	msgDebug         = 4
 	msgNewKeys       = 21
+<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
+=======
+
+	// Standard authentication messages
+	msgUserAuthSuccess = 52
+	msgUserAuthBanner  = 53
+>>>>>>> Update dependencies, switch to dep
 )
 
 // SSH messages:
@@ -133,6 +140,7 @@ type userAuthFailureMsg struct {
 	PartialSuccess bool
 }
 
+<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 // See RFC 4252, section 5.1
 const msgUserAuthSuccess = 52
 
@@ -145,6 +153,8 @@ type userAuthBannerMsg struct {
 	Language string
 }
 
+=======
+>>>>>>> Update dependencies, switch to dep
 // See RFC 4256, section 3.2
 const msgUserAuthInfoRequest = 60
 const msgUserAuthInfoResponse = 61

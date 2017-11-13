@@ -489,6 +489,7 @@ const (
 	POLLWRBAND = 0x100
 	POLLWRNORM = 0x4
 )
+<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 
 type Utsname struct {
 	Sysname  [256]byte
@@ -497,3 +498,5 @@ type Utsname struct {
 	Version  [256]byte
 	Machine  [256]byte
 }
+=======
+>>>>>>> Update dependencies, switch to dep
