@@ -9,7 +9,10 @@ import (
 	"errors"
 	"fmt"
 	"net"
+<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 	"os"
+=======
+>>>>>>> Update dependencies, switch to dep
 	"sync"
 	"time"
 )
@@ -188,10 +191,13 @@ func Dial(network, addr string, config *ClientConfig) (*Client, error) {
 // net.Conn underlying the the SSH connection.
 type HostKeyCallback func(hostname string, remote net.Addr, key PublicKey) error
 
+<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 // BannerCallback is the function type used for treat the banner sent by
 // the server. A BannerCallback receives the message sent by the remote server.
 type BannerCallback func(message string) error
 
+=======
+>>>>>>> Update dependencies, switch to dep
 // A ClientConfig structure is used to configure a Client. It must not be
 // modified after having been passed to an SSH function.
 type ClientConfig struct {
@@ -214,12 +220,15 @@ type ClientConfig struct {
 	// FixedHostKey can be used for simplistic host key checks.
 	HostKeyCallback HostKeyCallback
 
+<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 	// BannerCallback is called during the SSH dance to display a custom
 	// server's message. The client configuration can supply this callback to
 	// handle it as wished. The function BannerDisplayStderr can be used for
 	// simplistic display on Stderr.
 	BannerCallback BannerCallback
 
+=======
+>>>>>>> Update dependencies, switch to dep
 	// ClientVersion contains the version identification string that will
 	// be used for the connection. If empty, a reasonable default is used.
 	ClientVersion string
@@ -266,6 +275,7 @@ func FixedHostKey(key PublicKey) HostKeyCallback {
 	hk := &fixedHostKey{key}
 	return hk.check
 }
+<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 
 // BannerDisplayStderr returns a function that can be used for
 // ClientConfig.BannerCallback to display banners on os.Stderr.
@@ -276,3 +286,5 @@ func BannerDisplayStderr() BannerCallback {
 		return err
 	}
 }
+=======
+>>>>>>> Update dependencies, switch to dep

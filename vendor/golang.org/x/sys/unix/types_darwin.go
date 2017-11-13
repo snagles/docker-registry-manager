@@ -271,7 +271,10 @@ const (
 	POLLWRBAND = C.POLLWRBAND
 	POLLWRNORM = C.POLLWRNORM
 )
+<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 
 // uname
 
 type Utsname C.struct_utsname
+=======
+>>>>>>> Update dependencies, switch to dep
