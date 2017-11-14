@@ -283,13 +283,9 @@ func confirmKeyAck(key PublicKey, c packetConn) (bool, error) {
 		}
 		switch packet[0] {
 		case msgUserAuthBanner:
-<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 			if err := handleBannerResponse(c, packet); err != nil {
 				return false, err
 			}
-=======
-			// TODO(gpaul): add callback to present the banner to the user
->>>>>>> Update dependencies, switch to dep
 		case msgUserAuthPubKeyOk:
 			var msg userAuthPubKeyOkMsg
 			if err := Unmarshal(packet, &msg); err != nil {
@@ -331,13 +327,9 @@ func handleAuthResponse(c packetConn) (bool, []string, error) {
 
 		switch packet[0] {
 		case msgUserAuthBanner:
-<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 			if err := handleBannerResponse(c, packet); err != nil {
 				return false, nil, err
 			}
-=======
-			// TODO: add callback to present the banner to the user
->>>>>>> Update dependencies, switch to dep
 		case msgUserAuthFailure:
 			var msg userAuthFailureMsg
 			if err := Unmarshal(packet, &msg); err != nil {
@@ -352,7 +344,6 @@ func handleAuthResponse(c packetConn) (bool, []string, error) {
 	}
 }
 
-<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 func handleBannerResponse(c packetConn, packet []byte) error {
 	var msg userAuthBannerMsg
 	if err := Unmarshal(packet, &msg); err != nil {
@@ -371,8 +362,6 @@ func handleBannerResponse(c packetConn, packet []byte) error {
 	return nil
 }
 
-=======
->>>>>>> Update dependencies, switch to dep
 // KeyboardInteractiveChallenge should print questions, optionally
 // disabling echoing (e.g. for passwords), and return all the answers.
 // Challenge may be called multiple times in a single session. After
@@ -418,13 +407,9 @@ func (cb KeyboardInteractiveChallenge) auth(session []byte, user string, c packe
 		// like handleAuthResponse, but with less options.
 		switch packet[0] {
 		case msgUserAuthBanner:
-<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 			if err := handleBannerResponse(c, packet); err != nil {
 				return false, nil, err
 			}
-=======
-			// TODO: Print banners during userauth.
->>>>>>> Update dependencies, switch to dep
 			continue
 		case msgUserAuthInfoRequest:
 			// OK

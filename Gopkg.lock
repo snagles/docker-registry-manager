@@ -44,12 +44,6 @@
   revision = "23c074d0eceb2b8a5bfdbb271ab780cde70f05a8"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/heroku/docker-registry-client"
-  packages = ["registry"]
-  revision = "fd2fe803496897db70c236ee244f41487ea92ec2"
-
-[[projects]]
   name = "github.com/jtolds/gls"
   packages = ["."]
   revision = "77f18212c9c7edc9bd6a33d383a7b545ce62f064"
@@ -98,6 +92,12 @@
   version = "1.6.3"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/snagles/docker-registry-client"
+  packages = ["registry"]
+  revision = "303c36d662537fd1e1c4d2cf2122b52220ffcbb6"
+
+[[projects]]
   name = "github.com/spf13/afero"
   packages = [".","mem"]
   revision = "8d919cbe7e2627e417f3e45c3c0e489a5b7e2536"
@@ -137,13 +137,13 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  revision = "6a293f2d4b14b8e6d3f0539e383f6d0d30fce3fd"
+  revision = "9f005a07e0d31d45e6656d241bb5c0f2efd4bc94"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix","windows"]
-  revision = "1e2299c37cc91a509f1b12369872d27be0ce98a6"
+  revision = "665f6529cca930e27b831a0d1dafffbe1c172924"
 
 [[projects]]
   branch = "master"
@@ -160,6 +160,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8de9be536524a9262ccd64e7a1463721eeeed057abd070f8bc8f08d6366b63bd"
+  inputs-digest = "0acf0680957c14fe92258fb7fb43d3648bcf53008bcc307b11dfb73490e01ac9"
   solver-name = "gps-cdcl"
   solver-version = 1
