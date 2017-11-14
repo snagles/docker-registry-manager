@@ -1,9 +1,9 @@
 package manager
 
 import (
-	"github.com/Sirupsen/logrus"
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
-	client "github.com/heroku/docker-registry-client/registry"
+	"github.com/sirupsen/logrus"
+	client "github.com/snagles/docker-registry-client/registry"
 )
 
 const (
@@ -22,7 +22,7 @@ func HubGetManifest(repoName string, tagName string) (*manifestV2.DeserializedMa
 	}
 	// add and retrieve oauth token for connections
 	hub.Client.Transport = client.WrapTransport(hub.Client.Transport, HubURL, HubUser, HubPassword)
-	manifest, err := hub.ManifestV2("library/"+repoName, tagName)
+	manifest, err := hub.Manifest("library/"+repoName, tagName)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Error":           err.Error(),

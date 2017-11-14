@@ -5,8 +5,9 @@ services:
 go:
   - tip
 install: true
-before_install:
-  - go get -v ./...
+# all deps are now vendored
+#before_install:
+#  - go get -v ./...
 script:
   - ./.travis-test.sh
 after_success:

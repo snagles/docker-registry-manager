@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/astaxie/beego"
 	"github.com/snagles/docker-registry-manager/app/models"
 )

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	beego "github.com/astaxie/beego/logs"
 )
 
@@ -119,7 +119,7 @@ func (hook ContextHook) Fire(entry *logrus.Entry) error {
 	for i := 0; i < cnt; i++ {
 		fu := runtime.FuncForPC(pc[i] - 1)
 		name := fu.Name()
-		if !strings.Contains(name, "github.com/Sirupsen/logrus") {
+		if !strings.Contains(name, "github.com/sirupsen/logrus") {
 
 			if strings.Contains(name, "registryLogger") {
 				// Remove the prefix beego attaches
