@@ -10,7 +10,7 @@ import (
 	_ "net/http/pprof"
 	"os/exec"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	// Setup auth and storage drivers
 	"github.com/docker/distribution/configuration"
 	"github.com/docker/distribution/registry"

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	beego "github.com/astaxie/beego/logs"
 	. "github.com/smartystreets/goconvey/convey"
 )

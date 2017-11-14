@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/toolbox"
 )
