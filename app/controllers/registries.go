@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/astaxie/beego"
-	client "github.com/heroku/docker-registry-client/registry"
+	client "github.com/snagles/docker-registry-client/registry"
 	"github.com/snagles/docker-registry-manager/app/models"
 )
 

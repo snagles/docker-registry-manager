@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Sirupsen/logrus"
-	client "github.com/heroku/docker-registry-client/registry"
+	"github.com/sirupsen/logrus"
+	client "github.com/snagles/docker-registry-client/registry"
 )
 
 var AllRegistries Registries
@@ -81,7 +81,7 @@ func (r *Registry) Refresh() {
 
 			// Using v2 required getting the manifest then retrieving the blob
 			// for the config digest
-			man, err := ur.ManifestV2(repoName, tagName)
+			man, err := ur.Manifest(repoName, tagName)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"Error":           err.Error(),
