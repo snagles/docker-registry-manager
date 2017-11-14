@@ -270,7 +270,6 @@ func IoctlGetTermios(fd int, req uint) (*Termios, error) {
 	return &value, err
 }
 
-<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 func Uname(uname *Utsname) error {
 	mib := []_C_int{CTL_KERN, KERN_OSTYPE}
 	n := unsafe.Sizeof(uname.Sysname)
@@ -317,8 +316,6 @@ func Uname(uname *Utsname) error {
 	return nil
 }
 
-=======
->>>>>>> Update dependencies, switch to dep
 /*
  * Exposed directly
  */

@@ -79,7 +79,6 @@ func TestHostKeyCheck(t *testing.T) {
 		}
 	}
 }
-<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 
 func TestBannerCallback(t *testing.T) {
 	c1, c2, err := netPipe()
@@ -118,5 +117,3 @@ func TestBannerCallback(t *testing.T) {
 		t.Fatalf("got %s; want %s", receivedBanner, expected)
 	}
 }
-=======
->>>>>>> Update dependencies, switch to dep

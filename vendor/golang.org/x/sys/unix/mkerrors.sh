@@ -48,10 +48,7 @@ includes_Darwin='
 #include <sys/sysctl.h>
 #include <sys/mman.h>
 #include <sys/mount.h>
-<<<<<<< 8cfda1af4ac8d899bc4d22049fdc575b5d848a69
 #include <sys/utsname.h>
-=======
->>>>>>> Update dependencies, switch to dep
 #include <sys/wait.h>
 #include <net/bpf.h>
 #include <net/if.h>
