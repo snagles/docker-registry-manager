@@ -8,6 +8,7 @@ import (
 	"github.com/astaxie/beego"
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
 	"github.com/snagles/docker-registry-manager/app/models"
+	"github.com/snagles/docker-registry-manager/app/models/dockerhub"
 )
 
 type ImagesController struct {
@@ -91,7 +92,7 @@ func (c *ImagesController) GetImages() {
 
 	// Compare the two manifest layers
 	c.TplName = "images.tpl"
-	hubManifest, err := manager.HubGetManifest(repositoryName, tag.Name)
+	hubManifest, err := dockerhub.GetManifest(repositoryName, tag.Name)
 	if hubManifest == nil || err != nil {
 		c.Data["dockerHub"] = struct {
 			Error    error
