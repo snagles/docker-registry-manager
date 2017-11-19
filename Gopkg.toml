@@ -38,10 +38,6 @@
   version = "1.0.3"
 
 [[constraint]]
-  name = "github.com/smartystreets/goconvey"
-  version = "1.6.3"
-
-[[constraint]]
   branch = "master"
   name = "github.com/snagles/docker-registry-client"
 
