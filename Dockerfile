@@ -16,10 +16,5 @@ RUN go get -v ./...
 WORKDIR $GOPATH/src/github.com/snagles/docker-registry-manager/app
 RUN go build .
 
-# Defaults
-ENV MANAGER_PORT=8080
-ENV MANAGER_LOG_LEVEL=5
-ENV MANAGER_REFRESH_RATE=1m
-
 # Run the app by default when the container starts.
 CMD /go/src/github.com/snagles/docker-registry-manager/app/app

@@ -1,6 +1,11 @@
-# Instead of using the command line or environment variables, you can add the configuration here in the format below.
+app:
+  log-level: "debug"
+  port: 8080
 
-#exampleRegistry:
-#  url: https://example.com:5000
-#  username: exampleUser
-#  password: examplePassword
+registries:
+  #exampleRegistry:
+    #url: http://localhost:5000
+    #username: exampleUser
+    #password: examplePassword
+    #refresh-rate: "5m"
+    #skip-tls: true
