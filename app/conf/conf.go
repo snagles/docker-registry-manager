@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sirupsen/logrus"
 	beego "github.com/astaxie/beego/logs"
+	"github.com/sirupsen/logrus"
 )
 
 // GOPATH contains the gopath of the env

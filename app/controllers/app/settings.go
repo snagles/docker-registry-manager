@@ -1,9 +1,9 @@
-package controllers
+package app
 
 import (
-	"github.com/sirupsen/logrus"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/toolbox"
+	"github.com/sirupsen/logrus"
 )
 
 type SettingsController struct {

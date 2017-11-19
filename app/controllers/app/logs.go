@@ -1,4 +1,4 @@
-package controllers
+package app
 
 import (
 	"bufio"
@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/sirupsen/logrus"
 	"github.com/astaxie/beego"
+	"github.com/sirupsen/logrus"
 	"github.com/snagles/docker-registry-manager/app/conf"
 )
 
