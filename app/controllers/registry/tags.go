@@ -1,11 +1,11 @@
-package controllers
+package registry
 
 import (
 	"fmt"
 	"net/url"
 
-	"github.com/sirupsen/logrus"
 	"github.com/astaxie/beego"
+	"github.com/sirupsen/logrus"
 	"github.com/snagles/docker-registry-manager/app/models"
 )
 

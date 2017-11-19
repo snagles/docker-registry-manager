@@ -1,4 +1,4 @@
-package controllers
+package registry
 
 import (
 	"errors"

@@ -2,45 +2,47 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/snagles/docker-registry-manager/app/controllers"
+	"github.com/snagles/docker-registry-manager/app/controllers/app"
+	"github.com/snagles/docker-registry-manager/app/controllers/registry"
 )
 
 func init() {
-	beego.Router("/", &controllers.RegistriesController{})
-
-	// Routers for registries
-	beego.Router("/registries", &controllers.RegistriesController{})
-	beego.Router("/registries/", &controllers.RegistriesController{})
-	beego.Router("/registries/all/count", &controllers.RegistriesController{}, "get:GetRegistryCount")
-	beego.Router("/registries/add", &controllers.RegistriesController{}, "post:AddRegistry")
-	beego.Router("/registries/test", &controllers.RegistriesController{}, "post:TestRegistryStatus")
-
-	// Routers for repositories
-	beego.Router("/registries/:registryName/repositories", &controllers.RepositoriesController{}, "get:GetRepositories")
-	beego.Router("/registries/all/repositories/count", &controllers.RepositoriesController{}, "get:GetAllRepositoryCount")
-	beego.Router("/registries/all/repositories", &controllers.RepositoriesController{}, "get:GetAllRepositories")
-
-	// Routers for tags
-	beego.Router("/registries/:registryName/repositories/*/tags", &controllers.TagsController{}, "get:GetTags")
-	beego.Router("/registries/:registryName/repositories/*/tags/:tagName/delete", &controllers.TagsController{}, "post:DeleteTags")
-
-	// Routers for images
-	beego.Router("/registries/:registryName/repositories/*/tags/:tagName/images", &controllers.ImagesController{}, "get:GetImages")
+	beego.Router("/", &registry.RegistriesController{})
 
 	// Routers for logs
-	beego.Router("/logs", &controllers.LogsController{}, "get:Get")
-	beego.Router("/logs", &controllers.LogsController{}, "delete:Delete")
-	beego.Router("/logs/archive", &controllers.LogsController{}, "post:Archive")
-	beego.Router("/logs/level", &controllers.LogsController{}, "get:GetLevel")
-	beego.Router("/logs/level/:level", &controllers.LogsController{}, "post:PostLevel")
+	beego.Router("/logs", &app.LogsController{}, "get:Get")
+	beego.Router("/logs", &app.LogsController{}, "delete:Delete")
+	beego.Router("/logs/archive", &app.LogsController{}, "post:Archive")
+	beego.Router("/logs/level", &app.LogsController{}, "get:GetLevel")
+	beego.Router("/logs/level/:level", &app.LogsController{}, "post:PostLevel")
 
 	// Routers for events
-	beego.Router("/envelope", &controllers.EventsController{}, "post:PostEnvelope")
-	beego.Router("/events", &controllers.EventsController{}, "get:Get")
-	beego.Router("/events/:registryName", &controllers.EventsController{}, "get:GetRegistryEvents")
-	beego.Router("/events/:registryName/:eventID", &controllers.EventsController{}, "get:GetRegistryEventID")
+	beego.Router("/envelope", &app.EventsController{}, "post:PostEnvelope")
+	beego.Router("/events", &app.EventsController{}, "get:Get")
+	beego.Router("/events/:registryName", &app.EventsController{}, "get:GetRegistryEvents")
+	beego.Router("/events/:registryName/:eventID", &app.EventsController{}, "get:GetRegistryEventID")
 
 	// Routers for settings
-	beego.Router("/settings", &controllers.SettingsController{}, "get:Get")
-	beego.Router("/settings/stats", &controllers.SettingsController{}, "get:GetLiveStatistics")
+	beego.Router("/settings", &app.SettingsController{}, "get:Get")
+	beego.Router("/settings/stats", &app.SettingsController{}, "get:GetLiveStatistics")
+
+	// Routers for registries
+	beego.Router("/registries", &registry.RegistriesController{})
+	beego.Router("/registries/", &registry.RegistriesController{})
+	beego.Router("/registries/all/count", &registry.RegistriesController{}, "get:GetRegistryCount")
+	beego.Router("/registries/add", &registry.RegistriesController{}, "post:AddRegistry")
+	beego.Router("/registries/test", &registry.RegistriesController{}, "post:TestRegistryStatus")
+
+	// Routers for repositories
+	beego.Router("/registries/:registryName/repositories", &registry.RepositoriesController{}, "get:GetRepositories")
+	beego.Router("/registries/all/repositories/count", &registry.RepositoriesController{}, "get:GetAllRepositoryCount")
+	beego.Router("/registries/all/repositories", &registry.RepositoriesController{}, "get:GetAllRepositories")
+
+	// Routers for tags
+	beego.Router("/registries/:registryName/repositories/*/tags", &registry.TagsController{}, "get:GetTags")
+	beego.Router("/registries/:registryName/repositories/*/tags/:tagName/delete", &registry.TagsController{}, "post:DeleteTags")
+
+	// Routers for images
+	beego.Router("/registries/:registryName/repositories/*/tags/:tagName/images", &registry.ImagesController{}, "get:GetImages")
+
 }
