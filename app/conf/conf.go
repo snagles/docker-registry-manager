@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"io"
 	"os"
 	"path"
 	"path/filepath"
@@ -47,17 +48,15 @@ func init() {
 		}
 	}
 
-	// Setup logrus
+	// Setup logrus with the json events log
 	f, _ := os.OpenFile(LogFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0755)
+	logrus.AddHook(NewFileHook(f, &logrus.JSONFormatter{}))
 
-	// log to file and stdout
-	logrus.SetOutput(f)
+	// log to std out for docker logs
 	logrus.SetOutput(os.Stdout)
-
-	logrus.SetFormatter(&logrus.JSONFormatter{})
 	logrus.AddHook(ContextHook{})
 
-	// Setup Beego logging by registering the hook
+	// Connect the beego logs to the other logs
 	beego.Register("docker-registry-manager", NewBeegoHook)
 	beego.SetLogger("docker-registry-manager", "")
 	beego.EnableFuncCallDepth(true)
@@ -144,6 +143,32 @@ func (hook ContextHook) Fire(entry *logrus.Entry) error {
 
 	}
 	return nil
+}
+
+type FileHook struct {
+	writer    io.Writer
+	formatter logrus.Formatter
+}
+
+func NewFileHook(w io.Writer, f logrus.Formatter) logrus.Hook {
+	return FileHook{
+		writer:    w,
+		formatter: f,
+	}
+}
+
+func (h FileHook) Fire(e *logrus.Entry) error {
+	b, err := h.formatter.Format(e)
+	if err != nil {
+		return err
+	}
+	_, err = h.writer.Write(b)
+	return err
+}
+
+// Levels returns all logrus levels.
+func (h FileHook) Levels() []logrus.Level {
+	return logrus.AllLevels
 }
 
 func defaultGOPATH() string {
