@@ -6,7 +6,6 @@ import (
 
 	"github.com/docker/distribution"
 	"github.com/docker/distribution/manifest/schema2"
-	. "github.com/smartystreets/goconvey/convey"
 )
 
 var setTime = time.Now().UTC()
@@ -55,9 +54,9 @@ func TestRepoLastModifiedTime(t *testing.T) {
 			"tag2": &tag2,
 		},
 	}
-	Convey("Last modified time should be "+setTime.AddDate(0, 0, -1).String(), t, func(c C) {
-		c.So(repo.LastModified(), ShouldResemble, setTime.AddDate(0, 0, -1))
-	})
+	if repo.LastModified() != setTime.AddDate(0, 0, -1) {
+		t.Errorf("Last modified time should be %s", setTime.AddDate(0, 0, -1))
+	}
 }
 
 func TestRepoSize(t *testing.T) {
@@ -88,7 +87,8 @@ func TestRepoSize(t *testing.T) {
 			"tag2": &tag2,
 		},
 	}
-	Convey("Total size should be 6100", t, func(c C) {
-		c.So(repo.Size(), ShouldEqual, 6100)
-	})
+
+	if repo.Size() != 6100 {
+		t.Errorf("Total repository size %v not equal to expected value: %v", repo.Size(), 6100)
+	}
 }
