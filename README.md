@@ -15,18 +15,14 @@ Docker Registry Manager is a golang written, beego driven, web interface for int
 WARNING: This application is very much still a work in progress. Core functionality exists, but polish and features are still being worked on.
 
 ## Quickstart
- The below steps assume you have a docker registry currently running (with delete mode enabled (https://docs.docker.com/registry/configuration/).
-
- Note: If using basic authentication add the registry in the config file and give the location via the environment variable DOCKER_REGISTRIES_CONFIG or cli via -registries-config. Adding from the
-interface is not currently supported since the username and password would be sent in cleartext. TLS is a WIP.
-
-To skip tls verification use the --skip-tls command line flag or check the box in the interface.
+ The below steps assume you have a docker registry currently running (with delete mode enabled (https://docs.docker.com/registry/configuration/). To add a registry to manage, add via the interface... or via the config.yml file
 
 ### Docker-Compose (Recommended)
  Install compose (https://docs.docker.com/compose/install/)
 
 ```bash
  git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
+ vim config.yml # add your registry
  docker-compose up -d
  firefox localhost:8080
 ```
@@ -34,12 +30,14 @@ To skip tls verification use the --skip-tls command line flag or check the box i
 ### Go
  ```bash
     git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
-    cd app && go build . && ./app --port 8080 --log warn --ttl 2m
+    vim config.yml # add your registry
+    cd app && go build . && ./app
     firefox localhost:8080
  ```
 
 ### Dockerfile
  ```bash
+    vim config.yml # add your registry
     docker run --detach --name docker-registry-manager -p 8080:8080 docker-registry-manager
  ```
 
@@ -60,5 +58,4 @@ To skip tls verification use the --skip-tls command line flag or check the box i
  3. Notification on push
  4. List shared layers
  5. Event timeline
- 6. Curl command generator for json inspection in other programs
- 7. TLS
+ 6. TLS
