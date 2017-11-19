@@ -1,4 +1,4 @@
-package manager
+package dockerhub
 
 import (
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
@@ -6,22 +6,17 @@ import (
 	client "github.com/snagles/docker-registry-client/registry"
 )
 
-const (
-	HubURL = "https://registry.hub.docker.com"
-)
+// URL for dockerhub connection
+const URL = "https://registry.hub.docker.com"
 
-// HubUser and HubPassword set to empty so basic auth is not used
-var HubUser = ""
-var HubPassword = ""
-
-// HubGetManifest retrieves the manifest for the given repo and tag name
-func HubGetManifest(repoName string, tagName string) (*manifestV2.DeserializedManifest, error) {
-	hub, err := client.New(HubURL, HubUser, HubPassword)
+// GetManifest retrieves the manifest for the given repo and tag name
+func GetManifest(repoName string, tagName string) (*manifestV2.DeserializedManifest, error) {
+	hub, err := client.New(URL, "", "")
 	if err != nil {
 		return nil, err
 	}
 	// add and retrieve oauth token for connections
-	hub.Client.Transport = client.WrapTransport(hub.Client.Transport, HubURL, HubUser, HubPassword)
+	hub.Client.Transport = client.WrapTransport(hub.Client.Transport, URL, "", "")
 	manifest, err := hub.Manifest("library/"+repoName, tagName)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
