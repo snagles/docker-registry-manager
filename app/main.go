@@ -130,6 +130,7 @@ func parseConfig(configPath string) (*config, error) {
 		v.SetConfigName("config")
 		v.AddConfigPath(conf.GOPATH + "/src/github.com/snagles/docker-registry-manager")
 		v.AddConfigPath("../")
+		v.AddConfigPath("/opt/docker-registry-manager")
 	}
 
 	if err := v.ReadInConfig(); err != nil {
