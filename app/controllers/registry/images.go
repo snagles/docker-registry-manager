@@ -126,7 +126,7 @@ func (c *ImagesController) GetImages() {
 		}{
 			diffLayers,
 			hubManifest,
-			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags/%s/", repositoryName, tag.Name),
+			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags", repositoryName),
 			err,
 			size,
 		}
@@ -136,7 +136,7 @@ func (c *ImagesController) GetImages() {
 			ImageURL string
 		}{
 			errors.New("Different manifest scheme versions"),
-			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags/%s/", repositoryName, tag.Name),
+			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags", repositoryName),
 		}
 	}
 }
