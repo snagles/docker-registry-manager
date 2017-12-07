@@ -6,7 +6,6 @@
 | Status   | ![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master)  | ![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=develop)   |
 | Documentation  | [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager)  | [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager)  |
 
-
 Docker Registry Manager is a golang written, beego driven, web interface for interacting with multiple docker registries (one to many).
 
 ![Example](https://github.com/snagles/resources/blob/master/docker-registry-manager-updated.gif)
@@ -42,19 +41,13 @@ WARNING: This application is very much still a work in progress. Core functional
 
 ## Current Features
  1. Support for docker distribution registry v2 (https and http)
- 2. Manage multiple registries with one web instance
- 3. Viewable image/tags stages, commands, and sizes.
- 4. Configurable refresh intervals
- 5. Bulk deletes of tags
- 6. Admin panel with logs, request tracking, and configurable log levels
- 7. Registry envelope acceptance to allow for registry request tracking
- 8. Viewable activity logs when registry configured to forward
- 9. Compares to dockerhub public repository and notifies of differences
+ 2. Viewable image/tags stages, commands, and sizes.
+ 3. Bulk deletes of tags
+ 4. Registry activity logs
+ 5. Comparison of registry images to Dockerhub public images
 
 ## Planned Features
- 1. Authentication for users with admin/read only rights
+ 1. Authentication for users with admin/read only rights using TLS
  2. Global search
- 3. Notification on push
- 4. List shared layers
- 5. Event timeline
- 6. TLS
+ 3. List image shared layers
+ 4. Event timeline
