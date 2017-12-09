@@ -6,11 +6,12 @@ import (
 	"github.com/snagles/docker-registry-manager/app/models"
 )
 
+// RepositoriesController controls interactions between the UI and any repository related information
 type RepositoriesController struct {
 	beego.Controller
 }
 
-// Get returns the template for the registries page
+// GetRepositories returns the template for the table on the repositories page
 func (c *RepositoriesController) GetRepositories() {
 
 	registryName := c.Ctx.Input.Param(":registryName")
@@ -23,6 +24,7 @@ func (c *RepositoriesController) GetRepositories() {
 	c.TplName = "repositories.tpl"
 }
 
+// GetAllRepositoryCount returns the number of currently available repositories
 func (c *RepositoriesController) GetAllRepositoryCount() {
 	c.Data["registries"] = manager.AllRegistries.Registries
 

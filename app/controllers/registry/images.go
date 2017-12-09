@@ -11,6 +11,7 @@ import (
 	"github.com/snagles/docker-registry-manager/app/models/dockerhub"
 )
 
+// ImagesController controls access to any meta information surrounding a registry image
 type ImagesController struct {
 	beego.Controller
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/snagles/docker-registry-manager/app/models"
 )
 
+// TagsController controls interaction between the UI and all tag related information
 type TagsController struct {
 	beego.Controller
 }
@@ -33,6 +34,7 @@ func (c *TagsController) GetTags() {
 	c.TplName = "tags.tpl"
 }
 
+// DeleteTags deletes the manifest using the passed tag using the digest method
 func (c *TagsController) DeleteTags() {
 	registryName := c.Ctx.Input.Param(":registryName")
 	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
