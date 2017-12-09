@@ -81,7 +81,7 @@ func (c *RegistriesController) TestRegistryStatus() {
 		return
 	}
 
-	url := fmt.Sprintf(fmt.Sprintf("%s://%s:%v", scheme, host, port))
+	url := fmt.Sprintf("%s://%s:%v", scheme, host, port)
 	var temp *client.Registry
 	if skipTLS {
 		temp, err = client.NewInsecure(url, "", "")
