@@ -1,17 +1,14 @@
 
-# Docker Registry Manager
+# Docker Registry Manager [![Go Report Card](https://goreportcard.com/badge/github.com/snagles/docker-registry-manager)](https://goreportcard.com/report/github.com/snagles/docker-registry-manager) [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager)  
+
+Docker Registry Manager is a golang written, beego driven, web interface for interacting with multiple docker registries (one to many).
 
 | Service   |  Master  | Develop  |   
 |---|---|---|
 | Status   | ![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master)  | ![Build Status](https://travis-ci.org/snagles/docker-registry-manager.svg?branch=develop)   |
 | Coverage  | [![Coverage Status](https://codecov.io/gh/snagles/docker-registry-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/snagles/docker-registry-manager)  | [![Coverage Status](https://codecov.io/gh/snagles/docker-registry-manager/branch/develop/graph/badge.svg)](https://codecov.io/gh/snagles/docker-registry-manager)  |
-| Documentation  | [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager)  | [![GoDoc](https://godoc.org/github.com/snagles/docker-registry-manager?status.svg)](https://godoc.org/github.com/snagles/docker-registry-manager)  |
-
-Docker Registry Manager is a golang written, beego driven, web interface for interacting with multiple docker registries (one to many).
 
 ![Example](https://github.com/snagles/resources/blob/master/docker-registry-manager-updated.gif)
-
-WARNING: This application is very much still a work in progress. Core functionality exists, but polish and features are still being worked on.
 
 ## Quickstart
  The below steps assume you have a docker registry currently running (with delete mode enabled (https://docs.docker.com/registry/configuration/). To add a registry to manage, add via the interface... or via the config.yml file
@@ -24,7 +21,7 @@ WARNING: This application is very much still a work in progress. Core functional
  vim config.yml # add your registry
  docker-compose up -d
  firefox localhost:8080
-```
+  ```
 
 ### Go
  ```bash
@@ -45,7 +42,7 @@ WARNING: This application is very much still a work in progress. Core functional
  2. Viewable image/tags stages, commands, and sizes.
  3. Bulk deletes of tags
  4. Registry activity logs
- 5. Comparison of registry images to Dockerhub public images
+ 5. Comparison of registry images to public Dockerhub images
 
 ## Planned Features
  1. Authentication for users with admin/read only rights using TLS
