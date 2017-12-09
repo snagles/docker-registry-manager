@@ -7,4 +7,4 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - `pwd`/config.yml:/opt/docker-registry-manager/config.yml
+      - "./config.yml:/opt/docker-registry-manager/config.yml"
