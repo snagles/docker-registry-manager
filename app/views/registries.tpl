@@ -34,7 +34,12 @@
                     </div>
                   </div>
                   <div class="box-footer">
+                    {{if eq $registry.Status "UP" }}
                     <span class="label label-success text-capitalize">{{$registry.Status}}</span>
+                    {{else}}
+                    <span class="label label-danger text-capitalize">{{$registry.Status}}</span>
+                    {{ end }}
+                    {{if ne $registry.IP "" }}<span class="label label-info">{{$registry.IP}}</span> {{ end }}
                     <span class="label label-info text-capitalize">{{$registry.Version}}</span>
                     <span class="label label-info text-uppercase">{{$registry.Scheme}}</span>
                     {{if ne $registry.IP "" }}<span class="label label-info">{{$registry.IP}}</span> {{ end }}
