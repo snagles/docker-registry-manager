@@ -14,6 +14,8 @@ import (
 	client "github.com/snagles/docker-registry-client/registry"
 )
 
+// AllRegistries contains a list of added registries using their hostnames
+// access granted via mutex locks/unlocks
 var AllRegistries Registries
 
 func init() {
@@ -136,6 +138,7 @@ func (r *Registry) Refresh() {
 	AllRegistries.Unlock()
 }
 
+// TagCount returns the total number of tags across all repositories
 func (r *Registry) TagCount() (count int) {
 	for _, repo := range r.Repositories {
 		count += len(repo.Tags)
@@ -143,6 +146,7 @@ func (r *Registry) TagCount() (count int) {
 	return count
 }
 
+// TagCount returns the total number of layers across all repositories
 func (r *Registry) LayerCount() int {
 	layerDigests := make(map[string]struct{})
 	for _, repo := range r.Repositories {
@@ -155,6 +159,7 @@ func (r *Registry) LayerCount() int {
 	return len(layerDigests)
 }
 
+// Pushes returns the number of pushes recorded by passing the forwarded registry events
 func (r *Registry) Pushes() (pushes int) {
 	AllEvents.Lock()
 	defer AllEvents.Unlock()
@@ -171,6 +176,7 @@ func (r *Registry) Pushes() (pushes int) {
 	return pushes
 }
 
+// Pulls returns the number of pulls recorded by passing the forwarded registry events
 func (r *Registry) Pulls() (pulls int) {
 	AllEvents.Lock()
 	defer AllEvents.Unlock()
@@ -188,6 +194,7 @@ func (r *Registry) Pulls() (pulls int) {
 	return pulls
 }
 
+// Status returns the text representation of whether the registry is reachable
 func (r *Registry) Status() string {
 	if err := r.Ping(); err != nil {
 		return "DOWN"

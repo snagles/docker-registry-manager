@@ -25,6 +25,7 @@ func (c *RegistriesController) Get() {
 	c.TplName = "registries.tpl"
 }
 
+// GetRegistryCount returns the number of currently added registries
 func (c *RegistriesController) GetRegistryCount() {
 	c.Data["registries"] = manager.AllRegistries.Registries
 

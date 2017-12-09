@@ -17,15 +17,18 @@ type logResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
+// LogsController controls all actions to modify, return, and archive logs
 type LogsController struct {
 	beego.Controller
 }
 
+// Get just parses the logs on disk, and returns them as a json object
 func (c *LogsController) Get() {
 	c.Data["json"] = parseLogs()
 	c.ServeJSON()
 }
 
+// Delete truncates all logs on disk
 func (c *LogsController) Delete() {
 	if err := deleteLog(); err != nil {
 		c.Data["json"] = logResponse{
@@ -41,6 +44,7 @@ func (c *LogsController) Delete() {
 	c.ServeJSON()
 }
 
+// Archive executes a log rotation
 func (c *LogsController) Archive() {
 	if err := archiveLog(); err != nil {
 		c.Data["json"] = logResponse{
@@ -56,6 +60,7 @@ func (c *LogsController) Archive() {
 	c.ServeJSON()
 }
 
+// PostLevel allows for the log level of the program to be changed dynamically
 func (c *LogsController) PostLevel() {
 	level := c.Ctx.Input.Param(":level")
 	switch {
@@ -85,6 +90,7 @@ func (c *LogsController) PostLevel() {
 	c.ServeJSON()
 }
 
+// GetLevel returns the strinified representation of the current log level
 func (c *LogsController) GetLevel() {
 	c.Data["json"] = map[string]interface{}{"log_level": logrus.GetLevel().String(), "log_level_int": logrus.GetLevel()}
 	c.ServeJSON()
@@ -93,6 +99,7 @@ func (c *LogsController) GetLevel() {
 // parseLogs parses the locally stored flat log file that was logged to by logrus
 //{"file":"log.go","level":"warning","line":588,"msg":"test","source":"beego","time":"2017-04-29T20:37:09-04:00"}
 
+// Entry is the memory representation of a forwarded registry event
 type Entry struct {
 	File    string    `json:"file"`
 	Level   string    `json:"level"`
