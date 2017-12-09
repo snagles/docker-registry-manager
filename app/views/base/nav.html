@@ -1,4 +1,4 @@
-<div class = "left-nav">
+<div class="left-nav">
   <div class="nav-header"> </div>
   <div class="nav-menu-container">
     <div class="nav-menu">
@@ -23,7 +23,8 @@
             <div class="badge" id="repository-count"></div>
           </a>
         </li>
-      </ul> <!-- end top section-->
+      </ul>
+      <!-- end top section-->
       <hr>
 
       <h5>Admin</h5>
@@ -46,30 +47,34 @@
             <span>Documentation</span>
           </a>
         </li>
-      </ul> <!-- end bottom section-->
-    </div> <!-- end .nav-menu -->
-  </div> <!-- end .nav-menu-container -->
+      </ul>
+      <!-- end bottom section-->
+    </div>
+    <!-- end .nav-menu -->
+  </div>
+  <!-- end .nav-menu-container -->
   <div class="nav-footer">
   </div>
-</div> <!-- end .left-nav -->
+</div>
+<!-- end .left-nav -->
 
 <script>
-$(document).ready(function() {
+  $(document).ready(function() {
 
-  // Get the badge count information
-  $.ajax({
+    // Get the badge count information
+    $.ajax({
       url: '/registries/all/count',
       dataType: 'json',
       success: function(data) {
-          $('#registry-count').text(data.Count);
+        $('#registry-count').text(data.Count);
       }
-  });
-  $.ajax({
+    });
+    $.ajax({
       url: '/registries/all/repositories/count',
       dataType: 'json',
       success: function(data) {
-          $('#repository-count').text(data.Count);
+        $('#repository-count').text(data.Count);
       }
+    });
   });
-});
 </script>
