@@ -6,12 +6,5 @@ services:
     image: snagles/docker-registry-manager
     ports:
       - "8080:8080"
-    environment:
-    # - MANAGER_REGISTRIES=http://localhost:5000,https://example.com:5000,http://testuser:testpassword@localhost:5000
-    # make sure the config file is mounted within the container using the -v volume e.g -v `pwd`/config.yml:/opt/config.yml
-    # - MANAGER_REGISTRIES_CONFIG=/opt/config.yml
-      - MANAGER_LOG_LEVEL=5
-      - MANAGER_REFRESH_RATE=1m
-    #  - MANAGER_SKIP_TLS=true
     volumes:
-      - `pwd`/config.yml:/opt/config.yml
+      - "./config.yml:/opt/docker-registry-manager/config.yml"

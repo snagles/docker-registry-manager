@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/docker/distribution"
-	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestTagLastModifiedTime(t *testing.T) {
@@ -29,8 +28,8 @@ func TestTagLastModifiedTime(t *testing.T) {
 		{Created: setTime.AddDate(0, 0, -5)},
 		{Created: setTime.AddDate(0, 0, -6)},
 	}
-	Convey("Last modified time should be "+setTime.AddDate(0, 0, -1).String(), t, func(c C) {
-		c.So(tag.LastModified(), ShouldResemble, setTime.AddDate(0, 0, -1))
-	})
 
+	if tag.LastModified() != setTime.AddDate(0, 0, -1) {
+		t.Errorf("Last modified time should be %s", setTime.AddDate(0, 0, -1))
+	}
 }

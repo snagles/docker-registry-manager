@@ -74,11 +74,13 @@ type V1Compatibility struct {
 	} `json:"rootfs"`
 }
 
+// Command represents any command in the Dockerfile, using the commands keywords are parsed from the extensions
 type Command struct {
 	Cmd      string
 	Keywords []string
 }
 
+// KeywordTags returns space delimited list of keywords for the given tag
 func (c *Command) KeywordTags() string {
 	return strings.Join(c.Keywords, " ")
 }
