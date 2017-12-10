@@ -13,6 +13,7 @@ Docker Registry Manager is a golang written, beego driven, web interface for int
 ## Quickstart
  The below steps assume you have a docker registry currently running (with delete mode enabled (https://docs.docker.com/registry/configuration/). To add a registry to manage, add via the interface... or via the config.yml file
 
+
 ### Docker-Compose (Recommended)
  Install compose (https://docs.docker.com/compose/install/)
 
