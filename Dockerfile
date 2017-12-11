@@ -2,7 +2,7 @@
 FROM golang:alpine
 
 # Install git
-RUN apk add git
+RUN apk update && apk add git
 
 # Copy the local package files to the container's workspace.
 ADD . /go/src/github.com/snagles/docker-registry-manager/
