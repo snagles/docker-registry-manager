@@ -11,7 +11,6 @@ before_install:
 install: true
 script:
   - ./.travis-test.sh
-after_success:
   - bash <(curl -s https://codecov.io/bash)
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker build -t snagles/docker-registry-manager .;
