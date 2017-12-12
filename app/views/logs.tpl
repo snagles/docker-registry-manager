@@ -188,7 +188,7 @@
               $('html, body').animate({
                 scrollTop: 0
               }, 0);
-              localStorage.setItem("alert", "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Updated log level to {{.activeLevel}}</div>")
+              localStorage.setItem("alert", "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Success!</strong> Updated log level to "+level+"</div>")
               location.reload()
             }
           }
