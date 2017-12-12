@@ -28,7 +28,7 @@
 						</div>
 						<div id="use-insecure" class="alert alert-danger" style="margin-top:10px; display:none;">
 							<label class="checkbox-inline">
-								<input type="checkbox" name="skip-tls">Skip TLS Verification (required for self signed certs)
+								<input type="checkbox" name="skip-tls-validation">Skip TLS Validation (required for self signed certs)
 							</label>
 						</div>
 					</fieldset>
