@@ -23,7 +23,7 @@ type LogsController struct {
 }
 
 // Get just parses the logs on disk, and returns them as a json object
-func (c *LogsController) Get() {
+func (c *LogsController) GetJSON() {
 	c.Data["json"] = parseLogs()
 	c.ServeJSON()
 }
