@@ -9,6 +9,9 @@ import (
 func init() {
 	beego.Router("/", &registry.RegistriesController{})
 
+	// About Page
+	beego.Router("/about", &app.AboutController{})
+
 	// Routers for logs
 	// Template
 	beego.Router("/logs", &app.LogsController{}, "get:Get")
