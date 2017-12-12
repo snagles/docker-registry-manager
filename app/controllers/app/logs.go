@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/toolbox"
 	"github.com/sirupsen/logrus"
 	"github.com/snagles/docker-registry-manager/app/conf"
 )
@@ -20,6 +21,20 @@ type logResponse struct {
 // LogsController controls all actions to modify, return, and archive logs
 type LogsController struct {
 	beego.Controller
+}
+
+func (c *LogsController) Get() {
+	c.Data["activeLevel"] = logrus.GetLevel()
+	c.Data["allLevels"] = logrus.AllLevels
+	c.Data["logs"] = parseLogs()
+	c.Data["stats"] = toolbox.StatisticsMap.GetMapData()
+	c.TplName = "logs.tpl"
+}
+
+// GetRequestStatistics returns stats on request information tracked by beego
+func (c *LogsController) GetRequestStatistics() {
+	c.Data["json"] = toolbox.StatisticsMap.GetMapData()
+	c.ServeJSON()
 }
 
 // Get just parses the logs on disk, and returns them as a json object

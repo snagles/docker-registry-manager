@@ -10,7 +10,7 @@ func init() {
 	beego.Router("/", &registry.RegistriesController{})
 
 	/* proposed
-	beego.Router("/logs/requests", &app.SettingsController{}, "get:GetLiveStatistics")
+	beego.Router("/logs/requests", &app.SettingsController{}, "get:GetRequestStatistics")
 	beego.Router("/logs/active-level", &app.LogsController{}, "get:GetLevel")
 	beego.Router("/logs/actions/archive", &app.LogsController{}, "post:Archive")
 	beego.Router("/logs/actions/delete", &app.LogsController{}, "delete:Delete")
@@ -18,7 +18,7 @@ func init() {
 	*/
 
 	// Routers for settings
-	beego.Router("/settings/stats", &app.SettingsController{}, "get:GetLiveStatistics")
+	beego.Router("/logs/requests", &app.LogsController{}, "get:GetRequestStatistics")
 
 	// Routers for logs
 	beego.Router("/logs", &app.LogsController{}, "get:Get")
