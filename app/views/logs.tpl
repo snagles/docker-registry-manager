@@ -140,7 +140,7 @@
               e.preventDefault();
               $.ajax({
                 type: "POST",
-                url: "/logs/archive",
+                url: "/logs/actions/archive",
                 success: function (response) {
                   if (response.Error == null) {
                     window.location.reload(true)
@@ -161,7 +161,7 @@
               e.preventDefault();
               $.ajax({
                 type: "DELETE",
-                url: "/logs",
+                url: "/logs/actions/delete",
                 success: function (response) {
                   if (response.Error == null) {
                     $('html, body').animate({
@@ -181,7 +181,7 @@
         var level = $(this).attr("data-level");
         $.ajax({
           type: "POST",
-          url: "/logs/level/" + level,
+          url: "/logs/actions/set-level/" + level,
           success: function (response) {
             if (response.Error == null) {
               window.location.reload(true)
