@@ -6,70 +6,53 @@
         <li>
           <a href="/">Home</a>
         </li>
-        <li class="active">Settings</li>
+        <li class="active">Logs</li>
       </ol>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h1>About</h1>
+        <h1>Logs</h1>
       </div>
     </div>
-    <div class="content-block white-bg">
-      <div class="row" style="height:25px;">
-        <div class="pull-right">
-          <a href="https://github.com/snagles/docker-registry-manager"><img src="https://img.shields.io/github/stars/snagles/docker-registry-manager.svg?style=social&amp;label=Star" alt="GitHub stars"/></a>
-          <a href="https://github.com/snagles/docker-registry-manager/issues"><img src="https://img.shields.io/github/issues-raw/snagles/docker-registry-manager.svg" alt="GitHub issues"/></a>
-          <a href="https://raw.githubusercontent.com/snagles/docker-registry-manager/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license"></a>
-        </div>
-      </div>
-      <div class="row">
-        <table class="table table-striped table-bordered">
-          <thead>
+    <div class="content-block white-bg" id="logs">
+      <table id="log-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>Message</th>
+            <th>File</th>
+            <th>Line</th>
+            <th>Source</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>Level</th>
+            <th>Message</th>
+            <th>File</th>
+            <th>Line</th>
+            <th>Source</th>
+            <th>Time</th>
+          </tr>
+        </tfoot>
+        <tbody>
+          {{range $i, $entry := .logs}}
             <tr>
-              <th>Service</th>
-              <th>Master</th>
-              <th>Develop</th>
+              <td>{{$entry.Level}}</td>
+              <td>{{$entry.Message}}</td>
+              <td>{{$entry.File}}</td>
+              <td>{{$entry.Line}}</td>
+              <td>{{$entry.Source}}</td>
+              <td>{{$entry.Time}}</td>
             </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Status</td>
-              <td>
-                <a href="https://github.com/snagles/docker-registry-manager/tree/master"><img src="https://travis-ci.org/snagles/docker-registry-manager.svg?branch=master" alt="Build Status"/></a>
-              </td>
-              <td>
-                <a href="https://github.com/snagles/docker-registry-manager/tree/develop"><img src="https://travis-ci.org/snagles/docker-registry-manager.svg?branch=develop" alt="Build Status"/></a>
-              </td>
-            </tr>
-            <tr>
-              <td>Coverage</td>
-              <td>
-                <a href="https://codecov.io/gh/snagles/docker-registry-manager">
-                  <img src="https://codecov.io/gh/snagles/docker-registry-manager/branch/master/graph/badge.svg" alt="Coverage Status"></a>
-              </td>
-              <td>
-                <a href="https://codecov.io/gh/snagles/docker-registry-manager">
-                  <img src="https://codecov.io/gh/snagles/docker-registry-manager/branch/develop/graph/badge.svg" alt="Coverage Status"></a>
-              </td>
-            </tr>
-            <tr>
-              <td>Documentation</td>
-              <td>
-                <a href="https://godoc.org/github.com/snagles/docker-registry-manager">
-                  <img src="https://godoc.org/github.com/snagles/docker-registry-manager?status.svg" alt="GoDoc"></a>
-              </td>
-              <td>
-                <a href="https://godoc.org/github.com/snagles/docker-registry-manager">
-                  <img src="https://godoc.org/github.com/snagles/docker-registry-manager?status.svg" alt="GoDoc"></a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          {{end}}
+        </tbody>
+      </table>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h1>Statistics</h1>
+        <h1>Requests</h1>
       </div>
     </div>
     <div class="content-block white-bg">
@@ -119,47 +102,6 @@
           </table>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <h1>Logs</h1>
-      </div>
-    </div>
-    <div class="content-block white-bg" id="logs">
-      <table id="log-table" class="table table-striped table-bordered" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th>Level</th>
-            <th>Message</th>
-            <th>File</th>
-            <th>Line</th>
-            <th>Source</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <th>Level</th>
-            <th>Message</th>
-            <th>File</th>
-            <th>Line</th>
-            <th>Source</th>
-            <th>Time</th>
-          </tr>
-        </tfoot>
-        <tbody>
-          {{range $i, $entry := .logs}}
-            <tr>
-              <td>{{$entry.Level}}</td>
-              <td>{{$entry.Message}}</td>
-              <td>{{$entry.File}}</td>
-              <td>{{$entry.Line}}</td>
-              <td>{{$entry.Source}}</td>
-              <td>{{$entry.Time}}</td>
-            </tr>
-          {{end}}
-        </tbody>
-      </table>
     </div>
   </div>
 
@@ -212,7 +154,7 @@
               });
             }
           }, {
-            text: '<button href="/logs" download="logs.json" class="btn btn-default btn-group" style="margin-right:5px" download><i class="fa fa-download"></i> Download Logs</button>'
+            text: '<button href="/logs/json" download="logs.json" class="btn btn-default btn-group" style="margin-right:5px" download><i class="fa fa-download"></i> Download Logs</button>'
           }, {
             text: '<button id="clear-logs" type="button" class="btn btn-danger btn-group"><i class="fa fa-trash"></i> Clear Logs</button>',
             action: function (e, dt, node, config) {

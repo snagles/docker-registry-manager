@@ -10,12 +10,12 @@ type SettingsController struct {
 	beego.Controller
 }
 
-func (c *SettingsController) Get() {
+func (c *LogsController) Get() {
 	c.Data["activeLevel"] = logrus.GetLevel()
 	c.Data["allLevels"] = logrus.AllLevels
 	c.Data["logs"] = parseLogs()
 	c.Data["stats"] = toolbox.StatisticsMap.GetMapData()
-	c.TplName = "settings.tpl"
+	c.TplName = "logs.tpl"
 }
 
 // GetLiveStatistics returns stats on request information tracked by beego
