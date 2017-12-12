@@ -9,23 +9,17 @@ import (
 func init() {
 	beego.Router("/", &registry.RegistriesController{})
 
-	/* proposed
-	beego.Router("/logs/requests", &app.SettingsController{}, "get:GetRequestStatistics")
-	beego.Router("/logs/active-level", &app.LogsController{}, "get:GetLevel")
+	// Routers for logs
+	// Template
+	beego.Router("/logs", &app.LogsController{}, "get:Get")
+	// Raw JSON
+	beego.Router("/logs/json", &app.LogsController{}, "get:GetJSON")
+	beego.Router("/logs/requests", &app.LogsController{}, "get:GetRequestStatistics")
+	// Log actions
 	beego.Router("/logs/actions/archive", &app.LogsController{}, "post:Archive")
 	beego.Router("/logs/actions/delete", &app.LogsController{}, "delete:Delete")
 	beego.Router("/logs/actions/set-level/:level", &app.LogsController{}, "post:PostLevel")
-	*/
-
-	// Routers for settings
-	beego.Router("/logs/requests", &app.LogsController{}, "get:GetRequestStatistics")
-
-	// Routers for logs
-	beego.Router("/logs", &app.LogsController{}, "get:Get")
-	beego.Router("/logs", &app.LogsController{}, "delete:Delete")
-	beego.Router("/logs/archive", &app.LogsController{}, "post:Archive")
-	beego.Router("/logs/level", &app.LogsController{}, "get:GetLevel")
-	beego.Router("/logs/level/:level", &app.LogsController{}, "post:PostLevel")
+	beego.Router("/logs/active-level", &app.LogsController{}, "get:GetLevel")
 
 	// Routers for events
 	beego.Router("/envelope", &app.EventsController{}, "post:PostEnvelope")
