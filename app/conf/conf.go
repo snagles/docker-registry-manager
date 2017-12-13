@@ -36,7 +36,7 @@ func init() {
 
 	// create log dir if needed
 	if _, err := os.Stat(LogDir); os.IsNotExist(err) {
-		if err = os.Mkdir(LogDir, 0755); err != nil {
+		if err = os.MkdirAll(LogDir, 0755); err != nil {
 			logrus.Fatal(err)
 		}
 	}

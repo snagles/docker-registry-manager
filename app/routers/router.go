@@ -9,22 +9,26 @@ import (
 func init() {
 	beego.Router("/", &registry.RegistriesController{})
 
+	// About Page
+	beego.Router("/about", &app.AboutController{})
+
 	// Routers for logs
+	// Template
 	beego.Router("/logs", &app.LogsController{}, "get:Get")
-	beego.Router("/logs", &app.LogsController{}, "delete:Delete")
-	beego.Router("/logs/archive", &app.LogsController{}, "post:Archive")
-	beego.Router("/logs/level", &app.LogsController{}, "get:GetLevel")
-	beego.Router("/logs/level/:level", &app.LogsController{}, "post:PostLevel")
+	// Raw JSON
+	beego.Router("/logs/json", &app.LogsController{}, "get:GetJSON")
+	beego.Router("/logs/requests", &app.LogsController{}, "get:GetRequestStatistics")
+	// Log actions
+	beego.Router("/logs/actions/archive", &app.LogsController{}, "post:Archive")
+	beego.Router("/logs/actions/delete", &app.LogsController{}, "delete:Delete")
+	beego.Router("/logs/actions/set-level/:level", &app.LogsController{}, "post:PostLevel")
+	beego.Router("/logs/active-level", &app.LogsController{}, "get:GetLevel")
 
 	// Routers for events
 	beego.Router("/envelope", &app.EventsController{}, "post:PostEnvelope")
 	beego.Router("/events", &app.EventsController{}, "get:Get")
 	beego.Router("/events/:registryName", &app.EventsController{}, "get:GetRegistryEvents")
 	beego.Router("/events/:registryName/:eventID", &app.EventsController{}, "get:GetRegistryEventID")
-
-	// Routers for settings
-	beego.Router("/settings", &app.SettingsController{}, "get:Get")
-	beego.Router("/settings/stats", &app.SettingsController{}, "get:GetLiveStatistics")
 
 	// Routers for registries
 	beego.Router("/registries", &registry.RegistriesController{})
