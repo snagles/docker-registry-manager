@@ -4,7 +4,8 @@ services:
   docker-registry-manager:
     container_name: docker-registry-manager
     image: snagles/docker-registry-manager
+    build: .
     ports:
       - "8080:8080"
     volumes:
-      - "./config.yml:/opt/docker-registry-manager/config.yml"
+      - "./app/config.yml:/var/lib/docker-registry-manager/config.yml"
