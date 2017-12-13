@@ -111,7 +111,7 @@ type config struct {
 		URL         string
 		Username    string
 		Password    string
-		SkipTLS     bool   `mapstructure:"skip-tls"`
+		SkipTLS     bool   `mapstructure:"skip-tls-validation"`
 		RefreshRate string `mapstructure:"refresh-rate"`
 	} `mapstructure:"registries"`
 }

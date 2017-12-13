@@ -110,7 +110,7 @@ func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, sk
 	host = c.GetString("host")
 	port, err = c.GetInt("port", 5000)
 	scheme = c.GetString("scheme", "https")
-	skipTLSOn := c.GetString("skip-tls", "off")
+	skipTLSOn := c.GetString("skip-tls-validation", "off")
 	if skipTLSOn == "on" {
 		skipTLS = true
 	}

@@ -4,21 +4,24 @@ services:
   - docker
 go:
   - tip
+before_install:
+- sudo apt-get update
+- sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+- sudo docker --version
 install: true
-# all deps are now vendored
-#before_install:
-#  - go get -v ./...
 script:
   - ./.travis-test.sh
-after_success:
   - bash <(curl -s https://codecov.io/bash)
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker build -t snagles/docker-registry-manager .;
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push snagles/docker-registry-manager;
-    fi
-  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
-    docker build -t snagles/docker-registry-manager:develop .;
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push snagles/docker-registry-manager:develop;
+      docker build -t snagles/docker-registry-manager .;
+      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+      docker push snagles/docker-registry-manager;
+      echo "Auto-deploy successful for $TRAVIS_BRANCH";
+    elif [ "$TRAVIS_BRANCH" == "develop" ]; then
+      docker build -t snagles/docker-registry-manager:develop .;
+      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+      docker push snagles/docker-registry-manager:develop;
+      echo "Auto-deploy successful for $TRAVIS_BRANCH";
+    else
+      echo "Not auto-deploying docker image for $TRAVIS_BRANCH";
     fi

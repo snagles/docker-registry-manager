@@ -8,4 +8,4 @@ registries:
     #username: exampleUser
     #password: examplePassword
     #refresh-rate: "5m"
-    #skip-tls: true
+    #skip-tls-validation: true # REQUIRED for self signed certificates
