@@ -1,29 +1,29 @@
 # Start from an Alpine image with the latest version of Go installed
 FROM golang:alpine as build-env
 
-# Install git
+# Install git and the bee tool used for deployment
 RUN apk add --no-cache git
 
-WORKDIR $GOPATH/src/github.com/snagles/docker-registry-manager
-
 # Copy the local package files to the container's workspace.
-ADD . ./
+ADD . /go/src/github.com/snagles/docker-registry-manager
 
-# Build the application inside the container
-RUN go install github.com/snagles/docker-registry-manager/app
+# Build the application using the bee tool
+RUN go get github.com/beego/bee
+RUN bee pack -p /go/src/github.com/snagles/docker-registry-manager/app
 
-# Distribution image
+# Distributed image
 FROM alpine:3.7
+RUN apk add --no-cache tar
 
-# Copy binary from build stage
-COPY --from=build-env /go/bin/app /app/app
-COPY --from=build-env /go/src/github.com/snagles/docker-registry-manager/app/views/ /app/views/
-COPY --from=build-env /go/src/github.com/snagles/docker-registry-manager/app/static/ /app/static/
+# Copy packed beego tar
+WORKDIR /app
+COPY --from=build-env /go/app.tar.gz /app/app.tar.gz
+RUN tar -xzf app.tar.gz
+RUN rm app.tar.gz
 
-# Set the default config location
+# Set the default config location and volume
 ENV REGISTRY_CONFIG /var/lib/docker-registry-manager/config.yml
-# Config storage volume for persistent settings
-VOLUME ["/var/lib/docker-registry-manager/config.yml"]
+VOLUME ["/var/lib/docker-registry-manager"]
 
 # Run the app by default when the container starts
 CMD /app/app
