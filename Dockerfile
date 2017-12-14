@@ -26,4 +26,4 @@ ENV REGISTRY_CONFIG /var/lib/docker-registry-manager/config.yml
 VOLUME ["/var/lib/docker-registry-manager"]
 
 # Run the app by default when the container starts
-CMD /app/app
+CMD ["/app/app"]
