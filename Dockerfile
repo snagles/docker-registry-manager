@@ -10,16 +10,15 @@ ADD . /go/src/github.com/snagles/docker-registry-manager
 # Build the application using the bee tool
 RUN go get github.com/beego/bee
 RUN bee pack -p /go/src/github.com/snagles/docker-registry-manager/app
+RUN mkdir /app
+RUN tar -xzvf /go/app.tar.gz --directory /app
 
 # Distributed image
 FROM alpine:3.7
-RUN apk add --no-cache tar
 
 # Copy packed beego tar
 WORKDIR /app
-COPY --from=build-env /go/app.tar.gz /app/app.tar.gz
-RUN tar -xzf app.tar.gz
-RUN rm app.tar.gz
+COPY --from=build-env /app /app
 
 # Set the default config location and volume
 ENV REGISTRY_CONFIG /var/lib/docker-registry-manager/config.yml
