@@ -13,7 +13,7 @@ RUN bee pack -p /go/src/github.com/snagles/docker-registry-manager/app
 
 # Distributed image
 FROM alpine:3.7
-RUN apk add --no-cache tar
+RUN apk add --no-cache tar ca-certificates
 
 # Copy packed beego tar
 WORKDIR /app
