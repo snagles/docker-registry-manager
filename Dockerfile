@@ -16,6 +16,7 @@ RUN tar -xzvf /go/app.tar.gz --directory /app
 # Distributed image
 FROM alpine:3.7
 
+RUN apk add --no-cache ca-certificates
 # Copy packed beego tar
 WORKDIR /app
 COPY --from=build-env /app /app
@@ -25,4 +26,4 @@ ENV REGISTRY_CONFIG /var/lib/docker-registry-manager/config.yml
 VOLUME ["/var/lib/docker-registry-manager"]
 
 # Run the app by default when the container starts
-CMD /app/app
+CMD ["/app/app"]
