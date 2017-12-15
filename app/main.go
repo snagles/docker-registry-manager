@@ -81,6 +81,9 @@ func main() {
 		beego.BConfig.CopyRequestBody = true
 		beego.BConfig.WebConfig.ViewsPath = "views"
 
+		// set http port
+		beego.BConfig.Listen.HTTPPort = c.App.Port
+
 		// add template functions
 		beego.AddFuncMap("shortenDigest", DigestShortener)
 		beego.AddFuncMap("statToSeconds", StatToSeconds)
