@@ -45,8 +45,8 @@ func main() {
 			Destination: &registriesFile,
 		},
 		cli.StringFlag{
-			Name:        "log, l",
-			Usage:       "log level `level`",
+			Name:        "log-level, l",
+			Usage:       "log-level `warn`",
 			Value:       "info",
 			EnvVar:      "MANAGER_LOG_LEVEL",
 			Destination: &logLevel,

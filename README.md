@@ -19,7 +19,8 @@ Docker Registry Manager is a golang written, beego driven, web interface for int
 
 ```bash
  git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
- vim config.yml # add your registry
+ vim registries.yml # add your registry
+ vim docker-compose.yml # Edit application settings e.g log level, port
  docker-compose up -d
  firefox localhost:8080
   ```
@@ -27,15 +28,16 @@ Docker Registry Manager is a golang written, beego driven, web interface for int
 ### Go
  ```bash
     git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
-    vim config.yml # add your registry
-    cd app && go build . && ./app
+    vim registries.yml # add your registry
+    cd app && go build . && ./app --port 8080 --log-level warn --registries "../registries.yml"
     firefox localhost:8080
  ```
 
 ### Dockerfile
  ```bash
-    vim config.yml # add your registry
-    docker run --detach --name docker-registry-manager -p 8080:8080 docker-registry-manager
+    vim registries.yml # add your registry
+    docker run --detach --name docker-registry-manager -p 8080:8080 -e MANAGER_PORT=8080 -e MANAGER_REGISTRIES=/app/registries.yml -e MANAGER_LOG_LEVEL=warn docker-registry-manager
+    firefox localhost:8080
  ```
 
 ## Current Features

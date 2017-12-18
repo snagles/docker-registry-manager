@@ -22,7 +22,8 @@ WORKDIR /app
 COPY --from=build-env /app /app
 
 # Set the default registries location and volume
-ENV MANAGER_REGISTRIES /app/registries.yml
+ENV MANAGER_REGISTRIES=/app/registries.yml
+ENV MANAGER_LOG_LEVEL=warn
 VOLUME ["/app"]
 
 # Run the app by default when the container starts
