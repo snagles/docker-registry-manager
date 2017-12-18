@@ -1,7 +1,3 @@
-app:
-  log-level: "debug"
-  port: 8080
-
 registries:
   #exampleRegistry:
     #url: http://localhost:5000

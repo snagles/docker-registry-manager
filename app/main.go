@@ -27,23 +27,59 @@ func main() {
 	app.Name = "Docker Registry Manager"
 	app.Usage = "Connect to, view, and manage multiple private Docker registries"
 
-	var configPath string
+	var registriesFile, logLevel, keyPath, certPath string
+	var enableHTTPS bool
+	var appPort int
 	app.Flags = []cli.Flag{
+		cli.IntFlag{
+			Name:        "port, p",
+			Usage:       "port to use for the registry manager `port`",
+			Value:       8080,
+			Destination: &appPort,
+			EnvVar:      "MANAGER_PORT",
+		},
 		cli.StringFlag{
-			Name:        "config-path, c",
-			Usage:       "config path and name `/opt/docker-registry-manager/config.yml`",
-			EnvVar:      "REGISTRY_CONFIG",
-			Destination: &configPath,
+			Name:        "registries, r",
+			Usage:       "file location of the registries.yml `/app/registries.yml`",
+			EnvVar:      "MANAGER_REGISTRIES",
+			Destination: &registriesFile,
+		},
+		cli.StringFlag{
+			Name:        "log, l",
+			Usage:       "log level `level`",
+			Value:       "info",
+			EnvVar:      "MANAGER_LOG_LEVEL",
+			Destination: &logLevel,
+		},
+
+		// Beego HTTPS options
+		cli.BoolFlag{
+			Name:        "enable-https, e",
+			Usage:       "enable https `true or false`",
+			EnvVar:      "MANAGER_ENABLE_HTTPS",
+			Destination: &enableHTTPS,
+		},
+		cli.StringFlag{
+			Name:        "tls-key, k",
+			Usage:       "tls certificate path path and name `/app/key.key`",
+			EnvVar:      "MANAGER_KEY",
+			Destination: &keyPath,
+		},
+		cli.StringFlag{
+			Name:        "tls-certificate, cert",
+			Usage:       "tls certificate path path and name `/app/certificate.crt`",
+			EnvVar:      "MANAGER_CERTIFICATE",
+			Destination: &certPath,
 		},
 	}
 
 	app.Action = func(ctx *cli.Context) {
-		c, err := parseConfig(configPath)
+		c, err := parseRegistries(registriesFile)
 		if err != nil {
 			logrus.Fatal(err)
 		}
 
-		err = setlevel(c.App.LogLevel)
+		err = setlevel(logLevel)
 		if err != nil {
 			logrus.Fatal(err)
 		}
@@ -82,7 +118,23 @@ func main() {
 		beego.BConfig.WebConfig.ViewsPath = "views"
 
 		// set http port
-		beego.BConfig.Listen.HTTPPort = c.App.Port
+		if enableHTTPS {
+			beego.BConfig.Listen.HTTPSPort = appPort
+			// make sure we have both key and cert
+			if beego.BConfig.Listen.HTTPSKeyFile == "" {
+				logrus.Fatal("HTTPS enabled, but no key file provided")
+			} else {
+				beego.BConfig.Listen.HTTPSKeyFile = keyPath
+			}
+			if beego.BConfig.Listen.HTTPSKeyFile == "" {
+				logrus.Fatal("HTTPS enabled, but no certificate file provided")
+			} else {
+				beego.BConfig.Listen.HTTPSCertFile = certPath
+			}
+			// if we're not using https just use standard http
+		} else {
+			beego.BConfig.Listen.HTTPPort = appPort
+		}
 
 		// add template functions
 		beego.AddFuncMap("shortenDigest", DigestShortener)
@@ -116,11 +168,7 @@ func setlevel(level string) error {
 	return nil
 }
 
-type config struct {
-	App struct {
-		LogLevel string `mapstructure:"log-level"`
-		Port     int
-	}
+type registries struct {
 	Registries map[string]struct {
 		URL         string
 		Username    string
@@ -130,18 +178,18 @@ type config struct {
 	} `mapstructure:"registries"`
 }
 
-func parseConfig(configPath string) (*config, error) {
+func parseRegistries(registriesFile string) (*registries, error) {
 	v := viper.New()
 
-	// If the config path is not passed use the default project dir
-	if configPath != "" {
-		v.AddConfigPath(path.Dir(configPath))
-		base := path.Base(configPath)
-		ext := path.Ext(configPath)
+	// If the registries path is not passed use the default project dir
+	if registriesFile != "" {
+		v.AddConfigPath(path.Dir(registriesFile))
+		base := path.Base(registriesFile)
+		ext := path.Ext(registriesFile)
 		v.SetConfigName(base[0 : len(base)-len(ext)])
-		logrus.Infof("Using config located in %s with config name %s", path.Dir(configPath), base[0:len(base)-len(ext)])
+		logrus.Infof("Using registries located in %s with file name %s", path.Dir(registriesFile), base[0:len(base)-len(ext)])
 	} else {
-		v.SetConfigName("config")
+		v.SetConfigName("registries")
 		var root string
 		_, r, _, ok := runtime.Caller(0)
 		if ok {
@@ -150,16 +198,16 @@ func parseConfig(configPath string) (*config, error) {
 		} else {
 			logrus.Fatalf("Failed to get runtime caller for parser")
 		}
-		logrus.Infof("Using config located in %s with config name %s", root, "config.yml")
+		logrus.Infof("Using registries located in %s with file name %s", root, "registries.yml")
 	}
 
 	if err := v.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("Failed to read in config file: %s", err)
+		return nil, fmt.Errorf("Failed to read in registries file: %s", err)
 	}
 
-	c := config{}
+	c := registries{}
 	if err := v.Unmarshal(&c); err != nil {
-		return nil, fmt.Errorf("Unable to unmarshal config file: %s", err)
+		return nil, fmt.Errorf("Unable to unmarshal registries file: %s", err)
 	}
 	return &c, nil
 }
