@@ -1,6 +1,7 @@
 registries:
   #exampleRegistry:
-    #url: http://localhost:5000
+    #url: http://localhost
+    #port: 5000
     #username: exampleUser
     #password: examplePassword
     #refresh-rate: "5m"

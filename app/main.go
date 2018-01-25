@@ -7,7 +7,6 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
-	"strconv"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -90,20 +89,16 @@ func main() {
 				if err != nil {
 					logrus.Fatalf("Failed to parse registry from the passed url (%s): %s", r.URL, err)
 				}
-				port, err := strconv.Atoi(url.Port())
-				if err != nil || port == 0 {
-					logrus.Fatalf("Failed to add registry (%s), invalid port: %s", r.URL, err)
-				}
 				duration, err := time.ParseDuration(r.RefreshRate)
 				if err != nil {
 					logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
 				}
 				if r.Password != "" && r.Username != "" {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), r.Username, r.Password, port, duration, r.SkipTLS); err != nil {
+					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), r.Username, r.Password, r.Port, duration, r.SkipTLS); err != nil {
 						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
 					}
 				} else {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), "", "", port, duration, r.SkipTLS); err != nil {
+					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), "", "", r.Port, duration, r.SkipTLS); err != nil {
 						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
 					}
 				}
@@ -171,6 +166,7 @@ func setlevel(level string) error {
 type registries struct {
 	Registries map[string]struct {
 		URL         string
+		Port        int
 		Username    string
 		Password    string
 		SkipTLS     bool   `mapstructure:"skip-tls-validation"`
