@@ -91,53 +91,64 @@ func (c *ImagesController) GetImages() {
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
 	c.Data["repositoryName"] = repositoryName
 
-	// Compare the two manifest layers
 	c.TplName = "images.tpl"
-	hubManifest, err := dockerhub.GetManifest(repositoryName, tag.Name)
-	if hubManifest == nil || err != nil {
-		c.Data["dockerHub"] = struct {
-			Error    error
-			ImageURL string
-		}{
-			errors.New("Unable to retrieve information from dockerhub"),
-			"",
-		}
-		return
-	} else if hubManifest.SchemaVersion == tag.SchemaVersion {
-		diffLayers := make(map[string]struct{})
-		var size int64
-		if err == nil {
-			for _, layer := range tag.DeserializedManifest.Layers {
-				diffLayers[layer.Digest.String()] = struct{}{}
+
+	// Compare the two manifest layers if dockerhub integration is enabled
+	if registry.DockerhubIntegration {
+		hubManifest, err := dockerhub.GetManifest(repositoryName, tag.Name)
+		if hubManifest == nil || err != nil {
+			c.Data["dockerHub"] = struct {
+				Error    error
+				ImageURL string
+			}{
+				errors.New("Unable to retrieve information from dockerhub"),
+				"",
 			}
-			for _, layer := range hubManifest.Layers {
-				size += layer.Size
-				if _, ok := diffLayers[layer.Digest.String()]; ok {
-					delete(diffLayers, layer.Digest.String())
+			return
+		} else if hubManifest.SchemaVersion == tag.SchemaVersion {
+			diffLayers := make(map[string]struct{})
+			var size int64
+			if err == nil {
+				for _, layer := range tag.DeserializedManifest.Layers {
+					diffLayers[layer.Digest.String()] = struct{}{}
+				}
+				for _, layer := range hubManifest.Layers {
+					size += layer.Size
+					if _, ok := diffLayers[layer.Digest.String()]; ok {
+						delete(diffLayers, layer.Digest.String())
+					}
 				}
 			}
-		}
 
-		c.Data["dockerHub"] = struct {
-			DiffLayers map[string]struct{}
-			Manifest   *manifestV2.DeserializedManifest
-			ImageURL   string
-			Error      error
-			Size       int64
-		}{
-			diffLayers,
-			hubManifest,
-			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags", repositoryName),
-			err,
-			size,
+			c.Data["dockerHub"] = struct {
+				DiffLayers map[string]struct{}
+				Manifest   *manifestV2.DeserializedManifest
+				ImageURL   string
+				Error      error
+				Size       int64
+			}{
+				diffLayers,
+				hubManifest,
+				fmt.Sprintf("https://hub.docker.com/r/library/%s/tags", repositoryName),
+				err,
+				size,
+			}
+		} else {
+			c.Data["dockerHub"] = struct {
+				Error    error
+				ImageURL string
+			}{
+				errors.New("Different manifest scheme versions"),
+				fmt.Sprintf("https://hub.docker.com/r/library/%s/tags", repositoryName),
+			}
 		}
 	} else {
 		c.Data["dockerHub"] = struct {
 			Error    error
 			ImageURL string
 		}{
-			errors.New("Different manifest scheme versions"),
-			fmt.Sprintf("https://hub.docker.com/r/library/%s/tags", repositoryName),
+			errors.New("Dockerhub integration is disabled for this registry"),
+			"",
 		}
 	}
 }

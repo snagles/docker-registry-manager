@@ -14,7 +14,7 @@ func TestAddRegistry(t *testing.T) {
 	baseurl, env := testutils.SetupRegistry(t)
 	u, _ := url.Parse(baseurl)
 	port, _ := strconv.Atoi(u.Port())
-	r, err := AddRegistry(u.Scheme, u.Hostname(), "", "", port, 1*time.Minute, true)
+	r, err := AddRegistry(u.Scheme, u.Hostname(), "", "", port, 1*time.Minute, true, true)
 	if err != nil {
 		t.Fatalf("Failed to add test registry: %s", err)
 	}

@@ -94,11 +94,11 @@ func main() {
 					logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
 				}
 				if r.Password != "" && r.Username != "" {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), r.Username, r.Password, r.Port, duration, r.SkipTLS); err != nil {
+					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
 						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
 					}
 				} else {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), "", "", r.Port, duration, r.SkipTLS); err != nil {
+					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), "", "", r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
 						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
 					}
 				}
@@ -165,12 +165,13 @@ func setlevel(level string) error {
 
 type registries struct {
 	Registries map[string]struct {
-		URL         string
-		Port        int
-		Username    string
-		Password    string
-		SkipTLS     bool   `mapstructure:"skip-tls-validation"`
-		RefreshRate string `mapstructure:"refresh-rate"`
+		URL                  string
+		Port                 int
+		Username             string
+		Password             string
+		SkipTLS              bool   `mapstructure:"skip-tls-validation"`
+		RefreshRate          string `mapstructure:"refresh-rate"`
+		DockerhubIntegration bool   `mapstructure:"dockerhub-integration"`
 	} `mapstructure:"registries"`
 }
 

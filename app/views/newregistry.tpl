@@ -36,6 +36,11 @@
 						<label for="interval-input">Refresh Interval (seconds)</label>
 						<input type="text" class="form-control" id="interval-input" name="interval" placeholder="default: 10">
 					</fieldset>
+					<fieldset class="form-group">
+						<label class="checkbox-inline">
+							<input type="checkbox" name="dockerhub-integration">Use dockerhub for image comparison
+						</label>
+					</fieldset>
 					<div class="modal-footer">
 						<button style="float:left;" type="button" id="test" class="btn btn-warning">Test</button>
 						<input type="submit" class="btn btn-success" id="add-registry" value="Submit">

@@ -6,3 +6,4 @@ registries:
     #password: examplePassword
     #refresh-rate: "5m"
     #skip-tls-validation: true # REQUIRED for self signed certificates
+    #dockerhub-integration: true # Optional - compares to dockerhub to determine if image up to date

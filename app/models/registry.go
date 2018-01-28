@@ -36,16 +36,17 @@ type Registries struct {
 
 type Registry struct {
 	*client.Registry
-	Repositories map[string]*Repository
-	TTL          time.Duration
-	Ticker       *time.Ticker
-	Name         string
-	Host         string
-	Scheme       string
-	Version      string
-	Port         int
-	status       string
-	ip           string
+	Repositories         map[string]*Repository
+	TTL                  time.Duration
+	Ticker               *time.Ticker
+	Name                 string
+	Host                 string
+	Scheme               string
+	Version              string
+	Port                 int
+	DockerhubIntegration bool
+	status               string
+	ip                   string
 	sync.Mutex
 }
 
@@ -226,7 +227,7 @@ func (r *Registry) Status() string {
 
 // AddRegistry adds the new registry for viewing in the interface and sets up
 // the go routine for automatic refreshes
-func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration, skipTLS bool) (*Registry, error) {
+func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
 	switch {
 	case scheme == "":
 		return nil, errors.New("Invalid scheme: " + scheme)
@@ -254,15 +255,16 @@ func AddRegistry(scheme, host, user, password string, port int, ttl time.Duratio
 	}
 
 	r := Registry{
-		Registry: hub,
-		TTL:      ttl,
-		Ticker:   time.NewTicker(ttl),
-		Host:     host,
-		Scheme:   scheme,
-		Port:     port,
-		Version:  "v2",
-		Name:     host + ":" + strconv.Itoa(port),
-		status:   StatusDown,
+		Registry:             hub,
+		TTL:                  ttl,
+		Ticker:               time.NewTicker(ttl),
+		Host:                 host,
+		Scheme:               scheme,
+		Port:                 port,
+		Version:              "v2",
+		Name:                 host + ":" + strconv.Itoa(port),
+		status:               StatusDown,
+		DockerhubIntegration: dockerhubIntegration,
 	}
 	r.Refresh()
 
