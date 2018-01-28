@@ -131,6 +131,7 @@ func main() {
 			beego.BConfig.Listen.HTTPPort = appPort
 		}
 
+
 		// add template functions
 		beego.AddFuncMap("shortenDigest", DigestShortener)
 		beego.AddFuncMap("statToSeconds", StatToSeconds)
