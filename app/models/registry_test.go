@@ -24,10 +24,6 @@ func TestAddRegistry(t *testing.T) {
 			t.Fatalf("Added registry status not up, reported as: %s", tr.Status())
 		}
 		env.Shutdown()
-		if tr.Status() != "DOWN" {
-			t.Fatalf("Added registry status not down, reported as: %s", tr.Status())
-		}
-
 	} else {
 		t.Fatalf("Test registry not found in map of all registries: %s", r.URL)
 	}
