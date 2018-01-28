@@ -75,8 +75,9 @@
                           <span class="label label-info">{{$registry.Pulls}} Pulls</span>
                         {{ end }}
                         {{if ne $registry.TTL 0 }}
-                          <span class="label label-info">Refresh: {{$registry.TTL}}</span>
+                          <span class="label label-info">Refresh Rate: {{$registry.TTL}}</span>
                         {{ end }}
+                          <span class="label label-info">Last Refresh: {{timeAgo $registry.LastRefresh}}</span>
                       </div>
                     </div>
                   </div>

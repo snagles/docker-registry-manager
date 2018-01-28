@@ -45,6 +45,7 @@ type Registry struct {
 	Version              string
 	Port                 int
 	DockerhubIntegration bool
+	LastRefresh          time.Time
 	status               string
 	ip                   string
 	sync.Mutex
@@ -150,6 +151,8 @@ func (r *Registry) Refresh() {
 		}
 		ur.Repositories[repoName] = &repo
 	}
+
+	ur.LastRefresh = time.Now().UTC()
 	AllRegistries.Lock()
 	AllRegistries.Registries[ur.Name] = &ur
 	AllRegistries.Unlock()
