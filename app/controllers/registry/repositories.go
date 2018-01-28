@@ -2,7 +2,6 @@ package registry
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/sirupsen/logrus"
 	"github.com/snagles/docker-registry-manager/app/models"
 )
 
@@ -28,18 +27,11 @@ func (c *RepositoriesController) GetRepositories() {
 func (c *RepositoriesController) GetAllRepositoryCount() {
 	c.Data["registries"] = manager.AllRegistries.Registries
 
-	var count int
-	for _, reg := range manager.AllRegistries.Registries {
-		repositories, err := reg.Registry.Repositories()
-		if err != nil {
-			logrus.Errorf("Could not connect to registry (%s) to get the repository count: %s ", reg.Registry.URL, err.Error())
-		}
-		count += len(repositories)
-	}
-	repositoryCount := struct {
+	var repositoryCount struct {
 		Count int
-	}{
-		count,
+	}
+	for _, reg := range manager.AllRegistries.Registries {
+		repositoryCount.Count += len(reg.Repositories)
 	}
 
 	c.Data["json"] = &repositoryCount
