@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	manifestV2 "github.com/docker/distribution/manifest/schema2"
 	"github.com/sirupsen/logrus"
 	client "github.com/snagles/docker-registry-client/registry"
 )
@@ -138,8 +139,8 @@ func (r *Registry) Refresh() {
 				}
 			}
 
-			// Get the tag size information
-			size, err := ur.TagSize(repoName, tagName)
+			// Get the tag size information from the manifest layers
+			size, err := ur.CalculateTagSize(man)
 			if err != nil {
 				logrus.Error(err)
 			}
@@ -151,6 +152,15 @@ func (r *Registry) Refresh() {
 	AllRegistries.Lock()
 	AllRegistries.Registries[ur.Name] = &ur
 	AllRegistries.Unlock()
+}
+
+// TagCount returns the total number of tags across all repositories
+func (r *Registry) CalculateTagSize(deserialized *manifestV2.DeserializedManifest) (size int64, err error) {
+	size = int64(0)
+	for _, layer := range deserialized.Layers {
+		size += layer.Size
+	}
+	return size, nil
 }
 
 // TagCount returns the total number of tags across all repositories
