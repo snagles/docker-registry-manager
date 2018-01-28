@@ -7,4 +7,14 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - "./config.yml:/var/lib/docker-registry-manager/config.yml"
+      - ./registries.yml:/app/registries.yml
+      #- ./ssl.crt:/app/ssl.crt # https certfile location
+      #- ./ssl.key:/app/ssl.key # https keyfile location
+
+    environment:
+      - MANAGER_PORT=8080
+      - MANAGER_REGISTRIES=/app/registries.yml
+      - MANAGER_LOG_LEVEL=warn
+      #- MANAGER_ENABLE_HTTPS=true
+      #- MANAGER_KEY=/app/ssl.crt
+      #- MANAGER_CERTIFICATE=/app/ssl.key

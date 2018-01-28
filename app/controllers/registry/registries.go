@@ -18,7 +18,6 @@ type RegistriesController struct {
 
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
-
 	c.Data["registries"] = manager.AllRegistries.Registries
 
 	// Index template
@@ -42,27 +41,27 @@ func (c *RegistriesController) GetRegistryCount() {
 func (c *RegistriesController) AddRegistry() {
 	// Registry contains all identifying information for communicating with a registry
 
-	scheme, host, port, skipTLS, err := c.sanitizeForm()
+	scheme, host, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
 
-	interval, err := c.GetInt("interval", 10)
+	interval, err := c.GetInt("interval", 60)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
 
 	ttl := time.Duration(interval) * time.Second
 
-	_, err = manager.AddRegistry(scheme, host, "", "", port, ttl, skipTLS)
+	_, err = manager.AddRegistry(scheme, host, "", "", port, ttl, skipTLS, dockerhubIntegration)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
 	c.Ctx.Redirect(302, "/registries")
 }
 
-// TestRegistryStatus responds with JSON containing the status of the registry
-func (c *RegistriesController) TestRegistryStatus() {
+// RegistryStatus responds with JSON containing the status of the registry
+func (c *RegistriesController) RegistryStatus() {
 	// Define the response
 	var res struct {
 		Error       string `json:"error, omitempty"`
@@ -76,7 +75,7 @@ func (c *RegistriesController) TestRegistryStatus() {
 		c.ServeJSON()
 	}
 
-	scheme, host, port, skipTLS, err := c.sanitizeForm()
+	scheme, host, port, skipTLS, _, err := c.sanitizeForm()
 	if err != nil {
 		whenErr(err)
 		return
@@ -106,13 +105,18 @@ func (c *RegistriesController) TestRegistryStatus() {
 
 }
 
-func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, skipTLS bool, err error) {
+func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, skipTLS bool, dockerhubIntegration bool, err error) {
 	host = c.GetString("host")
 	port, err = c.GetInt("port", 5000)
 	scheme = c.GetString("scheme", "https")
 	skipTLSOn := c.GetString("skip-tls-validation", "off")
 	if skipTLSOn == "on" {
 		skipTLS = true
+	}
+
+	dockerhubIntegrationOn := c.GetString("dockerhub-integration", "off")
+	if dockerhubIntegrationOn == "on" {
+		dockerhubIntegration = true
 	}
 
 	switch {

@@ -89,9 +89,11 @@
               </div>
               <div class="row col-md-10">
                 <h4>Dockerhub
+                  {{if .dockerHub.ImageURL}}
                   <a href="{{.dockerHub.ImageURL}}">
                     <i style="vertical-align:bottom; color:black;" class="fa fa-external-link" aria-hidden="true"></i>
                   </a>
+                  {{end}}
                 </h4>
                 <div class="well well-md">
                   {{if .dockerHub.Error }}
