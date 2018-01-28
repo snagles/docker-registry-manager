@@ -46,7 +46,7 @@ func (c *RegistriesController) AddRegistry() {
 		c.CustomAbort(404, err.Error())
 	}
 
-	interval, err := c.GetInt("interval", 10)
+	interval, err := c.GetInt("interval", 60)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
