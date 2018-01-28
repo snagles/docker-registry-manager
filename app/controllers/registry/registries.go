@@ -18,7 +18,6 @@ type RegistriesController struct {
 
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
-
 	c.Data["registries"] = manager.AllRegistries.Registries
 
 	// Index template
@@ -61,8 +60,8 @@ func (c *RegistriesController) AddRegistry() {
 	c.Ctx.Redirect(302, "/registries")
 }
 
-// TestRegistryStatus responds with JSON containing the status of the registry
-func (c *RegistriesController) TestRegistryStatus() {
+// RegistryStatus responds with JSON containing the status of the registry
+func (c *RegistriesController) RegistryStatus() {
 	// Define the response
 	var res struct {
 		Error       string `json:"error, omitempty"`

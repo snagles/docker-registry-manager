@@ -14,6 +14,11 @@ import (
 	client "github.com/snagles/docker-registry-client/registry"
 )
 
+const (
+	StatusUp   = "UP"
+	StatusDown = "DOWN"
+)
+
 // AllRegistries contains a list of added registries using their hostnames
 // access granted via mutex locks/unlocks
 var AllRegistries Registries
@@ -38,15 +43,13 @@ type Registry struct {
 	Scheme       string
 	Version      string
 	Port         int
+	status       string
+	ip           string
 	sync.Mutex
 }
 
 func (r *Registry) IP() string {
-	ip, _ := net.LookupHost(r.Host)
-	if len(ip) > 0 {
-		return ip[0]
-	}
-	return ""
+	return r.ip
 }
 
 // Refresh is called with the configured TTL time for the given registry
@@ -54,6 +57,18 @@ func (r *Registry) Refresh() {
 
 	// Copy the registry information to a new object, and update it
 	ur := *r
+
+	err := r.Ping()
+	if err != nil {
+		ur.status = StatusDown
+	} else {
+		ur.status = StatusUp
+	}
+
+	ip, _ := net.LookupHost(r.Host)
+	if len(ip) > 0 {
+		r.ip = ip[0]
+	}
 
 	logrus.Info("Refreshing " + r.URL)
 	// Get the list of repositories
@@ -196,10 +211,7 @@ func (r *Registry) Pulls() (pulls int) {
 
 // Status returns the text representation of whether the registry is reachable
 func (r *Registry) Status() string {
-	if err := r.Ping(); err != nil {
-		return "DOWN"
-	}
-	return "UP"
+	return r.status
 }
 
 // AddRegistry adds the new registry for viewing in the interface and sets up
@@ -240,6 +252,7 @@ func AddRegistry(scheme, host, user, password string, port int, ttl time.Duratio
 		Port:     port,
 		Version:  "v2",
 		Name:     host + ":" + strconv.Itoa(port),
+		status:   StatusDown,
 	}
 	r.Refresh()
 
