@@ -21,9 +21,10 @@ RUN apk add --no-cache ca-certificates
 WORKDIR /app
 COPY --from=build-env /app /app
 
-# Set the default config location and volume
-ENV REGISTRY_CONFIG /var/lib/docker-registry-manager/config.yml
-VOLUME ["/var/lib/docker-registry-manager"]
+# Set the default registries location and volume
+ENV MANAGER_REGISTRIES=/app/registries.yml
+ENV MANAGER_LOG_LEVEL=warn
+VOLUME ["/app"]
 
 # Run the app by default when the container starts
 CMD ["/app/app"]

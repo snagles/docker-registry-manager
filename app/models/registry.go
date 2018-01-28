@@ -10,8 +10,14 @@ import (
 	"sync"
 	"time"
 
+	manifestV2 "github.com/docker/distribution/manifest/schema2"
 	"github.com/sirupsen/logrus"
 	client "github.com/snagles/docker-registry-client/registry"
+)
+
+const (
+	StatusUp   = "UP"
+	StatusDown = "DOWN"
 )
 
 // AllRegistries contains a list of added registries using their hostnames
@@ -30,23 +36,23 @@ type Registries struct {
 
 type Registry struct {
 	*client.Registry
-	Repositories map[string]*Repository
-	TTL          time.Duration
-	Ticker       *time.Ticker
-	Name         string
-	Host         string
-	Scheme       string
-	Version      string
-	Port         int
+	Repositories         map[string]*Repository
+	TTL                  time.Duration
+	Ticker               *time.Ticker
+	Name                 string
+	Host                 string
+	Scheme               string
+	Version              string
+	Port                 int
+	DockerhubIntegration bool
+	LastRefresh          time.Time
+	status               string
+	ip                   string
 	sync.Mutex
 }
 
 func (r *Registry) IP() string {
-	ip, _ := net.LookupHost(r.Host)
-	if len(ip) > 0 {
-		return ip[0]
-	}
-	return ""
+	return r.ip
 }
 
 // Refresh is called with the configured TTL time for the given registry
@@ -54,6 +60,18 @@ func (r *Registry) Refresh() {
 
 	// Copy the registry information to a new object, and update it
 	ur := *r
+
+	err := r.Ping()
+	if err != nil {
+		ur.status = StatusDown
+	} else {
+		ur.status = StatusUp
+	}
+
+	ip, _ := net.LookupHost(r.Host)
+	if len(ip) > 0 {
+		r.ip = ip[0]
+	}
 
 	logrus.Info("Refreshing " + r.URL)
 	// Get the list of repositories
@@ -123,8 +141,8 @@ func (r *Registry) Refresh() {
 				}
 			}
 
-			// Get the tag size information
-			size, err := ur.TagSize(repoName, tagName)
+			// Get the tag size information from the manifest layers
+			size, err := ur.CalculateTagSize(man)
 			if err != nil {
 				logrus.Error(err)
 			}
@@ -133,9 +151,20 @@ func (r *Registry) Refresh() {
 		}
 		ur.Repositories[repoName] = &repo
 	}
+
+	ur.LastRefresh = time.Now().UTC()
 	AllRegistries.Lock()
 	AllRegistries.Registries[ur.Name] = &ur
 	AllRegistries.Unlock()
+}
+
+// TagCount returns the total number of tags across all repositories
+func (r *Registry) CalculateTagSize(deserialized *manifestV2.DeserializedManifest) (size int64, err error) {
+	size = int64(0)
+	for _, layer := range deserialized.Layers {
+		size += layer.Size
+	}
+	return size, nil
 }
 
 // TagCount returns the total number of tags across all repositories
@@ -196,15 +225,12 @@ func (r *Registry) Pulls() (pulls int) {
 
 // Status returns the text representation of whether the registry is reachable
 func (r *Registry) Status() string {
-	if err := r.Ping(); err != nil {
-		return "DOWN"
-	}
-	return "UP"
+	return r.status
 }
 
 // AddRegistry adds the new registry for viewing in the interface and sets up
 // the go routine for automatic refreshes
-func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration, skipTLS bool) (*Registry, error) {
+func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
 	switch {
 	case scheme == "":
 		return nil, errors.New("Invalid scheme: " + scheme)
@@ -232,14 +258,16 @@ func AddRegistry(scheme, host, user, password string, port int, ttl time.Duratio
 	}
 
 	r := Registry{
-		Registry: hub,
-		TTL:      ttl,
-		Ticker:   time.NewTicker(ttl),
-		Host:     host,
-		Scheme:   scheme,
-		Port:     port,
-		Version:  "v2",
-		Name:     host + ":" + strconv.Itoa(port),
+		Registry:             hub,
+		TTL:                  ttl,
+		Ticker:               time.NewTicker(ttl),
+		Host:                 host,
+		Scheme:               scheme,
+		Port:                 port,
+		Version:              "v2",
+		Name:                 host + ":" + strconv.Itoa(port),
+		status:               StatusDown,
+		DockerhubIntegration: dockerhubIntegration,
 	}
 	r.Refresh()
 
