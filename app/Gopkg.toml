@@ -44,3 +44,7 @@
 [[constraint]]
   name = "github.com/spf13/viper"
   version = "1.0.0"
+
+[prune]
+  unused-packages = true
+  go-tests = true
