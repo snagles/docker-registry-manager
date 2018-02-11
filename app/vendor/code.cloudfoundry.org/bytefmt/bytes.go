@@ -14,16 +14,17 @@ import (
 )
 
 const (
-	BYTE     = 1.0
-	KILOBYTE = 1024 * BYTE
-	MEGABYTE = 1024 * KILOBYTE
-	GIGABYTE = 1024 * MEGABYTE
-	TERABYTE = 1024 * GIGABYTE
+	BYTE = 1.0 << (10 * iota)
+	KILOBYTE
+	MEGABYTE
+	GIGABYTE
+	TERABYTE
 )
 
-var bytesPattern *regexp.Regexp = regexp.MustCompile(`(?i)^(-?\d+(?:\.\d+)?)([KMGT]B?|B)$`)
-
-var invalidByteQuantityError = errors.New("Byte quantity must be a positive integer with a unit of measurement like M, MB, G, or GB")
+var (
+	bytesPattern             = regexp.MustCompile(`(?i)^(-?\d+(?:\.\d+)?)([KMGT]i?B?|B)$`)
+	invalidByteQuantityError = errors.New("byte quantity must be a positive integer with a unit of measurement like M, MB, MiB, G, GiB, or GB")
+)
 
 // ByteSize returns a human-readable byte string of the form 10M, 12.5K, and so forth.  The following units are available:
 //	T: Terabyte
@@ -70,7 +71,11 @@ func ToMegabytes(s string) (uint64, error) {
 	return bytes / MEGABYTE, nil
 }
 
-// ToBytes parses a string formatted by ByteSize as bytes.
+// ToBytes parses a string formatted by ByteSize as bytes. Note binary-prefixed and SI prefixed units both mean a base-2 units
+// KB = K = KiB	= 1024
+// MB = M = MiB = 1024 * K
+// GB = G = GiB = 1024 * M
+// TB = T = TiB = 1024 * G
 func ToBytes(s string) (uint64, error) {
 	parts := bytesPattern.FindStringSubmatch(strings.TrimSpace(s))
 	if len(parts) < 3 {
