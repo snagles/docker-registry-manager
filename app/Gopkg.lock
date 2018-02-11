@@ -95,7 +95,7 @@
   branch = "master"
   name = "github.com/snagles/docker-registry-client"
   packages = ["registry"]
-  revision = "303c36d662537fd1e1c4d2cf2122b52220ffcbb6"
+  revision = "db19f0d8169544eacc78f1cd8106c6f788b84f20"
 
 [[projects]]
   name = "github.com/spf13/afero"
