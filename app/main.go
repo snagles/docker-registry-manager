@@ -60,13 +60,13 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:        "tls-key, k",
-			Usage:       "tls certificate path path and name `/app/key.key`",
+			Usage:       "tls certificate path and name `/app/key.key`",
 			EnvVar:      "MANAGER_KEY",
 			Destination: &keyPath,
 		},
 		cli.StringFlag{
 			Name:        "tls-certificate, cert",
-			Usage:       "tls certificate path path and name `/app/certificate.crt`",
+			Usage:       "tls certificate path and name `/app/certificate.crt`",
 			EnvVar:      "MANAGER_CERTIFICATE",
 			Destination: &certPath,
 		},
@@ -116,12 +116,12 @@ func main() {
 		if enableHTTPS {
 			beego.BConfig.Listen.HTTPSPort = appPort
 			// make sure we have both key and cert
-			if beego.BConfig.Listen.HTTPSKeyFile == "" {
+			if keyPath == "" {
 				logrus.Fatal("HTTPS enabled, but no key file provided")
 			} else {
 				beego.BConfig.Listen.HTTPSKeyFile = keyPath
 			}
-			if beego.BConfig.Listen.HTTPSKeyFile == "" {
+			if certPath == "" {
 				logrus.Fatal("HTTPS enabled, but no certificate file provided")
 			} else {
 				beego.BConfig.Listen.HTTPSCertFile = certPath
@@ -130,7 +130,6 @@ func main() {
 		} else {
 			beego.BConfig.Listen.HTTPPort = appPort
 		}
-
 
 		// add template functions
 		beego.AddFuncMap("shortenDigest", DigestShortener)

@@ -5,19 +5,80 @@
   branch = "master"
   name = "code.cloudfoundry.org/bytefmt"
   packages = ["."]
-  revision = "f4415fafc5619dd75599a54a7c91fb3948ad58bd"
+  revision = "b31f603f5e1e047fdb38584e1a922dcc5c4de5c8"
 
 [[projects]]
   name = "github.com/astaxie/beego"
-  packages = [".","config","context","context/param","grace","logs","session","toolbox","utils"]
-  revision = "d96289a81bf67728cff7a19b067aaecc65a62ec6"
-  version = "v1.9.0"
+  packages = [
+    ".",
+    "config",
+    "context",
+    "context/param",
+    "grace",
+    "logs",
+    "session",
+    "toolbox",
+    "utils"
+  ]
+  revision = "bf5c5626ab429e66d88602e1ab1ab5fbf4629a01"
+  version = "v1.9.2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/beorn7/perks"
+  packages = ["quantile"]
+  revision = "4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9"
 
 [[projects]]
   branch = "master"
   name = "github.com/docker/distribution"
-  packages = [".","configuration","context","digestset","health","health/checks","manifest","manifest/manifestlist","manifest/schema1","manifest/schema2","notifications","reference","registry/api/errcode","registry/api/v2","registry/auth","registry/client","registry/client/auth","registry/client/auth/challenge","registry/client/transport","registry/handlers","registry/middleware/registry","registry/middleware/repository","registry/proxy","registry/proxy/scheduler","registry/storage","registry/storage/cache","registry/storage/cache/memory","registry/storage/cache/redis","registry/storage/driver","registry/storage/driver/base","registry/storage/driver/factory","registry/storage/driver/inmemory","registry/storage/driver/middleware","registry/storage/driver/testdriver","testutil","uuid","version"]
-  revision = "e5b5e44386f7964a1f010a2b8b7687d073215bbb"
+  packages = [
+    ".",
+    "configuration",
+    "context",
+    "digestset",
+    "health",
+    "health/checks",
+    "manifest",
+    "manifest/manifestlist",
+    "manifest/schema1",
+    "manifest/schema2",
+    "metrics",
+    "notifications",
+    "reference",
+    "registry/api/errcode",
+    "registry/api/v2",
+    "registry/auth",
+    "registry/client",
+    "registry/client/auth",
+    "registry/client/auth/challenge",
+    "registry/client/transport",
+    "registry/handlers",
+    "registry/middleware/registry",
+    "registry/middleware/repository",
+    "registry/proxy",
+    "registry/proxy/scheduler",
+    "registry/storage",
+    "registry/storage/cache",
+    "registry/storage/cache/memory",
+    "registry/storage/cache/redis",
+    "registry/storage/driver",
+    "registry/storage/driver/base",
+    "registry/storage/driver/factory",
+    "registry/storage/driver/inmemory",
+    "registry/storage/driver/middleware",
+    "registry/storage/driver/testdriver",
+    "testutil",
+    "uuid",
+    "version"
+  ]
+  revision = "6664ec703991875e14419ff4960921cce7678bab"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/docker/go-metrics"
+  packages = ["."]
+  revision = "399ea8c73916000c64c2c76e8da00ca82f8387ab"
 
 [[projects]]
   branch = "master"
@@ -28,14 +89,23 @@
 [[projects]]
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
-  revision = "629574ca2a5df945712d3079857300b5e4da0236"
-  version = "v1.4.2"
+  revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
+  version = "v1.4.7"
 
 [[projects]]
   name = "github.com/garyburd/redigo"
-  packages = ["internal","redis"]
-  revision = "47dc60e71eed504e3ef8e77ee3c6fe720f3be57f"
-  version = "v1.3.0"
+  packages = [
+    "internal",
+    "redis"
+  ]
+  revision = "d1ed5c67e5794de818ea85e6b522fda02623a484"
+  version = "v1.4.0"
+
+[[projects]]
+  name = "github.com/golang/protobuf"
+  packages = ["proto"]
+  revision = "925541529c1fa6821df4e44ce2723319eb2be768"
+  version = "v1.0.0"
 
 [[projects]]
   name = "github.com/gorilla/context"
@@ -52,26 +122,42 @@
 [[projects]]
   name = "github.com/gorilla/mux"
   packages = ["."]
-  revision = "7f08801859139f86dfafd1c296e2cba9a80d292e"
-  version = "v1.6.0"
+  revision = "53c1911da2b537f792e7cafcb446b05ffe33b996"
+  version = "v1.6.1"
 
 [[projects]]
   branch = "master"
   name = "github.com/hashicorp/hcl"
-  packages = [".","hcl/ast","hcl/parser","hcl/scanner","hcl/strconv","hcl/token","json/parser","json/scanner","json/token"]
+  packages = [
+    ".",
+    "hcl/ast",
+    "hcl/parser",
+    "hcl/scanner",
+    "hcl/strconv",
+    "hcl/token",
+    "json/parser",
+    "json/scanner",
+    "json/token"
+  ]
   revision = "23c074d0eceb2b8a5bfdbb271ab780cde70f05a8"
 
 [[projects]]
   name = "github.com/magiconair/properties"
   packages = ["."]
-  revision = "be5ece7dd465ab0765a9682137865547526d1dfb"
-  version = "v1.7.3"
+  revision = "d419a98cdbed11a922bf76f257b7c4be79b50e73"
+  version = "v1.7.4"
+
+[[projects]]
+  name = "github.com/matttproud/golang_protobuf_extensions"
+  packages = ["pbutil"]
+  revision = "3247c84500bff8d9fb6d579d800f20b3e091582c"
+  version = "v1.0.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
-  revision = "06020f85339e21b2478f756a78e295255ffa4d6a"
+  revision = "a4e142e9c047c904fa2f1e144d9a84e6133024bc"
 
 [[projects]]
   name = "github.com/opencontainers/go-digest"
@@ -82,26 +168,65 @@
 [[projects]]
   name = "github.com/pelletier/go-toml"
   packages = ["."]
-  revision = "16398bac157da96aa88f98a2df640c7f32af1da2"
-  version = "v1.0.1"
+  revision = "acdc4509485b587f5e675510c4f2c63e90ff68a8"
+  version = "v1.1.0"
+
+[[projects]]
+  name = "github.com/prometheus/client_golang"
+  packages = [
+    "prometheus",
+    "prometheus/promhttp"
+  ]
+  revision = "c5b7fccd204277076155f10851dad72b76a49317"
+  version = "v0.8.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/prometheus/client_model"
+  packages = ["go"]
+  revision = "99fa1f4be8e564e8a6b613da7fa6f46c9edafc6c"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/prometheus/common"
+  packages = [
+    "expfmt",
+    "internal/bitbucket.org/ww/goautoneg",
+    "model"
+  ]
+  revision = "89604d197083d4781071d3c65855d24ecfb0a563"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/prometheus/procfs"
+  packages = [
+    ".",
+    "internal/util",
+    "nfs",
+    "xfs"
+  ]
+  revision = "cb4147076ac75738c9a7d279075a253c0cc5acbd"
 
 [[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
-  revision = "f006c2ac4710855cf0f916dd6b77acf6b048dc6e"
-  version = "v1.0.3"
+  revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
+  version = "v1.0.4"
 
 [[projects]]
   branch = "master"
   name = "github.com/snagles/docker-registry-client"
   packages = ["registry"]
-  revision = "303c36d662537fd1e1c4d2cf2122b52220ffcbb6"
+  revision = "db19f0d8169544eacc78f1cd8106c6f788b84f20"
 
 [[projects]]
   name = "github.com/spf13/afero"
-  packages = [".","mem"]
-  revision = "8d919cbe7e2627e417f3e45c3c0e489a5b7e2536"
-  version = "v1.0.0"
+  packages = [
+    ".",
+    "mem"
+  ]
+  revision = "bb8f1927f2a9d3ab41c9340aa034f6b803f4359c"
+  version = "v1.0.2"
 
 [[projects]]
   name = "github.com/spf13/cast"
@@ -113,7 +238,7 @@
   branch = "master"
   name = "github.com/spf13/jwalterweatherman"
   packages = ["."]
-  revision = "12bd96e66386c1960ab0f74ced1362f66f552f7b"
+  revision = "7c0cea34c8ece3fbeb2b27ab9b59511d360fb394"
 
 [[projects]]
   name = "github.com/spf13/pflag"
@@ -130,7 +255,11 @@
 [[projects]]
   branch = "master"
   name = "github.com/stevvooe/resumable"
-  packages = [".","sha256","sha512"]
+  packages = [
+    ".",
+    "sha256",
+    "sha512"
+  ]
   revision = "2aaf90b2ceea5072cb503ef2a620b08ff3119870"
 
 [[projects]]
@@ -143,31 +272,35 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  revision = "9f005a07e0d31d45e6656d241bb5c0f2efd4bc94"
-
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/net"
-  packages = ["context"]
-  revision = "dc871a5d77e227f5bbf6545176ef3eeebf87e76e"
+  revision = "9de5f2eaf759b4c4550b3db39fed2e9e5f86f45c"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix","windows"]
-  revision = "82aafbf43bf885069dc71b7e7c2f9d7a614d47da"
+  packages = [
+    "unix",
+    "windows"
+  ]
+  revision = "37707fdb30a5b38865cfb95e5aab41707daec7fd"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
-  packages = ["internal/gen","internal/triegen","internal/ucd","transform","unicode/cldr","unicode/norm"]
-  revision = "88f656faf3f37f690df1a32515b479415e1a6769"
+  packages = [
+    "internal/gen",
+    "internal/triegen",
+    "internal/ucd",
+    "transform",
+    "unicode/cldr",
+    "unicode/norm"
+  ]
+  revision = "4e4a3210bb54bb31f6ab2cdca2edcc0b50c420c1"
 
 [[projects]]
   branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "287cf08546ab5e7e37d55a84f7ed3fd1db036de5"
+  revision = "d670f9405373e636a5a2765eea47fac0c9bc91a4"
 
 [solve-meta]
   analyzer-name = "dep"
