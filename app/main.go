@@ -83,7 +83,7 @@ func main() {
 			logrus.Fatal(err)
 		}
 
-		for _, r := range c.Registries {
+		for name, r := range c.Registries {
 			if r.URL != "" {
 				url, err := url.Parse(r.URL)
 				if err != nil {
@@ -94,11 +94,11 @@ func main() {
 					logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
 				}
 				if r.Password != "" && r.Username != "" {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
+					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), name, r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
 						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
 					}
 				} else {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), "", "", r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
+					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), name, "", "", r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
 						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
 					}
 				}

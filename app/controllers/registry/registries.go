@@ -41,7 +41,7 @@ func (c *RegistriesController) GetRegistryCount() {
 func (c *RegistriesController) AddRegistry() {
 	// Registry contains all identifying information for communicating with a registry
 
-	scheme, host, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
+	scheme, host, name, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -53,7 +53,7 @@ func (c *RegistriesController) AddRegistry() {
 
 	ttl := time.Duration(interval) * time.Second
 
-	_, err = manager.AddRegistry(scheme, host, "", "", port, ttl, skipTLS, dockerhubIntegration)
+	_, err = manager.AddRegistry(scheme, host, name, "", "", port, ttl, skipTLS, dockerhubIntegration)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -75,7 +75,7 @@ func (c *RegistriesController) RegistryStatus() {
 		c.ServeJSON()
 	}
 
-	scheme, host, port, skipTLS, _, err := c.sanitizeForm()
+	scheme, host, _, port, skipTLS, _, err := c.sanitizeForm()
 	if err != nil {
 		whenErr(err)
 		return
@@ -116,9 +116,10 @@ func (c *RegistriesController) Refresh() {
 	c.CustomAbort(200, "Refreshed registry")
 }
 
-func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, skipTLS bool, dockerhubIntegration bool, err error) {
+func (c *RegistriesController) sanitizeForm() (scheme, host string, name string, port int, skipTLS bool, dockerhubIntegration bool, err error) {
 	host = c.GetString("host")
 	port, err = c.GetInt("port", 5000)
+	name = c.GetString("name", fmt.Sprintf("%s:%v", host, port))
 	scheme = c.GetString("scheme", "https")
 	skipTLSOn := c.GetString("skip-tls-validation", "off")
 	if skipTLSOn == "on" {
