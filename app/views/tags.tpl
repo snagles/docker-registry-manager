@@ -202,7 +202,7 @@
             statusCode: {
               404: function () {
                 $("#delete-tags").append(
-                  "<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Failure!</strong> We were unable to delete " + tagName + " from the registry. For more details view the <a href='/settings'>logs</" +
+                  "<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a> <strong>Failure!</strong> We were unable to delete " + tagName + " from the registry. For more details view the <a href='/logs'>logs</" +
                   "a>.</div>"
                 );
                 $(".alert").alert();
