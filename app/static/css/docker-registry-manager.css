@@ -173,10 +173,15 @@ ul {list-style-type: none;}
 .box-header{
   height:60px;
   color:black;
+  text-align: center;
 }
 
 .box-body{
   height:140px;
+}
+
+.box-footer{
+  text-align:center;
 }
 
 .metric-value {
