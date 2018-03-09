@@ -105,6 +105,17 @@ func (c *RegistriesController) RegistryStatus() {
 
 }
 
+// Refresh refreshes the passed registry
+func (c *RegistriesController) Refresh() {
+	registryName := c.Ctx.Input.Param(":registryName")
+
+	if r, ok := manager.AllRegistries.Registries[registryName]; ok {
+		r.Refresh()
+	}
+	// Index template
+	c.CustomAbort(200, "Refreshed registry")
+}
+
 func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, skipTLS bool, dockerhubIntegration bool, err error) {
 	host = c.GetString("host")
 	port, err = c.GetInt("port", 5000)
