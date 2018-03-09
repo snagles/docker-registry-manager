@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/astaxie/beego"
+	"github.com/fsnotify/fsnotify"
 	"github.com/sirupsen/logrus"
 	"github.com/snagles/docker-registry-manager/app/models"
 	_ "github.com/snagles/docker-registry-manager/app/routers"
@@ -83,27 +84,7 @@ func main() {
 			logrus.Fatal(err)
 		}
 
-		for name, r := range c.Registries {
-			if r.URL != "" {
-				url, err := url.Parse(r.URL)
-				if err != nil {
-					logrus.Fatalf("Failed to parse registry from the passed url (%s): %s", r.URL, err)
-				}
-				duration, err := time.ParseDuration(r.RefreshRate)
-				if err != nil {
-					logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
-				}
-				if r.Password != "" && r.Username != "" {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), name, r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
-						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
-					}
-				} else {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), name, "", "", r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
-						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
-					}
-				}
-			}
-		}
+		addRegistries(c)
 
 		// Beego configuration
 		beego.BConfig.AppName = "docker-registry-manager"
@@ -141,6 +122,30 @@ func main() {
 		beego.Run()
 	}
 	app.Run(os.Args)
+}
+
+func addRegistries(c *registries) {
+	for name, r := range c.Registries {
+		if r.URL != "" {
+			url, err := url.Parse(r.URL)
+			if err != nil {
+				logrus.Fatalf("Failed to parse registry from the passed url (%s): %s", r.URL, err)
+			}
+			duration, err := time.ParseDuration(r.RefreshRate)
+			if err != nil {
+				logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
+			}
+			if r.Password != "" && r.Username != "" {
+				if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), name, r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
+					logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
+				}
+			} else {
+				if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), name, "", "", r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
+					logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
+				}
+			}
+		}
+	}
 }
 
 func setlevel(level string) error {
@@ -206,5 +211,15 @@ func parseRegistries(registriesFile string) (*registries, error) {
 	if err := v.Unmarshal(&c); err != nil {
 		return nil, fmt.Errorf("Unable to unmarshal registries file: %s", err)
 	}
+
+	v.WatchConfig()
+	v.OnConfigChange(func(e fsnotify.Event) {
+		c, err := parseRegistries(registriesFile)
+		if err != nil {
+			logrus.Fatal(err)
+		}
+		addRegistries(c)
+	})
+
 	return &c, nil
 }
