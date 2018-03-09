@@ -230,7 +230,7 @@ func (r *Registry) Status() string {
 
 // AddRegistry adds the new registry for viewing in the interface and sets up
 // the go routine for automatic refreshes
-func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
+func AddRegistry(scheme, host, name, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
 	switch {
 	case scheme == "":
 		return nil, errors.New("Invalid scheme: " + scheme)
@@ -265,7 +265,7 @@ func AddRegistry(scheme, host, user, password string, port int, ttl time.Duratio
 		Scheme:               scheme,
 		Port:                 port,
 		Version:              "v2",
-		Name:                 host + ":" + strconv.Itoa(port),
+		Name:                 name,
 		status:               StatusDown,
 		DockerhubIntegration: dockerhubIntegration,
 	}

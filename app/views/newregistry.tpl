@@ -9,6 +9,10 @@
 			<div class="modal-body">
 				<form id="registry-form" action="/registries/add" method="post">
 					<fieldset class="form-group">
+						<label for="name-input">Name</label>
+						<input type="text" class="form-control" id="name-input" name="name" placeholder="registry 1">
+					</fieldset>
+					<fieldset class="form-group">
 						<label for="host-input">Host</label>
 						<input type="text" class="form-control" id="host-input" name="host" placeholder="ex: 192.168.1.1 or testhost.com">
 					</fieldset>
