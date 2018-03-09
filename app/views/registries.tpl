@@ -21,11 +21,11 @@
               <a href="/registries/{{$registry.Name}}/repositories">
                 <div class="white-bg box col-lg-4 col-md-6 col-sm-12 col-xs-12">
                   <div class="col-lg-12">
-                    <div class="box-container">
-                      <div class="box-header">
+                    <div>
+                      <div class="box-header row">
                         <h2>{{$registry.Name}}</h2>
                       </div>
-                      <div class="box-body col-md-12 border-between">
+                      <div class="box-body row border-between">
                         <div class="col-md-4 metric">
                           <h3 class="metric-value">{{len $registry.Repositories}}</h3>
                           <small>{{ $repoCount := len $registry.Repositories }}
@@ -57,7 +57,7 @@
                           </small>
                         </div>
                       </div>
-                      <div class="box-footer">
+                      <div class="box-footer row">
                         {{if eq $registry.Status "UP" }}
                           <span class="label label-success text-capitalize">{{$registry.Status}}</span>
                         {{else}}
@@ -66,7 +66,6 @@
                         {{if ne $registry.IP "" }}
                           <span class="label label-info">{{$registry.IP}}</span>
                         {{ end }}
-                        <span class="label label-info text-capitalize">{{$registry.Version}}</span>
                         <span class="label label-info text-uppercase">{{$registry.Scheme}}</span>
                         {{if ne $registry.Pushes 0 }}
                           <span class="label label-info">{{$registry.Pushes}} Pushes</span>
@@ -77,7 +76,7 @@
                         {{if ne $registry.TTL 0 }}
                           <span class="label label-info">Refresh Rate: {{$registry.TTL}}</span>
                         {{ end }}
-                          <span class="label label-info">Last Refresh: {{timeAgo $registry.LastRefresh}}</span>
+                          <span class="label label-info">Refreshed: {{timeAgo $registry.LastRefresh}}</span>
                       </div>
                     </div>
                   </div>
