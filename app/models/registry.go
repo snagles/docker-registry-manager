@@ -187,7 +187,7 @@ func (r *Registry) Refresh() {
 		r.ip = ip[0]
 	}
 
-	logrus.Info("Refreshing " + r.URL)
+	logrus.Info("Refreshing " + r.Name)
 	// Get the list of repositories
 	repos, err := r.Registry.Repositories()
 	if err != nil {
