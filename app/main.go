@@ -2,18 +2,12 @@ package main
 
 import (
 	"fmt"
-	"net/url"
 	"os"
-	"path"
-	"path/filepath"
-	"runtime"
-	"time"
 
 	"github.com/astaxie/beego"
 	"github.com/sirupsen/logrus"
 	"github.com/snagles/docker-registry-manager/app/models"
 	_ "github.com/snagles/docker-registry-manager/app/routers"
-	"github.com/spf13/viper"
 	"github.com/urfave/cli"
 )
 
@@ -73,36 +67,12 @@ func main() {
 	}
 
 	app.Action = func(ctx *cli.Context) {
-		c, err := parseRegistries(registriesFile)
+
+		manager.AllRegistries.LoadConfig(registriesFile)
+
+		err := setlevel(logLevel)
 		if err != nil {
 			logrus.Fatal(err)
-		}
-
-		err = setlevel(logLevel)
-		if err != nil {
-			logrus.Fatal(err)
-		}
-
-		for name, r := range c.Registries {
-			if r.URL != "" {
-				url, err := url.Parse(r.URL)
-				if err != nil {
-					logrus.Fatalf("Failed to parse registry from the passed url (%s): %s", r.URL, err)
-				}
-				duration, err := time.ParseDuration(r.RefreshRate)
-				if err != nil {
-					logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
-				}
-				if r.Password != "" && r.Username != "" {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), name, r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
-						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
-					}
-				} else {
-					if _, err := manager.AddRegistry(url.Scheme, url.Hostname(), name, "", "", r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
-						logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
-					}
-				}
-			}
 		}
 
 		// Beego configuration
@@ -161,50 +131,4 @@ func setlevel(level string) error {
 		return fmt.Errorf("Unrecognized log level: %s", level)
 	}
 	return nil
-}
-
-type registries struct {
-	Registries map[string]struct {
-		URL                  string
-		Port                 int
-		Username             string
-		Password             string
-		SkipTLS              bool   `mapstructure:"skip-tls-validation"`
-		RefreshRate          string `mapstructure:"refresh-rate"`
-		DockerhubIntegration bool   `mapstructure:"dockerhub-integration"`
-	} `mapstructure:"registries"`
-}
-
-func parseRegistries(registriesFile string) (*registries, error) {
-	v := viper.New()
-
-	// If the registries path is not passed use the default project dir
-	if registriesFile != "" {
-		v.AddConfigPath(path.Dir(registriesFile))
-		base := path.Base(registriesFile)
-		ext := path.Ext(registriesFile)
-		v.SetConfigName(base[0 : len(base)-len(ext)])
-		logrus.Infof("Using registries located in %s with file name %s", path.Dir(registriesFile), base[0:len(base)-len(ext)])
-	} else {
-		v.SetConfigName("registries")
-		var root string
-		_, r, _, ok := runtime.Caller(0)
-		if ok {
-			root = filepath.Dir(r)
-			v.AddConfigPath(root)
-		} else {
-			logrus.Fatalf("Failed to get runtime caller for parser")
-		}
-		logrus.Infof("Using registries located in %s with file name %s", root, "registries.yml")
-	}
-
-	if err := v.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("Failed to read in registries file: %s", err)
-	}
-
-	c := registries{}
-	if err := v.Unmarshal(&c); err != nil {
-		return nil, fmt.Errorf("Unable to unmarshal registries file: %s", err)
-	}
-	return &c, nil
 }
