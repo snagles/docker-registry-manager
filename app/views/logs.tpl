@@ -2,12 +2,12 @@
 {{define "body"}}
   <div class="right-content-container">
     <div class="header">
-      <ol class="breadcrumb">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li class="active">Logs</li>
-      </ol>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active"><a aria-current="page">Logs</a></li>
+        </ol>
+      </nav>
     </div>
     <div class="row">
       <div class="col-md-12">

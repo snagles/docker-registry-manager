@@ -81,13 +81,17 @@ ul {list-style-type: none;}
   height: 50px;
   background-color: #fff;
   box-shadow: 0 1px 1px rgba(0,0,0,0.06);
-  padding: 0 27px;
   position: fixed;
   top: 0px;
   left: 200px;
   z-index: 101;
   transition: left .0001s .48s;
   width: calc(100vw - 200px);
+  font-size: 15px;
+}
+
+.header .breadcrumb {
+  margin-top: 0px;
 }
 
 /*
