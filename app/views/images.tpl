@@ -33,7 +33,7 @@
           </li>
           <div id="keywords" style="float:right;">
             {{range $keyword, $keywordInfo := .labels}}
-              <a class="label keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}">
+              <a class="badge keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}">
                 <i class="fa {{$keywordInfo.Icon}}"></i>
                 {{$keyword}}</a>
             {{end}}

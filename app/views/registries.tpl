@@ -57,24 +57,24 @@
                       </div>
                       <div class="box-footer row">
                         {{if eq $registry.Status "UP" }}
-                          <span class="label label-success text-capitalize">{{$registry.Status}}</span>
+                          <span class="badge badge-success text-capitalize">{{$registry.Status}}</span>
                         {{else}}
-                          <span class="label label-danger text-capitalize">{{$registry.Status}}</span>
+                          <span class="badge badge-danger text-capitalize">{{$registry.Status}}</span>
                         {{ end }}
                         {{if ne $registry.IP "" }}
-                          <span class="label label-info">{{$registry.IP}}</span>
+                          <span class="badge badge-info">{{$registry.IP}}</span>
                         {{ end }}
-                        <span class="label label-info text-uppercase">{{$registry.Scheme}}</span>
+                        <span class="badge badge-info text-uppercase">{{$registry.Scheme}}</span>
                         {{if ne $registry.Pushes 0 }}
-                          <span class="label label-info">{{$registry.Pushes}} Pushes</span>
+                          <span class="badge badge-info">{{$registry.Pushes}} Pushes</span>
                         {{ end }}
                         {{if ne $registry.Pulls 0 }}
-                          <span class="label label-info">{{$registry.Pulls}} Pulls</span>
+                          <span class="badge badge-info">{{$registry.Pulls}} Pulls</span>
                         {{ end }}
                         {{if ne $registry.TTL 0 }}
-                          <span class="label label-info">Refresh Rate: {{$registry.TTL}}</span>
+                          <span class="badge badge-info">Refresh Rate: {{$registry.TTL}}</span>
                         {{ end }}
-                          <span class="label label-info">Refreshed: {{timeAgo $registry.LastRefresh}}</span>
+                          <span class="badge badge-info">Refreshed: {{timeAgo $registry.LastRefresh}}</span>
                       </div>
                     </div>
                   </div>
