@@ -251,11 +251,18 @@ table.dataTable thead th.sorting_desc:after {
   display:inline-block;
   font-size: 11px;
   margin-top:13px;
+  color: white;
 }
 
 .keyword-label i{
   font-size: 17px;
+  color: white;
 }
+
+.keyword-label span{
+  color: white;
+}
+
 
 div.tooltip-inner {
     max-width: 600px;

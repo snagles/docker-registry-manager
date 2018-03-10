@@ -26,7 +26,7 @@
                       <div class="box-body row border-between">
                         <div class="col-md-4 metric">
                           <h3 class="metric-value">{{len $registry.Repositories}}</h3>
-                          <small>{{ $repoCount := len $registry.Repositories }}
+                          <small class="text-muted">{{ $repoCount := len $registry.Repositories }}
                             {{ if eq $repoCount 1 }}
                               Repository
                             {{else}}
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-md-4 metric">
                           <h3 class="metric-value">{{$registry.TagCount}}</h3>
-                          <small>{{ $tagCount := $registry.TagCount }}
+                          <small class="text-muted">{{ $tagCount := $registry.TagCount }}
                             {{ if eq $tagCount 1 }}
                               Tag
                             {{else}}
@@ -46,7 +46,7 @@
                         </div>
                         <div class="col-md-4 metric">
                           <h3 class="metric-value">{{$registry.LayerCount}}</h4>
-                          <small>{{ $layerCount := $registry.LayerCount }}
+                          <small class="text-muted">{{ $layerCount := $registry.LayerCount }}
                             {{ if eq $layerCount 1 }}
                               Layer
                             {{else}}
