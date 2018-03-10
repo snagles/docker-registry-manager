@@ -53,10 +53,10 @@ func (c *RegistriesController) AddRegistry() {
 
 	ttl := time.Duration(interval) * time.Second
 
-	_, err = manager.AddRegistry(scheme, host, name, "", "", port, ttl, skipTLS, dockerhubIntegration)
-	if err != nil {
+	if err := manager.AllRegistries.AddRegistry(scheme, host, name, "", "", port, ttl, skipTLS, dockerhubIntegration); err != nil {
 		c.CustomAbort(404, err.Error())
 	}
+	manager.AllRegistries.WriteConfig()
 	c.Ctx.Redirect(302, "/registries")
 }
 
@@ -102,7 +102,6 @@ func (c *RegistriesController) RegistryStatus() {
 	res.IsAvailable = true
 	c.Data["json"] = &res
 	c.ServeJSON()
-
 }
 
 // Refresh refreshes the passed registry

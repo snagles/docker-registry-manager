@@ -5,6 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"net/url"
+	"path"
+	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -13,6 +17,7 @@ import (
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
 	"github.com/sirupsen/logrus"
 	client "github.com/snagles/docker-registry-client/registry"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -31,41 +36,150 @@ func init() {
 // Registries contains a map of all active registries identified by their name, locked when necessary
 type Registries struct {
 	Registries map[string]*Registry
+	*viper.Viper
 	sync.Mutex
 }
 
+type registriesConfig struct {
+	URL                  string
+	Port                 int
+	Username             string
+	Password             string
+	SkipTLS              bool   `mapstructure:"skip-tls-validation" yaml:"skip-tls-validation"`
+	RefreshRate          string `mapstructure:"refresh-rate" yaml:"refresh-rate"`
+	DockerhubIntegration bool   `mapstructure:"dockerhub-integration" yaml:"dockerhub-integration"`
+}
+
+// AddRegistry adds the registry to the all registries map its details
+func (rs *Registries) AddRegistry(scheme, host, name, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) error {
+	r, err := NewRegistry(scheme, host, name, user, password, port, ttl, skipTLS, dockerhubIntegration)
+	if err != nil {
+		return err
+	}
+	AllRegistries.Lock()
+	AllRegistries.Registries[r.Name] = r
+	AllRegistries.Unlock()
+	logrus.Infof("Added new registry: %s", name)
+	return nil
+}
+
+// RemoveRegistry removes the registry from the all registries map using its name
+func (rs *Registries) RemoveRegistry(name string) {
+	AllRegistries.Lock()
+	AllRegistries.Registries[name].Ticker.Stop()
+	AllRegistries.Registries[name].StopRefresh <- false
+	delete(AllRegistries.Registries, name)
+	AllRegistries.Unlock()
+	logrus.Infof("Removed registry: %s", name)
+}
+
+// LoadConfig adds the registries parsed from the passed yaml file
+func (rs *Registries) LoadConfig(registriesFile string) {
+	if rs.Viper == nil {
+		rs.Viper = viper.New()
+	}
+
+	// If the registries path is not passed use the default project dir
+	if registriesFile != "" {
+		rs.AddConfigPath(path.Dir(registriesFile))
+		base := path.Base(registriesFile)
+		ext := path.Ext(registriesFile)
+		rs.SetConfigName(base[0 : len(base)-len(ext)])
+		logrus.Infof("Using registries located in %s with file name %s", path.Dir(registriesFile), base[0:len(base)-len(ext)])
+	} else {
+		rs.SetConfigName("registries")
+		var root string
+		_, run, _, ok := runtime.Caller(0)
+		if ok {
+			root = filepath.Dir(run)
+			rs.AddConfigPath(root)
+		} else {
+			logrus.Fatalf("Failed to get runtime caller for parser")
+		}
+		logrus.Infof("Using registries located in %s with file name %s", root, "registries.yml")
+	}
+
+	config := make(map[string]map[string]registriesConfig)
+
+	if err := rs.ReadInConfig(); err != nil {
+		logrus.Fatalf("Failed to read in registries file: %s", err)
+	}
+
+	if err := rs.Unmarshal(&config); err != nil {
+		logrus.Fatalf("Unable to unmarshal registries file: %s", err)
+	}
+
+	// overwrite the entries with the updated information
+	for name, r := range config["registries"] {
+		if r.URL != "" {
+			url, err := url.Parse(r.URL)
+			if err != nil {
+				logrus.Fatalf("Failed to parse registry from the passed url (%s): %s", r.URL, err)
+			}
+			duration, err := time.ParseDuration(r.RefreshRate)
+			if err != nil {
+				logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
+			}
+			if err := AllRegistries.AddRegistry(url.Scheme, url.Hostname(), name, r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
+				logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
+			}
+		}
+	}
+}
+
+// WriteConfig builds the config and writes from the map of registries
+func (rs *Registries) WriteConfig() error {
+	config := make(map[string]registriesConfig)
+	for name, r := range AllRegistries.Registries {
+		config[name] = registriesConfig{
+			URL:                  r.URL,
+			Port:                 r.Port,
+			Username:             r.Username,
+			Password:             r.Password,
+			SkipTLS:              r.SkipTLS,
+			RefreshRate:          r.TTL.String(),
+			DockerhubIntegration: r.DockerhubIntegration,
+		}
+	}
+
+	rs.Set("registries", config)
+	logrus.Info("Writing config with new/removed registries")
+	return rs.Viper.WriteConfig()
+}
+
+// Registry contains all information about the registry and its metadata
 type Registry struct {
 	*client.Registry
 	Repositories         map[string]*Repository
 	TTL                  time.Duration
 	Ticker               *time.Ticker
+	StopRefresh          chan (bool)
 	Name                 string
+	Username             string
+	Password             string
 	Host                 string
 	Scheme               string
 	Version              string
 	Port                 int
 	DockerhubIntegration bool
+	SkipTLS              bool
 	LastRefresh          time.Time
 	status               string
 	ip                   string
-	sync.Mutex
 }
 
+// IP returns the ip as a string
 func (r *Registry) IP() string {
 	return r.ip
 }
 
 // Refresh is called with the configured TTL time for the given registry
 func (r *Registry) Refresh() {
-
-	// Copy the registry information to a new object, and update it
-	ur := *r
-
 	err := r.Ping()
 	if err != nil {
-		ur.status = StatusDown
+		r.status = StatusDown
 	} else {
-		ur.status = StatusUp
+		r.status = StatusUp
 	}
 
 	ip, _ := net.LookupHost(r.Host)
@@ -75,23 +189,23 @@ func (r *Registry) Refresh() {
 
 	logrus.Info("Refreshing " + r.URL)
 	// Get the list of repositories
-	repos, err := ur.Registry.Repositories()
+	repos, err := r.Registry.Repositories()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Error": err.Error(),
-		}).Error("Failed to retrieve an updated list of repositories for " + ur.URL)
+		}).Error("Failed to retrieve an updated list of repositories for " + r.URL)
 	}
 	// Get the repository information
-	ur.Repositories = make(map[string]*Repository)
+	r.Repositories = make(map[string]*Repository)
 	for _, repoName := range repos {
 
 		// Get the list of tags for the repository
-		tags, err := ur.Tags(repoName)
+		tags, err := r.Tags(repoName)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"Error":           err.Error(),
 				"Repository Name": repoName,
-			}).Error("Failed to retrieve an updated list of tags for " + ur.URL)
+			}).Error("Failed to retrieve an updated list of tags for " + r.URL)
 			continue
 		}
 
@@ -101,18 +215,18 @@ func (r *Registry) Refresh() {
 
 			// Using v2 required getting the manifest then retrieving the blob
 			// for the config digest
-			man, err := ur.Manifest(repoName, tagName)
+			man, err := r.Manifest(repoName, tagName)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"Error":           err.Error(),
 					"Repository Name": repoName,
 					"Tag Name":        tagName,
-				}).Error("Failed to retrieve manifest information for " + ur.URL)
+				}).Error("Failed to retrieve manifest information for " + r.URL)
 				continue
 			}
 
 			// Get the v1 config information
-			v1Bytes, err := ur.ManifestMetadata(repoName, man.Config.Digest)
+			v1Bytes, err := r.ManifestMetadata(repoName, man.Config.Digest)
 			if err != nil {
 				logrus.Error(err)
 				continue
@@ -142,23 +256,21 @@ func (r *Registry) Refresh() {
 			}
 
 			// Get the tag size information from the manifest layers
-			size, err := ur.CalculateTagSize(man)
+			size, err := r.CalculateTagSize(man)
 			if err != nil {
 				logrus.Error(err)
 			}
 
 			repo.Tags[tagName] = &Tag{Name: tagName, V1Compatibility: &v1, Size: int64(size), DeserializedManifest: man}
 		}
-		ur.Repositories[repoName] = &repo
+		r.Repositories[repoName] = &repo
 	}
 
-	ur.LastRefresh = time.Now().UTC()
-	AllRegistries.Lock()
-	AllRegistries.Registries[ur.Name] = &ur
-	AllRegistries.Unlock()
+	r.LastRefresh = time.Now().UTC()
+	AllRegistries.Registries[r.Name] = r
 }
 
-// TagCount returns the total number of tags across all repositories
+// CalculateTagSize returns the total number of tags across all repositories
 func (r *Registry) CalculateTagSize(deserialized *manifestV2.DeserializedManifest) (size int64, err error) {
 	size = int64(0)
 	for _, layer := range deserialized.Layers {
@@ -175,7 +287,7 @@ func (r *Registry) TagCount() (count int) {
 	return count
 }
 
-// TagCount returns the total number of layers across all repositories
+// LayerCount returns the total number of layers across all repositories
 func (r *Registry) LayerCount() int {
 	layerDigests := make(map[string]struct{})
 	for _, repo := range r.Repositories {
@@ -228,9 +340,9 @@ func (r *Registry) Status() string {
 	return r.status
 }
 
-// AddRegistry adds the new registry for viewing in the interface and sets up
+// NewRegistry adds the new registry for viewing in the interface and sets up
 // the go routine for automatic refreshes
-func AddRegistry(scheme, host, name, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
+func NewRegistry(scheme, host, name, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
 	switch {
 	case scheme == "":
 		return nil, errors.New("Invalid scheme: " + scheme)
@@ -261,21 +373,28 @@ func AddRegistry(scheme, host, name, user, password string, port int, ttl time.D
 		Registry:             hub,
 		TTL:                  ttl,
 		Ticker:               time.NewTicker(ttl),
+		StopRefresh:          make(chan bool, 1),
 		Host:                 host,
 		Scheme:               scheme,
+		Username:             user,
+		Password:             password,
 		Port:                 port,
 		Version:              "v2",
 		Name:                 name,
-		status:               StatusDown,
+		SkipTLS:              skipTLS,
 		DockerhubIntegration: dockerhubIntegration,
 	}
-	r.Refresh()
 
+	r.Refresh()
 	go func() {
-		for range r.Ticker.C {
-			r.Refresh()
+		for {
+			select {
+			case <-r.Ticker.C:
+				r.Refresh()
+			case <-r.StopRefresh:
+				return
+			}
 		}
 	}()
-
-	return AllRegistries.Registries[r.Name], nil
+	return &r, nil
 }
