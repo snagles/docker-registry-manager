@@ -14,12 +14,12 @@
         </ol>
       </nav>
     </div>
-    <div class="row">
-      <div class="row ml-5 col-md-12">
+    <div class="row-fluid">
+      <div class="ml-2">
         <h1>{{.tagName}} <small class="text-muted"> {{.repositoryName}}</small></h1>
       </div>
     </div>
-    <div class="container-fluid-width row ml-5 mr-4">
+    <div class="container-fluid-width row ml-2 mr-4">
       <div class="content-block white-bg col-lg-7 col-md-12 col-sm-12">
           <div class="container">
             <div class="row">
