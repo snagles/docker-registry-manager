@@ -263,6 +263,10 @@ table.dataTable thead th.sorting_desc:after {
   color: white;
 }
 
+.borderless thead tr th {
+  border-top: 0px!important;
+}
+
 
 div.tooltip-inner {
     max-width: 600px;

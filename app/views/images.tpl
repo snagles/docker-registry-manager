@@ -139,8 +139,8 @@
               </div>
             </div>
             <div role="tabpanel" class="tab-pane table-responsive" id="build">
-              <table id="datatable" class="table" cellspacing="0" width="100%">
-                <thead class="border-0">
+              <table id="datatable" class="table borderless" cellspacing="0" width="100%">
+                <thead>
                   <th>Stage</th>
                   <th>Digest</th>
                   <th>Command</th>
