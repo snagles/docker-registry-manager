@@ -56,52 +56,43 @@
       </div>
     </div>
     <div class="content-block white-bg">
-      <div class="row">
-        <ul class="nav nav-tabs" role="tablist" style="margin-bottom:20px;">
-          <li role="presentation" class="active">
-            <a href="#stats" aria-controls="overview" role="tab" data-toggle="tab">Requests</a>
-          </li>
-        </ul>
-        <div role="tabpanel" class="tab-pane" id="stats">
-          <table id="stats-datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-            <thead>
-              <tr>
-                <th>Method</th>
-                <th>Request URL</th>
-                <th>Average Time</th>
-                <th>Max Time</th>
-                <th>Min Time</th>
-                <th>Total Time</th>
-                <th>Request Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{range $i, $stat := .stats}}
-                <tr>
-                  <td>{{index $stat "method"}}</td>
-                  <td>{{index $stat "request_url"}}</td>
-                  <td data-order="{{statToSeconds (index $stat `avg_time`)}}">{{index $stat "avg_time"}}</td>
-                  <td data-order="{{statToSeconds (index $stat `max_time`)}}">{{index $stat "max_time"}}</td>
-                  <td data-order="{{statToSeconds (index $stat `min_time`)}}">{{index $stat "min_time"}}</td>
-                  <td data-order="{{statToSeconds (index $stat `total_time`)}}">{{index $stat "total_time"}}</td>
-                  <td>{{index $stat "times"}}</td>
-                </tr>
-              {{end}}
-            </tbody>
-            <tfoot>
-              <tr>
-                <th>Method</th>
-                <th>Request URL</th>
-                <th>Average Time</th>
-                <th>Max Time</th>
-                <th>Min Time</th>
-                <th>Total Time</th>
-                <th>Request Count</th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
+      <table id="stats-datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Request URL</th>
+            <th>Average Time</th>
+            <th>Max Time</th>
+            <th>Min Time</th>
+            <th>Total Time</th>
+            <th>Request Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range $i, $stat := .stats}}
+            <tr>
+              <td>{{index $stat "method"}}</td>
+              <td>{{index $stat "request_url"}}</td>
+              <td data-order="{{statToSeconds (index $stat `avg_time`)}}">{{index $stat "avg_time"}}</td>
+              <td data-order="{{statToSeconds (index $stat `max_time`)}}">{{index $stat "max_time"}}</td>
+              <td data-order="{{statToSeconds (index $stat `min_time`)}}">{{index $stat "min_time"}}</td>
+              <td data-order="{{statToSeconds (index $stat `total_time`)}}">{{index $stat "total_time"}}</td>
+              <td>{{index $stat "times"}}</td>
+            </tr>
+          {{end}}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Method</th>
+            <th>Request URL</th>
+            <th>Average Time</th>
+            <th>Max Time</th>
+            <th>Min Time</th>
+            <th>Total Time</th>
+            <th>Request Count</th>
+          </tr>
+        </tfoot>
+      </table>
     </div>
   </div>
 
@@ -132,10 +123,10 @@
         dom: "<'row'<'col-sm-3'l><'col-sm-6'B><'col-sm-3'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         buttons: [
           {
-            text: '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-edit"></i> Log Level: <span id="active-level">{{.activeLevel}} </span><span class="caret"> </span></but' +
+            text: '<button class="btn align-items-center btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-edit"></i> Log Level: <span id="active-level">{{.activeLevel}} </span><span class="caret"> </span></but' +
                 'ton> <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> {{ range $i, $level :=.allLevels }} <li><a class="dropdown-item" data-level="{{$level}}" href="#">{{$level}}</a></li> {{ end }} </ul>'
           }, {
-            text: '<button id="archive-logs" type="button" class="btn btn-default btn-group" style="margin-right:5px"><i class="fa fa-archive"></i> Archive Logs</button>',
+            text: '<button id="archive-logs" type="button" class="btn align-items-center btn-secondary btn-group" style="margin-right:5px"><i class="fa fa-archive"></i> &nbsp Archive Logs</button>',
             action: function (e, dt, node, config) {
               e.preventDefault();
               $.ajax({
@@ -154,9 +145,9 @@
               });
             }
           }, {
-            text: '<button href="/logs/json" download="logs.json" class="btn btn-default btn-group" style="margin-right:5px" download><i class="fa fa-download"></i> Download Logs</button>'
+            text: '<button href="/logs/json" download="logs.json" class="btn align-items-center btn-secondary btn-group" style="margin-right:5px" download><i class="align-middle fa fa-download"></i> &nbsp Download Logs</button>'
           }, {
-            text: '<button id="clear-logs" type="button" class="btn btn-danger btn-group"><i class="fa fa-trash"></i> Clear Logs</button>',
+            text: '<button id="clear-logs" type="button" class="btn align-items-center btn-danger btn-group"><i class="fa fa-trash"></i> &nbsp Clear Logs</button>',
             action: function (e, dt, node, config) {
               e.preventDefault();
               $.ajax({
