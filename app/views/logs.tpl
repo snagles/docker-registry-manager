@@ -123,10 +123,10 @@
         dom: "<'row'<'col-sm-3'l><'col-sm-6'B><'col-sm-3'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         buttons: [
           {
-            text: '<button class="btn align-items-center btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-edit"></i> Log Level: <span id="active-level">{{.activeLevel}} </span><span class="caret"> </span></but' +
+            text: '<button class="btn mb-1  align-items-center btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-edit"></i> Log Level: <span id="active-level">{{.activeLevel}} </span><span class="caret"> </span></but' +
                 'ton> <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> {{ range $i, $level :=.allLevels }} <li><a class="dropdown-item" data-level="{{$level}}" href="#">{{$level}}</a></li> {{ end }} </ul>'
           }, {
-            text: '<button id="archive-logs" type="button" class="btn align-items-center btn-secondary btn-group" style="margin-right:5px"><i class="fa fa-archive"></i> &nbsp Archive Logs</button>',
+            text: '<button id="archive-logs" type="button" class="btn mb-1  align-items-center btn-secondary btn-group" style="margin-right:5px"><i class="fa fa-archive"></i> &nbsp Archive Logs</button>',
             action: function (e, dt, node, config) {
               e.preventDefault();
               $.ajax({
@@ -145,9 +145,9 @@
               });
             }
           }, {
-            text: '<button href="/logs/json" download="logs.json" class="btn align-items-center btn-secondary btn-group" style="margin-right:5px" download><i class="align-middle fa fa-download"></i> &nbsp Download Logs</button>'
+            text: '<button href="/logs/json" download="logs.json" class="btn mb-1  align-items-center btn-secondary btn-group" style="margin-right:5px" download><i class="align-middle fa fa-download"></i> &nbsp Download Logs</button>'
           }, {
-            text: '<button id="clear-logs" type="button" class="btn align-items-center btn-danger btn-group"><i class="fa fa-trash"></i> &nbsp Clear Logs</button>',
+            text: '<button id="clear-logs" type="button" class="btn mb-1  align-items-center btn-danger btn-group"><i class="fa fa-trash"></i> &nbsp Clear Logs</button>',
             action: function (e, dt, node, config) {
               e.preventDefault();
               $.ajax({
