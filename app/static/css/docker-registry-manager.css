@@ -141,18 +141,16 @@ ul {list-style-type: none;}
   margin-top: 10px;
 }
 
-.badge {
+.btn-orange {
+  color: #FFF;
   background-color:#FF5722;
 }
 
 .add-new {
   background-color: white;
-  border: 1px solid #e3e3e3;
   height: 150px;
-  margin-top: 50px;
   cursor: pointer;
   width: 150px;
-  margin-left: 115px;
   border-radius: 4px
 }
 
@@ -160,11 +158,24 @@ ul {list-style-type: none;}
   display: inline-block!important;
   font-size: 140px!important;
   line-height: 160px!important;
+  border: 1px solid rgb(222, 226, 230);
   height: 150px;
   width:150px;
   text-align: center;
   vertical-align: bottom;
   color: #adadad;
+}
+
+.card-columns {
+  @include media-breakpoint-only(lg) {
+    column-count: 4;
+  }
+  @include media-breakpoint-only(md) {
+    column-count: 2;
+  }
+  @include media-breakpoint-only(sm) {
+    column-count: 1;
+  }
 }
 
 .box {
