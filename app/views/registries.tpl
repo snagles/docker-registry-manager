@@ -31,7 +31,7 @@
             </div>
           </div>
        {{end}}
-        <div class="card d-flex bg-light justify-content-center align-text-middle">
+        <div class="card d-flex bg-light justify-content-center align-text-middle" style="min-height:275px">
           <div type="button" class="add-new align-self-center" data-toggle="modal" data-target="#new-registry-modal">
             <i class="fa fa-plus add-new-icon"></i>
           </div>

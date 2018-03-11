@@ -1,10 +1,10 @@
 <div id="new-registry-modal" class="modal fade" role="dialog">
-	<div class="modal-dialog" style="z-index:999">
+	<div class="modal-dialog" role="document" style="z-index:999">
 		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title">Add new registry</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
 			</div>
 			<div class="modal-body">
 				<form id="registry-form" action="/registries/add" method="post">
@@ -21,19 +21,22 @@
 						<input type="text" class="form-control" id="port-input" name="port" placeholder="default: 5000">
 					</fieldset>
 					<fieldset class="form-group">
-						<label for="scheme-input">Scheme</label>
-						<div class="form-check form-check-inline">
-							<label id="http" class="radio-inline">
-								<input type="radio" name="scheme" value="http">HTTP
-							</label>
-							<label id="https" class="radio-inline">
-								<input type="radio" name="scheme" value="https">HTTPS
-							</label>
+						<div for="scheme-input">Scheme</div>
+						<div>
+							<div class="form-check form-check-inline" id="http" class="radio-inline">
+								<input class="form-check-input" type="radio" checked name="scheme" id="scheme" value="http">
+								<label class="form-check-label" for="http">HTTP</label>
+							</div>
+							<div  class="form-check form-check-inline" id="https" class="radio-inline">
+								<input class="form-check-input" type="radio" name="scheme" id="scheme" value="https">
+								<label class="form-check-label" for="https">HTTPS</label>
+							</div>
 						</div>
 						<div id="use-insecure" class="alert alert-danger" style="margin-top:10px; display:none;">
-							<label class="checkbox-inline">
-								<input type="checkbox" name="skip-tls-validation">Skip TLS Validation (required for self signed certs)
-							</label>
+							<div class="form-check form-check-inline" id="http" class="radio-inline">
+								<input class="form-check-input" type="checkbox" name="skip-tls-validation">
+								<label class="form-check-label" for="skip-tls-validation">Skip TLS Validation (required for self signed certs)</label>
+							</div>
 						</div>
 					</fieldset>
 					<fieldset class="form-group">
@@ -41,9 +44,11 @@
 						<input type="text" class="form-control" id="interval-input" name="interval" placeholder="default: 60">
 					</fieldset>
 					<fieldset class="form-group">
-						<label class="checkbox-inline">
-							<input type="checkbox" name="dockerhub-integration">Use dockerhub for image comparison
-						</label>
+						<div class="form-check form-check-inline" id="http" class="radio-inline">
+							<input class="form-check-input" type="checkbox" name="dockerhub-integration">
+							<label class="form-check-label" for="skip-tls-validation">Compare images to hub.docker.com</label>
+						</div>
+						<small class="form-text text-muted">Every image tag is queried using the hub.docker.com API, and then compares layers and sizes</small>
 					</fieldset>
 					<div class="modal-footer">
 						<button style="float:left;" type="button" id="test" class="btn btn-warning">Test</button>
@@ -57,6 +62,10 @@
 </div>
 
 <script>
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	});
+
 	$('#https').click(function () {
 		$("#use-insecure").show();
 	});
