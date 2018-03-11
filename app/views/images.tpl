@@ -21,22 +21,26 @@
     </div>
     <div class="container-fluid-width row ml-5 mr-4">
       <div class="content-block white-bg col-lg-7 col-md-12 col-sm-12">
-          <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#build" aria-controls="build" role="tab" data-toggle="tab">Build</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#inspect" aria-controls="inspect" role="tab" data-toggle="tab">Inspect</a>
-            </li>
-            <div id="keywords" style="float:right;">
-              {{range $keyword, $keywordInfo := .labels}}
-                <a class="badge keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}"> <i class="fa {{$keywordInfo.Icon}}"></i> <span>{{$keyword}}</span></a>
-              {{end}}
+          <div class="container">
+            <div class="row">
+              <ul class="nav nav-tabs col-lg-5" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#build" aria-controls="build" role="tab" data-toggle="tab">Build</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#inspect" aria-controls="inspect" role="tab" data-toggle="tab">Inspect</a>
+                </li>
+              </ul>
+              <div id="keywords" class="col border-bottom">
+                {{range $keyword, $keywordInfo := .labels}}
+                  <a class="pull-right badge keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}"> <i class="fa {{$keywordInfo.Icon}}"></i> <span>{{$keyword}}</span></a>
+                {{end}}
+              </div>
             </div>
-          </ul>
+          </div>
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active border-between" id="overview">
               <div class="container">
