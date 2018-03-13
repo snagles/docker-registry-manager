@@ -34,9 +34,9 @@
                   <a class="nav-link disabled" href="#inspect" aria-controls="inspect" role="tab" data-toggle="tab">Inspect</a>
                 </li>
               </ul>
-              <div id="keywords" class="col border-bottom">
+              <div id="keywords" class="col border-bottom d-flex justify-content-end align-items-center">
                 {{range $keyword, $keywordInfo := .labels}}
-                  <a class="pull-right badge keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}"> <i class="fa {{$keywordInfo.Icon}}"></i> <span>{{$keyword}}</span></a>
+                  <div class="ml-1 badge keyword-label {{$keywordInfo.Color}}" data-label-color="{{$keywordInfo.Color}}" data-keyword="{{$keyword}}"> <i class="fa {{$keywordInfo.Icon}}"></i> <span>{{$keyword}}</span></div>
                 {{end}}
               </div>
             </div>
