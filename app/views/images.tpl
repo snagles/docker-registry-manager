@@ -83,7 +83,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-10 border-0 card row">
+                    <div class="col-12 border-0 card row">
                       <div class="card-block mt-2">
                         <h7 class="pl-0 col-md-12">Dockerhub {{if .dockerHub.ImageURL}} <a href="{{.dockerHub.ImageURL}}"> <i style="vertical-align:bottom; color:black;" class="fa fa-external-link" aria-hidden="true"></i> </a> {{end}}</h7>
                         <div class="card bg-light rounded p-3">
