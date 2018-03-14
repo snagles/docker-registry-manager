@@ -50,10 +50,10 @@
 						</div>
 						<small class="form-text text-muted">Every image tag is queried using the hub.docker.com API, and then compares layers and sizes</small>
 					</fieldset>
-					<div class="modal-footer">
-						<button style="float:left;" type="button" id="test" class="btn btn-warning">Test</button>
-						<input type="submit" class="btn btn-success" id="add-registry" value="Submit">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+					<div class="modal-footer d-flex">
+					  <div class="mr-auto"><button type="button" id="test" class="d-flex justify-content-start btn btn-warning text-white">Test</button></div>
+					  <div><input type="submit" class="btn btn-success" id="add-registry" value="Submit"></div>
+					  <div><button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button></div>
 					</div>
 				</form>
 			</div>

@@ -16,7 +16,7 @@
 	</div>
 	<div class="content-block white-bg">
 		<div class="row">
-			<table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+			<table id="datatable" class="table table-striped table-borderless" cellspacing="0" width="100%">
 				<thead>
 					<th>Repository</th>
 					<th>Registry</th>
