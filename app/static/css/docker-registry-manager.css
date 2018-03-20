@@ -187,30 +187,10 @@ ul {list-style-type: none;}
   margin: 20px;
 }
 
-.box-header{
-  height:60px;
-  color:black;
-  text-align: center;
-}
-
-.box-body{
-  height:140px;
-}
-
-.box-footer{
-  text-align:center;
-}
-
 .metric-value {
+  text-overflow: ellipsis;
   font-size: 40px;
   color:#FF5722;
-}
-
-.metric{
-  margin-top: 10px;
-  padding-bottom: 10px;
-  text-align: center;
-  color: #737373;
 }
 
 .well-box {

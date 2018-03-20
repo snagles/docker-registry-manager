@@ -166,6 +166,47 @@ type Registry struct {
 	LastRefresh          time.Time
 	status               string
 	ip                   string
+	History              []RegistryHistory
+}
+
+func (r *Registry) HistoryTimes() []time.Time {
+	var hs []time.Time
+	for i := range r.History {
+		hs = append(hs, r.History[i].Time)
+	}
+	return hs
+}
+
+func (r *Registry) HistoryRepos() []int {
+	var hs []int
+	for i := range r.History {
+		hs = append(hs, r.History[i].Repositories)
+	}
+	return hs
+}
+
+func (r *Registry) HistoryLayers() []int {
+	var hs []int
+	for i := range r.History {
+		hs = append(hs, r.History[i].Layers)
+	}
+	return hs
+}
+
+func (r *Registry) HistoryTags() []int {
+	var hs []int
+	for i := range r.History {
+		hs = append(hs, r.History[i].Tags)
+	}
+	return hs
+}
+
+// RegistryHistory maintains a list of data points at a regular interval for plotting in the UI
+type RegistryHistory struct {
+	Repositories int
+	Layers       int
+	Tags         int
+	Time         time.Time
 }
 
 // IP returns the ip as a string
@@ -266,6 +307,23 @@ func (r *Registry) Refresh() {
 		r.Repositories[repoName] = &repo
 	}
 
+	n := time.Now().UTC()
+	// Add history at most every 15 minutes
+	if len(r.History) == 0 || n.Sub(r.History[len(r.History)-1].Time) >= (15*time.Minute) {
+		r.History = append(r.History, RegistryHistory{
+			Repositories: len(r.Repositories),
+			Tags:         r.TagCount(),
+			Layers:       r.LayerCount(),
+			Time:         n,
+		})
+	}
+
+	// purge everything older than 3 days
+	for i, h := range r.History {
+		if h.Time.Before(n.AddDate(0, -3, 0)) {
+			r.History = append(r.History[:i], r.History[i+1:]...)
+		}
+	}
 	r.LastRefresh = time.Now().UTC()
 	AllRegistries.Registries[r.Name] = r
 }

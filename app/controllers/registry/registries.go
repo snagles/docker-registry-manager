@@ -19,7 +19,6 @@ type RegistriesController struct {
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
 	c.Data["registries"] = manager.AllRegistries.Registries
-
 	// Index template
 	c.TplName = "registries.tpl"
 }
