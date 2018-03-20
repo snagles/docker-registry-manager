@@ -86,14 +86,26 @@
   </div>
 
   <script>
+  function padChart(times, values) {
+    if (times.length == 1) {
+      var data = {
+          labels: [times[0], times[0]],
+          datasets: [{ data: [values[0], values[0]] }]
+      }
+      return data
+    } else {
+      var data = {
+          labels: times,
+          datasets: [{ data: values }]
+      }
+      return data
+    }
+  }
   {{range $key, $registry := .registries}}
     const repos = document.getElementById('{{$registry.Name}}-repositories-chart').getContext('2d');
     const chart1 = new Chart(repos, {
       type: 'line',
-      data: {
-        labels: {{$registry.HistoryTimes}},
-        datasets: [{ data: {{$registry.HistoryRepos}} }]
-      },
+      data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryRepos}}),
       options: {
         responsive: true,
         legend: { display: false },
@@ -122,10 +134,7 @@
     const tags = document.getElementById('{{$registry.Name}}-tags-chart').getContext('2d');
     const chart2 = new Chart(tags, {
       type: 'line',
-      data: {
-        labels: {{$registry.HistoryTimes}},
-        datasets: [{ data: {{$registry.HistoryTags}} }]
-      },
+      data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryTags}}),
       options: {
         responsive: true,
         legend: { display: false },
@@ -152,10 +161,7 @@
     const layers = document.getElementById('{{$registry.Name}}-layers-chart').getContext('2d');
     const chart3 = new Chart(layers, {
       type: 'line',
-      data: {
-        labels: {{$registry.HistoryTimes}},
-        datasets: [{ data: {{$registry.HistoryLayers}} }]
-      },
+      data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryLayers}}),
       options: {
         responsive: true,
         legend: { display: false },
