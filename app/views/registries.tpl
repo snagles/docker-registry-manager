@@ -17,12 +17,13 @@
       <div class="card-deck">
         {{range $key, $registry := .registries}}
           <div class="card col-lg-5 pl-0 pr-0 gutterless">
-            <img class="card-img-top border-bottom bg-light" style="max-height:200px" src="http://1000logos.net/wp-content/uploads/2017/07/Docker-Logo-500x148.png" alt="Card image cap">
+            <div class="card-header bg-light">
+              <h3 class="card-title">
+                {{$registry.Name}}
+                <small class="text-muted">{{$registry.IP}}</small>
+              </h3>
+            </div>
             <div class="card-body">
-              <div class="row-fluid mb-4">
-                <h4 class="card-title">{{$registry.Name}}</h4>
-                <h5 class="card-subtitle mb-2 text-muted">{{$registry.IP}}</h5>
-              </div>
               <div class="container">
                 <div class="row">
                   <div class="col-lg-4 col-md-6 text-center border-right">
