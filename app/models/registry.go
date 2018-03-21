@@ -215,7 +215,7 @@ func (r *Registry) IP() string {
 }
 
 // Refresh is called with the configured TTL time for the given registry
-func (r *Registry) Refresh() {
+func (r Registry) Refresh() {
 	err := r.Ping()
 	if err != nil {
 		r.status = StatusDown
@@ -325,7 +325,7 @@ func (r *Registry) Refresh() {
 		}
 	}
 	r.LastRefresh = time.Now().UTC()
-	AllRegistries.Registries[r.Name] = r
+	AllRegistries.Registries[r.Name] = &r
 }
 
 // CalculateTagSize returns the total number of tags across all repositories
