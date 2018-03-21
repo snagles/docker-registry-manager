@@ -10,7 +10,7 @@
 				<form id="registry-form" action="/registries/add" method="post">
 					<fieldset class="form-group">
 						<label for="name-input">Name</label>
-						<input type="text" class="form-control" id="name-input" name="name" placeholder="registry 1">
+						<input type="text" class="form-control" id="name-input" name="name" placeholder="registry1">
 					</fieldset>
 					<fieldset class="form-group">
 						<label for="host-input">Host</label>
