@@ -18,7 +18,8 @@ func TestNewRegistry(t *testing.T) {
 		t.Fatalf("Failed to create test registry: %s", err)
 	}
 
-	AllRegistries.Add(r)
+	ur := r.Update()
+	AllRegistries.Add(&ur)
 
 	if tr, ok := AllRegistries.Registries["test"]; ok {
 		if tr.Status() != "UP" {
