@@ -13,10 +13,12 @@ func TestNewRegistry(t *testing.T) {
 	baseurl, env := testutils.SetupRegistry(t)
 	u, _ := url.Parse(baseurl)
 	port, _ := strconv.Atoi(u.Port())
-	err := AllRegistries.AddRegistry(u.Scheme, u.Hostname(), "test", "", "", port, 1*time.Minute, true, true)
+	r, err := NewRegistry(u.Scheme, u.Hostname(), "test", "", "", port, 1*time.Minute, true, true)
 	if err != nil {
-		t.Fatalf("Failed to add test registry: %s", err)
+		t.Fatalf("Failed to create test registry: %s", err)
 	}
+
+	AllRegistries.Add(r)
 
 	if tr, ok := AllRegistries.Registries["test"]; ok {
 		if tr.Status() != "UP" {

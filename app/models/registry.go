@@ -5,19 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"net"
-	"net/url"
-	"path"
-	"path/filepath"
-	"runtime"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
 	"github.com/sirupsen/logrus"
 	client "github.com/snagles/docker-registry-client/registry"
-	"github.com/spf13/viper"
 )
 
 const (
@@ -25,135 +19,11 @@ const (
 	StatusDown = "DOWN"
 )
 
-// AllRegistries contains a list of added registries using their hostnames
-// access granted via mutex locks/unlocks
-var AllRegistries Registries
-
-func init() {
-	AllRegistries.Registries = map[string]*Registry{}
-}
-
-// Registries contains a map of all active registries identified by their name, locked when necessary
-type Registries struct {
-	Registries map[string]*Registry
-	*viper.Viper
-	sync.Mutex
-}
-
-type registriesConfig struct {
-	URL                  string
-	Port                 int
-	Username             string
-	Password             string
-	SkipTLS              bool   `mapstructure:"skip-tls-validation" yaml:"skip-tls-validation"`
-	RefreshRate          string `mapstructure:"refresh-rate" yaml:"refresh-rate"`
-	DockerhubIntegration bool   `mapstructure:"dockerhub-integration" yaml:"dockerhub-integration"`
-}
-
-// AddRegistry adds the registry to the all registries map its details
-func (rs *Registries) AddRegistry(scheme, host, name, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) error {
-	r, err := NewRegistry(scheme, host, name, user, password, port, ttl, skipTLS, dockerhubIntegration)
-	if err != nil {
-		return err
-	}
-	AllRegistries.Lock()
-	AllRegistries.Registries[r.Name] = r
-	AllRegistries.Unlock()
-	logrus.Infof("Added new registry: %s", name)
-	return nil
-}
-
-// RemoveRegistry removes the registry from the all registries map using its name
-func (rs *Registries) RemoveRegistry(name string) {
-	AllRegistries.Lock()
-	AllRegistries.Registries[name].Ticker.Stop()
-	AllRegistries.Registries[name].StopRefresh <- false
-	delete(AllRegistries.Registries, name)
-	AllRegistries.Unlock()
-	logrus.Infof("Removed registry: %s", name)
-}
-
-// LoadConfig adds the registries parsed from the passed yaml file
-func (rs *Registries) LoadConfig(registriesFile string) {
-	if rs.Viper == nil {
-		rs.Viper = viper.New()
-	}
-
-	// If the registries path is not passed use the default project dir
-	if registriesFile != "" {
-		rs.AddConfigPath(path.Dir(registriesFile))
-		base := path.Base(registriesFile)
-		ext := path.Ext(registriesFile)
-		rs.SetConfigName(base[0 : len(base)-len(ext)])
-		logrus.Infof("Using registries located in %s with file name %s", path.Dir(registriesFile), base[0:len(base)-len(ext)])
-	} else {
-		rs.SetConfigName("registries")
-		var root string
-		_, run, _, ok := runtime.Caller(0)
-		if ok {
-			root = filepath.Dir(run)
-			rs.AddConfigPath(root)
-		} else {
-			logrus.Fatalf("Failed to get runtime caller for parser")
-		}
-		logrus.Infof("Using registries located in %s with file name %s", root, "registries.yml")
-	}
-
-	config := make(map[string]map[string]registriesConfig)
-
-	if err := rs.ReadInConfig(); err != nil {
-		logrus.Fatalf("Failed to read in registries file: %s", err)
-	}
-
-	if err := rs.Unmarshal(&config); err != nil {
-		logrus.Fatalf("Unable to unmarshal registries file: %s", err)
-	}
-
-	// overwrite the entries with the updated information
-	for name, r := range config["registries"] {
-		if r.URL != "" {
-			url, err := url.Parse(r.URL)
-			if err != nil {
-				logrus.Fatalf("Failed to parse registry from the passed url (%s): %s", r.URL, err)
-			}
-			duration, err := time.ParseDuration(r.RefreshRate)
-			if err != nil {
-				logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
-			}
-			if err := AllRegistries.AddRegistry(url.Scheme, url.Hostname(), name, r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration); err != nil {
-				logrus.Fatalf("Failed to add registry (%s): %s", r.URL, err)
-			}
-		}
-	}
-}
-
-// WriteConfig builds the config and writes from the map of registries
-func (rs *Registries) WriteConfig() error {
-	config := make(map[string]registriesConfig)
-	for name, r := range AllRegistries.Registries {
-		config[name] = registriesConfig{
-			URL:                  r.URL,
-			Port:                 r.Port,
-			Username:             r.Username,
-			Password:             r.Password,
-			SkipTLS:              r.SkipTLS,
-			RefreshRate:          r.TTL.String(),
-			DockerhubIntegration: r.DockerhubIntegration,
-		}
-	}
-
-	rs.Set("registries", config)
-	logrus.Info("Writing config with new/removed registries")
-	return rs.Viper.WriteConfig()
-}
-
 // Registry contains all information about the registry and its metadata
 type Registry struct {
 	*client.Registry
 	Repositories         map[string]*Repository
 	TTL                  time.Duration
-	Ticker               *time.Ticker
-	StopRefresh          chan (bool)
 	Name                 string
 	Username             string
 	Password             string
@@ -214,8 +84,9 @@ func (r *Registry) IP() string {
 	return r.ip
 }
 
-// Refresh is called with the configured TTL time for the given registry
-func (r Registry) Refresh() {
+// Update is called with the configured TTL time for the given registry
+func (r Registry) Update() Registry {
+	old := r
 	err := r.Ping()
 	if err != nil {
 		r.status = StatusDown
@@ -308,8 +179,7 @@ func (r Registry) Refresh() {
 	}
 
 	n := time.Now().UTC()
-	// Add history at most every 15 minutes
-	if len(r.History) == 0 || n.Sub(r.History[len(r.History)-1].Time) >= (15*time.Minute) {
+	if len(r.History) == 0 || old.LayerCount() != r.LayerCount() || old.TagCount() != r.TagCount() || len(old.Repositories) != len(r.Repositories) {
 		r.History = append(r.History, RegistryHistory{
 			Repositories: len(r.Repositories),
 			Tags:         r.TagCount(),
@@ -318,14 +188,14 @@ func (r Registry) Refresh() {
 		})
 	}
 
-	// purge everything older than 3 days
+	// purge everything older than 5 days
 	for i, h := range r.History {
-		if h.Time.Before(n.AddDate(0, -3, 0)) {
+		if h.Time.Before(n.AddDate(0, -5, 0)) {
 			r.History = append(r.History[:i], r.History[i+1:]...)
 		}
 	}
 	r.LastRefresh = time.Now().UTC()
-	AllRegistries.Registries[r.Name] = &r
+	return r
 }
 
 // CalculateTagSize returns the total number of tags across all repositories
@@ -430,8 +300,6 @@ func NewRegistry(scheme, host, name, user, password string, port int, ttl time.D
 	r := Registry{
 		Registry:             hub,
 		TTL:                  ttl,
-		Ticker:               time.NewTicker(ttl),
-		StopRefresh:          make(chan bool, 1),
 		Host:                 host,
 		Scheme:               scheme,
 		Username:             user,
@@ -442,17 +310,5 @@ func NewRegistry(scheme, host, name, user, password string, port int, ttl time.D
 		SkipTLS:              skipTLS,
 		DockerhubIntegration: dockerhubIntegration,
 	}
-
-	r.Refresh()
-	go func() {
-		for {
-			select {
-			case <-r.Ticker.C:
-				r.Refresh()
-			case <-r.StopRefresh:
-				return
-			}
-		}
-	}()
 	return &r, nil
 }

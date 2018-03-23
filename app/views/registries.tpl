@@ -1,6 +1,9 @@
 {{template "base/base.html" .}}
 {{define "body"}}
   {{template "newregistry.tpl" .}}
+  {{range $key, $registry := .registries}}
+    {{template "editregistry.tpl" $registry}}
+  {{end}}
   <div class="right-content-container">
     <div class="header">
       <nav aria-label="breadcrumb">
@@ -16,6 +19,7 @@
     <div class="content-block-empty">
       <div class="card-deck">
         {{range $key, $registry := .registries}}
+          {{template "editregistry.tpl" $registry}}
           <div class="card col-lg-5 pl-0 pr-0 gutterless">
             <div class="card-header bg-light">
               <h3 class="card-title">
@@ -70,7 +74,7 @@
                   <small class="text-muted align-baseline">Last updated {{timeAgo $registry.LastRefresh}}</small>
                 </div>
                 <div class="col-7 text-right">
-                  <a href="#" class="btn btn-info">Edit</a>
+                  <a href="#" data-toggle="modal" data-target="#edit-registry-modal-{{$registry.Name}}" class="btn btn-info">Edit</a>
                   <a href="/registries/{{$registry.Name}}/repositories" class="btn btn-orange">View</a>
                 </div>
               </div>

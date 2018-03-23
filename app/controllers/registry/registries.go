@@ -18,14 +18,18 @@ type RegistriesController struct {
 
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
+	manager.AllRegistries.Lock()
 	c.Data["registries"] = manager.AllRegistries.Registries
+	manager.AllRegistries.Unlock()
 	// Index template
 	c.TplName = "registries.tpl"
 }
 
 // GetRegistryCount returns the number of currently added registries
 func (c *RegistriesController) GetRegistryCount() {
+	manager.AllRegistries.Lock()
 	c.Data["registries"] = manager.AllRegistries.Registries
+	manager.AllRegistries.Unlock()
 
 	registryCount := struct {
 		Count int
@@ -39,7 +43,6 @@ func (c *RegistriesController) GetRegistryCount() {
 // AddRegistry adds a registry to the active registry list from a form
 func (c *RegistriesController) AddRegistry() {
 	// Registry contains all identifying information for communicating with a registry
-
 	scheme, host, name, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
 	if err != nil {
 		c.CustomAbort(404, err.Error())
@@ -52,9 +55,37 @@ func (c *RegistriesController) AddRegistry() {
 
 	ttl := time.Duration(interval) * time.Second
 
-	if err := manager.AllRegistries.AddRegistry(scheme, host, name, "", "", port, ttl, skipTLS, dockerhubIntegration); err != nil {
+	r, err := manager.NewRegistry(scheme, host, name, "", "", port, ttl, skipTLS, dockerhubIntegration)
+	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
+	manager.AllRegistries.Add(r)
+	manager.AllRegistries.WriteConfig()
+	c.Ctx.Redirect(302, "/registries")
+}
+
+func (c *RegistriesController) EditRegistry() {
+	// Registry contains all identifying information for communicating with a registry
+	scheme, host, name, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
+
+	interval, err := c.GetInt("interval", 60)
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
+
+	new, err := manager.NewRegistry(scheme, host, name, "", "", port, time.Duration(interval)*time.Second, skipTLS, dockerhubIntegration)
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
+
+	registryName := c.Ctx.Input.Param(":registryName")
+	if old, ok := manager.AllRegistries.Registries[registryName]; ok {
+		manager.AllRegistries.Edit(new, old)
+	}
+
 	manager.AllRegistries.WriteConfig()
 	c.Ctx.Redirect(302, "/registries")
 }
@@ -105,12 +136,14 @@ func (c *RegistriesController) RegistryStatus() {
 
 // Refresh refreshes the passed registry
 func (c *RegistriesController) Refresh() {
-	registryName := c.Ctx.Input.Param(":registryName")
+	/*
+		registryName := c.Ctx.Input.Param(":registryName")
 
-	if r, ok := manager.AllRegistries.Registries[registryName]; ok {
-		r.Refresh()
-	}
-	// Index template
+			if r, ok := manager.AllRegistries.Registries[registryName]; ok {
+				r.Refresh()
+			}
+			// Index template
+	*/
 	c.CustomAbort(200, "Refreshed registry")
 }
 

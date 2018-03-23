@@ -50,7 +50,7 @@ func (c *TagsController) DeleteTags() {
 		}).Errorf("Failed to delete digest.")
 		c.CustomAbort(404, fmt.Sprintf("Failure to delete Digest: %v Error: %v", digest.String(), err))
 	}
-	registry.Refresh()
+	//registry.Refresh()
 
 	c.CustomAbort(200, "Success")
 
