@@ -1,30 +1,30 @@
-<div id="new-registry-modal" class="modal fade" role="dialog">
+<div id="edit-registry-modal-{{.Name}}" class="modal fade" role="dialog">
 	<div class="modal-dialog" role="document" style="z-index:999">
 		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Add new registry</h4>
+				<h4 class="modal-title">Edit registry: {{.Name}}</h4>
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 			</div>
 			<div class="modal-body">
-				<form id="registry-form" action="/registries/add" method="post">
+				<form id="registry-form-{{.Name}}" action="/registries/edit/{{.Name}}" method="post">
 					<fieldset class="form-group">
 						<label for="name-input">Name</label>
-						<input type="text" class="form-control" id="name-input" name="name" placeholder="registry1">
+						<input type="text" class="form-control" id="name-input" name="name" value="{{.Name}}">
 					</fieldset>
 					<fieldset class="form-group">
 						<label for="host-input">Host</label>
-						<input type="text" class="form-control" id="host-input" name="host" placeholder="ex: 192.168.1.1 or testhost.com">
+						<input type="text" class="form-control" id="host-input" name="host" value="{{.Host}}">
 					</fieldset>
 					<fieldset class="form-group">
 						<label for="port-input">Port</label>
-						<input type="text" class="form-control" id="port-input" name="port" placeholder="default: 5000">
+						<input type="text" class="form-control" id="port-input" name="port" placeholder="{{.Port}}">
 					</fieldset>
 					<fieldset class="form-group">
 						<div for="scheme-input">Scheme</div>
 						<div>
 							<div class="form-check form-check-inline" id="http" class="radio-inline">
-								<input class="form-check-input" type="radio" checked name="scheme" id="scheme" value="http">
+								<input class="form-check-input" type="radio" name="scheme" id="scheme" value="http">
 								<label class="form-check-label" for="http">HTTP</label>
 							</div>
 							<div  class="form-check form-check-inline" id="https" class="radio-inline">
@@ -34,14 +34,14 @@
 						</div>
 						<div id="use-insecure" class="alert alert-danger" style="margin-top:10px; display:none;">
 							<div class="form-check form-check-inline" id="http" class="radio-inline">
-								<input class="form-check-input" type="checkbox" name="skip-tls-validation">
+								<input class="form-check-input" type="checkbox" name="skip-tls-validation" value="{{.SkipTLS}}">
 								<label class="form-check-label" for="skip-tls-validation">Skip TLS Validation (required for self signed certs)</label>
 							</div>
 						</div>
 					</fieldset>
 					<fieldset class="form-group">
 						<label for="interval-input">Refresh Interval (seconds)</label>
-						<input type="text" class="form-control" id="interval-input" name="interval" placeholder="default: 60">
+						<input type="text" class="form-control" id="interval-input" name="interval" value="{{.TTL.Seconds}}">
 					</fieldset>
 					<fieldset class="form-group">
 						<div class="form-check form-check-inline" id="http" class="radio-inline">
@@ -62,18 +62,30 @@
 </div>
 
 <script>
+	$( document ).ready(function() {
+	    if ({{.Scheme}} == "http") {
+				$("#http #scheme").prop("checked",true);
+			} else {
+				$("#https #scheme").prop("checked",true);
+			}
+
+			if ({{.SkipTLS}} == true) {
+				$("#interval-input").prop("checked",true);
+			}
+
+	});
 	$(function () {
 	  $('[data-toggle="tooltip"]').tooltip()
 	});
 
-	$('#https').click(function () {
+	$('#registry-form-{{.Name}} #https').click(function () {
 		$("#use-insecure").show();
 	});
-	$('#http').click(function () {
+	$('#registry-form-{{.Name}} #http').click(function () {
 		$("#use-insecure").hide();
 	});
-	$("#test").click(function () {
-		var data = $('#registry-form').serialize();
+	$("#registry-form-{{.Name}} #test").click(function () {
+		var data = $('#registry-form-{{.Name}}').serialize();
 		$.ajax({
 			type: 'POST',
 			url: '/registries/test',
