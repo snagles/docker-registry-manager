@@ -19,7 +19,6 @@
     <div class="content-block-empty">
       <div class="card-deck">
         {{range $key, $registry := .registries}}
-          {{template "editregistry.tpl" $registry}}
           <div class="card col-lg-5 pl-0 pr-0 gutterless">
             <div class="card-header bg-light">
               <h3 class="card-title">
