@@ -1,15 +1,13 @@
 {{template "base/base.html" .}} {{define "body"}}
 <div class="right-content-container">
 	<div class="header">
-		<ol class="breadcrumb">
-			<li>
-				<a href="/">Home</a>
-			</li>
-			<li>
-				<a href="/registries">Registries</a>
-			</li>
-			<li class="active">Repositories</li>
-		</ol>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/">Home</a></li>
+				<li class="breadcrumb-item"><a href="/registries" class="registry-name">Registries</a></li>
+				<li class="breadcrumb-item active"><a class="registry-name" aria-current="page">Repositories</a></li>
+			</ol>
+		</nav>
 	</div>
 	<div class="row">
 		<div class="col-md-12">
@@ -18,7 +16,7 @@
 	</div>
 	<div class="content-block white-bg">
 		<div class="row">
-			<table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+			<table id="datatable" class="table table-striped table-borderless" cellspacing="0" width="100%">
 				<thead>
 					<th>Repository</th>
 					<th>Registry</th>

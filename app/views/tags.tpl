@@ -2,29 +2,22 @@
 {{define "body"}}
   <div class="right-content-container">
     <div class="header">
-      <ol class="breadcrumb">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/registries">Registries</a>
-        </li>
-        <li>
-          <a class="registry-name" href="/registries/{{.registryName}}/repositories">{{.registryName}}</a>
-        </li>
-        <li>
-          <a href="/registries/{{.registryName}}/repositories">Repositories</a>
-        </li>
-        <li>
-          <a class="registry-name" href="/registries/{{.registryName}}/repositories/{{.repositoryNameEncode}}/tags">{{.repositoryName}}</a>
-        </li>
-        <li class="active">Tags</li>
-      </ol>
+      <div class="header">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/registries">Registries</a></li>
+            <li class="breadcrumb-item"><a class="registry-name" href="/registries/{{.registryName}}/repositories">{{.registryName}}</a></li>
+            <li class="breadcrumb-item"><a href="/registries/{{.registryName}}/repositories" class="registry-name">Repositories</a></li>
+            <li class="breadcrumb-item active"><a class="registry-name" aria-current="page">{{.repositoryName}}</a></li>
+          </ol>
+        </nav>
+      </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <h1>{{.repositoryName}}
-          <small>
+          <small class="text-muted">
             {{.registryName}}</small>
         </h1>
       </div>
@@ -56,7 +49,7 @@
               {{end}}
             </tbody>
           </table>
-          <p>
+          <p class="col">
             <button class="btn btn-danger">Delete
               <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Delete will make the tag inaccessible. To free disk space, run the garbage collection utility."></i>
             </button>
