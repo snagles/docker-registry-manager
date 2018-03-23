@@ -21,14 +21,14 @@ func init() {
 
 	go func() {
 		for {
+			AllRegistries.Lock()
 			for _, r := range AllRegistries.Registries {
-				AllRegistries.Lock()
 				if time.Now().UTC().Sub(r.LastRefresh) >= r.TTL {
 					ur := r.Update()
 					AllRegistries.Registries[r.Name] = &ur
 				}
-				AllRegistries.Unlock()
 			}
+			AllRegistries.Unlock()
 		}
 	}()
 }

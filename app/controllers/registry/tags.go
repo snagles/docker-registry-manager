@@ -21,6 +21,7 @@ func (c *TagsController) GetTags() {
 	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
 	repositoryNameEncode := url.QueryEscape(repositoryName)
 
+	manager.AllRegistries.RLock()
 	registry, _ := manager.AllRegistries.Registries[registryName]
 	repository, _ := registry.Repositories[repositoryName]
 	tags := repository.Tags
@@ -29,6 +30,7 @@ func (c *TagsController) GetTags() {
 	c.Data["registryName"] = registryName
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
 	c.Data["repositoryName"] = repositoryName
+	manager.AllRegistries.RUnlock()
 
 	// Index template
 	c.TplName = "tags.tpl"
@@ -40,9 +42,11 @@ func (c *TagsController) DeleteTags() {
 	repositoryName, _ := url.QueryUnescape(c.Ctx.Input.Param(":splat"))
 	tag := c.Ctx.Input.Param(":tagName")
 
+	manager.AllRegistries.RLock()
 	registry, _ := manager.AllRegistries.Registries[registryName]
 	digest, _ := manager.AllRegistries.Registries[registryName].ManifestDigest(repositoryName, tag)
 	err := registry.Registry.DeleteManifest(repositoryName, digest)
+	manager.AllRegistries.RUnlock()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Digest": digest.String(),
@@ -50,7 +54,10 @@ func (c *TagsController) DeleteTags() {
 		}).Errorf("Failed to delete digest.")
 		c.CustomAbort(404, fmt.Sprintf("Failure to delete Digest: %v Error: %v", digest.String(), err))
 	}
-	//registry.Refresh()
+	manager.AllRegistries.Lock()
+	ur := registry.Update()
+	manager.AllRegistries.Registries[registry.Name] = &ur
+	manager.AllRegistries.Unlock()
 
 	c.CustomAbort(200, "Success")
 

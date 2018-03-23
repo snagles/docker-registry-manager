@@ -24,6 +24,7 @@ func (c *ImagesController) GetImages() {
 	repositoryNameEncode := url.QueryEscape(repositoryName)
 	c.Data["tagName"] = c.Ctx.Input.Param(":tagName")
 
+	manager.AllRegistries.RLock()
 	registry, _ := manager.AllRegistries.Registries[registryName]
 	c.Data["registry"] = registry
 
@@ -151,4 +152,5 @@ func (c *ImagesController) GetImages() {
 			"",
 		}
 	}
+	manager.AllRegistries.RUnlock()
 }
