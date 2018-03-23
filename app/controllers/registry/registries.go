@@ -138,9 +138,11 @@ func (c *RegistriesController) RegistryStatus() {
 func (c *RegistriesController) Refresh() {
 	registryName := c.Ctx.Input.Param(":registryName")
 
+	manager.AllRegistries.RLock()
 	if r, ok := manager.AllRegistries.Registries[registryName]; ok {
 		r.Update()
 	}
+	manager.AllRegistries.RLock()
 	// Index template
 	c.CustomAbort(200, "Refreshed registry")
 }
