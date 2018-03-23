@@ -106,8 +106,7 @@
     }
   }
   {{range $key, $registry := .registries}}
-    const repos = document.getElementById('{{$registry.Name}}-repositories-chart').getContext('2d');
-    const chart1 = new Chart(repos, {
+    new Chart(document.getElementById('{{$registry.Name}}-repositories-chart').getContext('2d'), {
       type: 'line',
       data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryRepos}}),
       options: {
@@ -135,8 +134,7 @@
       }
     });
 
-    const tags = document.getElementById('{{$registry.Name}}-tags-chart').getContext('2d');
-    const chart2 = new Chart(tags, {
+    new Chart(document.getElementById('{{$registry.Name}}-tags-chart').getContext('2d'), {
       type: 'line',
       data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryTags}}),
       options: {
@@ -162,8 +160,7 @@
       }
     });
 
-    const layers = document.getElementById('{{$registry.Name}}-layers-chart').getContext('2d');
-    const chart3 = new Chart(layers, {
+    new Chart(document.getElementById('{{$registry.Name}}-layers-chart').getContext('2d'), {
       type: 'line',
       data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryLayers}}),
       options: {
