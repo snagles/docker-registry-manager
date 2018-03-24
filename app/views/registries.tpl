@@ -1,103 +1,190 @@
 {{template "base/base.html" .}}
 {{define "body"}}
   {{template "newregistry.tpl" .}}
+  {{range $key, $registry := .registries}}
+    {{template "editregistry.tpl" $registry}}
+  {{end}}
   <div class="right-content-container">
     <div class="header">
-      <ol class="breadcrumb">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/registries">Registries</a>
-        </li>
-      </ol>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/">Home</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Registries</li>
+        </ol>
+      </nav>
     </div>
 
     <div class="content-block-empty">
-      <div class="col-lg-12">
-        <ul class="boxes">
-          {{range $key, $registry := .registries}}
-            <li data-registry="{{$registry.Name}}">
-              <a href="/registries/{{$registry.Name}}/repositories">
-                <div class="white-bg box col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                  <div class="col-lg-12">
-                    <div class="box-container">
-                      <div class="box-header">
-                        <h2>{{$registry.Name}}</h2>
-                      </div>
-                      <div class="box-body col-md-12 border-between">
-                        <div class="col-md-4 metric">
-                          <h3 class="metric-value">{{len $registry.Repositories}}</h3>
-                          <small>{{ $repoCount := len $registry.Repositories }}
-                            {{ if eq $repoCount 1 }}
-                              Repository
-                            {{else}}
-                              Repositories
-                            {{ end }}
-                          </small>
-                        </div>
-                        <div class="col-md-4 metric">
-                          <h3 class="metric-value">{{$registry.TagCount}}</h3>
-                          <small>{{ $tagCount := $registry.TagCount }}
-                            {{ if eq $tagCount 1 }}
-                              Tag
-                            {{else}}
-                              Tags
-                            {{ end }}
-                          </small>
-                        </div>
-                        <div class="col-md-4 metric">
-                          <h3 class="metric-value">{{$registry.LayerCount}}</h4>
-                          <small>{{ $layerCount := $registry.LayerCount }}
-                            {{ if eq $layerCount 1 }}
-                              Layer
-                            {{else}}
-                              Layers
-                            {{ end }}
-                          </small>
-                        </div>
-                      </div>
-                      <div class="box-footer">
-                        {{if eq $registry.Status "UP" }}
-                          <span class="label label-success text-capitalize">{{$registry.Status}}</span>
-                        {{else}}
-                          <span class="label label-danger text-capitalize">{{$registry.Status}}</span>
-                        {{ end }}
-                        {{if ne $registry.IP "" }}
-                          <span class="label label-info">{{$registry.IP}}</span>
-                        {{ end }}
-                        <span class="label label-info text-capitalize">{{$registry.Version}}</span>
-                        <span class="label label-info text-uppercase">{{$registry.Scheme}}</span>
-                        {{if ne $registry.Pushes 0 }}
-                          <span class="label label-info">{{$registry.Pushes}} Pushes</span>
-                        {{ end }}
-                        {{if ne $registry.Pulls 0 }}
-                          <span class="label label-info">{{$registry.Pulls}} Pulls</span>
-                        {{ end }}
-                        {{if ne $registry.TTL 0 }}
-                          <span class="label label-info">Refresh Rate: {{$registry.TTL}}</span>
-                        {{ end }}
-                          <span class="label label-info">Last Refresh: {{timeAgo $registry.LastRefresh}}</span>
+      <div class="card-deck">
+        {{range $key, $registry := .registries}}
+          <div class="card col-lg-5 pl-0 pr-0 gutterless">
+            <div class="card-header bg-light">
+              <h3 class="card-title">
+                {{$registry.Name}}
+                <small class="text-muted">{{$registry.IP}}</small>
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-4 col-md-6 text-center border-right">
+                    <div class="row-fluid no-gutters">
+                      <div class="col" style="position: relative;">
+                        <canvas id="{{$registry.Name}}-repositories-chart"></canvas>
                       </div>
                     </div>
+                    <div class="row-fluid no-gutters">
+                      <span class="metric-value">{{len $registry.Repositories}}</span>
+                    </div>
+                    <h8>Repos</h8>
+                  </div>
+                  <div class="col-lg-4 col-md-6 text-center border-right">
+                    <div class="row-fluid no-gutters">
+                      <div class="col" style="position: relative;">
+                        <canvas id="{{$registry.Name}}-tags-chart"></canvas>
+                      </div>
+                    </div>
+                    <div class="row-fluid no-gutters">
+                      <span class="metric-value">{{$registry.TagCount}}</span>
+                    </div>
+                    <h8>Tags</h8>
+                  </div>
+                  <div class="col-lg-4 col-md-6 text-center">
+                    <div class="row-fluid no-gutters">
+                      <div class="col" style="position: relative;">
+                        <canvas id="{{$registry.Name}}-layers-chart"></canvas>
+                      </div>
+                    </div>
+                    <div class="row-fluid no-gutters">
+                      <span class="metric-value">{{$registry.LayerCount}}</span>
+                    </div>
+                    <h8>Layers</h8>
                   </div>
                 </div>
-              </a>
-            </li>
-          {{end}}
-          <li>
-            <div class="well-box box col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <div class="col-lg-12">
-                <div class="box-container">
-                  <div type="button" class="add-new" data-toggle="modal" data-target="#new-registry-modal">
-                    <i class="fa fa-plus add-new-icon"></i>
-                  </div>
+                <div class="row mt-4">
                 </div>
               </div>
             </div>
-          </li>
-        </ul>
+            <div class="card-footer">
+              <div class="row d-flex align-items-center">
+                <div class="col-5">
+                  <small class="text-muted align-baseline">Last updated {{timeAgo $registry.LastRefresh}}</small>
+                </div>
+                <div class="col-7 text-right">
+                  <a href="#" data-toggle="modal" data-target="#edit-registry-modal-{{$registry.Name}}" class="btn btn-info">Edit</a>
+                  <a href="/registries/{{$registry.Name}}/repositories" class="btn btn-orange">View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+       {{end}}
+        <div class="col-lg-5 card d-flex bg-light justify-content-center align-text-middle" style="min-height:275px">
+          <div type="button" class="add-new align-self-center" data-toggle="modal" data-target="#new-registry-modal">
+            <i class="fa fa-plus add-new-icon"></i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <script>
+  function padChart(times, values) {
+    if (times.length == 1) {
+      var data = {
+          labels: [times[0], times[0]],
+          datasets: [{ data: [values[0], values[0]] }]
+      }
+      return data
+    } else {
+      var data = {
+          labels: times,
+          datasets: [{ data: values }]
+      }
+      return data
+    }
+  }
+  {{range $key, $registry := .registries}}
+    new Chart(document.getElementById('{{$registry.Name}}-repositories-chart').getContext('2d'), {
+      type: 'line',
+      data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryRepos}}),
+      options: {
+        responsive: true,
+        legend: { display: false },
+        elements: {
+          line: {
+            borderColor: '#000000',
+            backgroundColor: '#FFF',
+            borderWidth: 1
+          },
+          point: {
+            radius: 0
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        scales: {
+          yAxes: [ { display: false } ],
+          xAxes: [ {
+            display: false
+          }]
+        }
+      }
+    });
+
+    new Chart(document.getElementById('{{$registry.Name}}-tags-chart').getContext('2d'), {
+      type: 'line',
+      data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryTags}}),
+      options: {
+        responsive: true,
+        legend: { display: false },
+        elements: {
+          line: {
+            borderColor: '#000000',
+            backgroundColor: '#FFF',
+            borderWidth: 1
+          },
+          point: {
+            radius: 0
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        scales: {
+          yAxes: [ { display: false } ],
+          xAxes: [ { display: false } ]
+        }
+      }
+    });
+
+    new Chart(document.getElementById('{{$registry.Name}}-layers-chart').getContext('2d'), {
+      type: 'line',
+      data: padChart({{$registry.HistoryTimes}}, {{$registry.HistoryLayers}}),
+      options: {
+        responsive: true,
+        legend: { display: false },
+        elements: {
+          line: {
+            borderColor: '#000000',
+            backgroundColor: '#FFF',
+            borderWidth: 1
+          },
+          point: {
+            radius: 0
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        scales: {
+          yAxes: [ { display: false } ],
+          xAxes: [ { display: false } ]
+        }
+      }
+    });
+    {{end}}
+  </script>
 {{end}}

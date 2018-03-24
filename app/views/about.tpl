@@ -2,12 +2,12 @@
 {{define "body"}}
   <div class="right-content-container">
     <div class="header">
-      <ol class="breadcrumb">
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li class="active">Settings</li>
-      </ol>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active"><a aria-current="page">Settings</a></li>
+        </ol>
+      </nav>
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -15,8 +15,8 @@
       </div>
     </div>
     <div class="content-block white-bg">
-      <div class="row" style="height:25px;">
-        <div class="pull-right">
+      <div class="row-fluid" style="height:25px;">
+        <div class="float-right">
           <a href="https://github.com/snagles/docker-registry-manager"><img src="https://img.shields.io/github/stars/snagles/docker-registry-manager.svg?style=social&amp;label=Star" alt="GitHub stars"/></a>
           <a href="https://github.com/snagles/docker-registry-manager/issues"><img src="https://img.shields.io/github/issues-raw/snagles/docker-registry-manager.svg" alt="GitHub issues"/></a>
           <a href="https://raw.githubusercontent.com/snagles/docker-registry-manager/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license"></a>

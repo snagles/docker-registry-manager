@@ -7,7 +7,6 @@ import (
 	"net"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
@@ -20,52 +19,79 @@ const (
 	StatusDown = "DOWN"
 )
 
-// AllRegistries contains a list of added registries using their hostnames
-// access granted via mutex locks/unlocks
-var AllRegistries Registries
-
-func init() {
-	AllRegistries.Registries = map[string]*Registry{}
-}
-
-// Registries contains a map of all active registries identified by their name, locked when necessary
-type Registries struct {
-	Registries map[string]*Registry
-	sync.Mutex
-}
-
+// Registry contains all information about the registry and its metadata
 type Registry struct {
 	*client.Registry
 	Repositories         map[string]*Repository
 	TTL                  time.Duration
-	Ticker               *time.Ticker
 	Name                 string
+	Username             string
+	Password             string
 	Host                 string
 	Scheme               string
 	Version              string
 	Port                 int
 	DockerhubIntegration bool
+	SkipTLS              bool
 	LastRefresh          time.Time
 	status               string
 	ip                   string
-	sync.Mutex
+	History              []RegistryHistory
 }
 
+func (r *Registry) HistoryTimes() []time.Time {
+	var hs []time.Time
+	for i := range r.History {
+		hs = append(hs, r.History[i].Time)
+	}
+	return hs
+}
+
+func (r *Registry) HistoryRepos() []int {
+	var hs []int
+	for i := range r.History {
+		hs = append(hs, r.History[i].Repositories)
+	}
+	return hs
+}
+
+func (r *Registry) HistoryLayers() []int {
+	var hs []int
+	for i := range r.History {
+		hs = append(hs, r.History[i].Layers)
+	}
+	return hs
+}
+
+func (r *Registry) HistoryTags() []int {
+	var hs []int
+	for i := range r.History {
+		hs = append(hs, r.History[i].Tags)
+	}
+	return hs
+}
+
+// RegistryHistory maintains a list of data points at a regular interval for plotting in the UI
+type RegistryHistory struct {
+	Repositories int
+	Layers       int
+	Tags         int
+	Time         time.Time
+}
+
+// IP returns the ip as a string
 func (r *Registry) IP() string {
 	return r.ip
 }
 
-// Refresh is called with the configured TTL time for the given registry
-func (r *Registry) Refresh() {
-
-	// Copy the registry information to a new object, and update it
-	ur := *r
-
+// Update is called with the configured TTL time for the given registry
+func (r Registry) Update() Registry {
+	old := r
 	err := r.Ping()
 	if err != nil {
-		ur.status = StatusDown
+		r.status = StatusDown
 	} else {
-		ur.status = StatusUp
+		r.status = StatusUp
 	}
 
 	ip, _ := net.LookupHost(r.Host)
@@ -73,25 +99,25 @@ func (r *Registry) Refresh() {
 		r.ip = ip[0]
 	}
 
-	logrus.Info("Refreshing " + r.URL)
+	logrus.Info("Refreshing " + r.Name)
 	// Get the list of repositories
-	repos, err := ur.Registry.Repositories()
+	repos, err := r.Registry.Repositories()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"Error": err.Error(),
-		}).Error("Failed to retrieve an updated list of repositories for " + ur.URL)
+		}).Error("Failed to retrieve an updated list of repositories for " + r.URL)
 	}
 	// Get the repository information
-	ur.Repositories = make(map[string]*Repository)
+	r.Repositories = make(map[string]*Repository)
 	for _, repoName := range repos {
 
 		// Get the list of tags for the repository
-		tags, err := ur.Tags(repoName)
+		tags, err := r.Tags(repoName)
 		if err != nil {
 			logrus.WithFields(logrus.Fields{
 				"Error":           err.Error(),
 				"Repository Name": repoName,
-			}).Error("Failed to retrieve an updated list of tags for " + ur.URL)
+			}).Error("Failed to retrieve an updated list of tags for " + r.URL)
 			continue
 		}
 
@@ -101,18 +127,18 @@ func (r *Registry) Refresh() {
 
 			// Using v2 required getting the manifest then retrieving the blob
 			// for the config digest
-			man, err := ur.Manifest(repoName, tagName)
+			man, err := r.Manifest(repoName, tagName)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"Error":           err.Error(),
 					"Repository Name": repoName,
 					"Tag Name":        tagName,
-				}).Error("Failed to retrieve manifest information for " + ur.URL)
+				}).Error("Failed to retrieve manifest information for " + r.URL)
 				continue
 			}
 
 			// Get the v1 config information
-			v1Bytes, err := ur.ManifestMetadata(repoName, man.Config.Digest)
+			v1Bytes, err := r.ManifestMetadata(repoName, man.Config.Digest)
 			if err != nil {
 				logrus.Error(err)
 				continue
@@ -142,23 +168,37 @@ func (r *Registry) Refresh() {
 			}
 
 			// Get the tag size information from the manifest layers
-			size, err := ur.CalculateTagSize(man)
+			size, err := r.CalculateTagSize(man)
 			if err != nil {
 				logrus.Error(err)
 			}
 
 			repo.Tags[tagName] = &Tag{Name: tagName, V1Compatibility: &v1, Size: int64(size), DeserializedManifest: man}
 		}
-		ur.Repositories[repoName] = &repo
+		r.Repositories[repoName] = &repo
 	}
 
-	ur.LastRefresh = time.Now().UTC()
-	AllRegistries.Lock()
-	AllRegistries.Registries[ur.Name] = &ur
-	AllRegistries.Unlock()
+	n := time.Now().UTC()
+	if len(r.History) == 0 || old.LayerCount() != r.LayerCount() || old.TagCount() != r.TagCount() || len(old.Repositories) != len(r.Repositories) {
+		r.History = append(r.History, RegistryHistory{
+			Repositories: len(r.Repositories),
+			Tags:         r.TagCount(),
+			Layers:       r.LayerCount(),
+			Time:         n,
+		})
+	}
+
+	// purge everything older than 5 days
+	for i, h := range r.History {
+		if h.Time.Before(n.AddDate(0, -5, 0)) {
+			r.History = append(r.History[:i], r.History[i+1:]...)
+		}
+	}
+	r.LastRefresh = time.Now().UTC()
+	return r
 }
 
-// TagCount returns the total number of tags across all repositories
+// CalculateTagSize returns the total number of tags across all repositories
 func (r *Registry) CalculateTagSize(deserialized *manifestV2.DeserializedManifest) (size int64, err error) {
 	size = int64(0)
 	for _, layer := range deserialized.Layers {
@@ -175,7 +215,7 @@ func (r *Registry) TagCount() (count int) {
 	return count
 }
 
-// TagCount returns the total number of layers across all repositories
+// LayerCount returns the total number of layers across all repositories
 func (r *Registry) LayerCount() int {
 	layerDigests := make(map[string]struct{})
 	for _, repo := range r.Repositories {
@@ -228,9 +268,9 @@ func (r *Registry) Status() string {
 	return r.status
 }
 
-// AddRegistry adds the new registry for viewing in the interface and sets up
+// NewRegistry adds the new registry for viewing in the interface and sets up
 // the go routine for automatic refreshes
-func AddRegistry(scheme, host, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
+func NewRegistry(scheme, host, name, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
 	switch {
 	case scheme == "":
 		return nil, errors.New("Invalid scheme: " + scheme)
@@ -260,22 +300,15 @@ func AddRegistry(scheme, host, user, password string, port int, ttl time.Duratio
 	r := Registry{
 		Registry:             hub,
 		TTL:                  ttl,
-		Ticker:               time.NewTicker(ttl),
 		Host:                 host,
 		Scheme:               scheme,
+		Username:             user,
+		Password:             password,
 		Port:                 port,
 		Version:              "v2",
-		Name:                 host + ":" + strconv.Itoa(port),
-		status:               StatusDown,
+		Name:                 name,
+		SkipTLS:              skipTLS,
 		DockerhubIntegration: dockerhubIntegration,
 	}
-	r.Refresh()
-
-	go func() {
-		for range r.Ticker.C {
-			r.Refresh()
-		}
-	}()
-
-	return AllRegistries.Registries[r.Name], nil
+	return &r, nil
 }
