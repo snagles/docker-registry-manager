@@ -33,8 +33,10 @@ func init() {
 	// Routers for registries
 	beego.Router("/registries", &registry.RegistriesController{})
 	beego.Router("/registries/", &registry.RegistriesController{})
+	beego.Router("/registries/:registryName/refresh", &registry.RegistriesController{}, "get:Refresh")
 	beego.Router("/registries/all/count", &registry.RegistriesController{}, "get:GetRegistryCount")
 	beego.Router("/registries/add", &registry.RegistriesController{}, "post:AddRegistry")
+	beego.Router("/registries/edit/:registryName", &registry.RegistriesController{}, "post:EditRegistry")
 	beego.Router("/registries/test", &registry.RegistriesController{}, "post:RegistryStatus")
 
 	// Routers for repositories

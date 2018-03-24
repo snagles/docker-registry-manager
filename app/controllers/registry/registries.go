@@ -18,14 +18,16 @@ type RegistriesController struct {
 
 // Get returns the template for the registries page
 func (c *RegistriesController) Get() {
+	manager.AllRegistries.RLock()
 	c.Data["registries"] = manager.AllRegistries.Registries
-
+	manager.AllRegistries.RUnlock()
 	// Index template
 	c.TplName = "registries.tpl"
 }
 
 // GetRegistryCount returns the number of currently added registries
 func (c *RegistriesController) GetRegistryCount() {
+	manager.AllRegistries.RLock()
 	c.Data["registries"] = manager.AllRegistries.Registries
 
 	registryCount := struct {
@@ -34,14 +36,14 @@ func (c *RegistriesController) GetRegistryCount() {
 		len(manager.AllRegistries.Registries),
 	}
 	c.Data["json"] = &registryCount
+	manager.AllRegistries.RUnlock()
 	c.ServeJSON()
 }
 
 // AddRegistry adds a registry to the active registry list from a form
 func (c *RegistriesController) AddRegistry() {
 	// Registry contains all identifying information for communicating with a registry
-
-	scheme, host, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
+	scheme, host, name, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -53,10 +55,38 @@ func (c *RegistriesController) AddRegistry() {
 
 	ttl := time.Duration(interval) * time.Second
 
-	_, err = manager.AddRegistry(scheme, host, "", "", port, ttl, skipTLS, dockerhubIntegration)
+	r, err := manager.NewRegistry(scheme, host, name, "", "", port, ttl, skipTLS, dockerhubIntegration)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
+	manager.AllRegistries.Add(r)
+	manager.AllRegistries.WriteConfig()
+	c.Ctx.Redirect(302, "/registries")
+}
+
+func (c *RegistriesController) EditRegistry() {
+	// Registry contains all identifying information for communicating with a registry
+	scheme, host, name, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
+
+	interval, err := c.GetInt("interval", 60)
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
+
+	new, err := manager.NewRegistry(scheme, host, name, "", "", port, time.Duration(interval)*time.Second, skipTLS, dockerhubIntegration)
+	if err != nil {
+		c.CustomAbort(404, err.Error())
+	}
+
+	registryName := c.Ctx.Input.Param(":registryName")
+	if old, ok := manager.AllRegistries.Registries[registryName]; ok {
+		manager.AllRegistries.Edit(new, old)
+	}
+
+	manager.AllRegistries.WriteConfig()
 	c.Ctx.Redirect(302, "/registries")
 }
 
@@ -75,7 +105,7 @@ func (c *RegistriesController) RegistryStatus() {
 		c.ServeJSON()
 	}
 
-	scheme, host, port, skipTLS, _, err := c.sanitizeForm()
+	scheme, host, _, port, skipTLS, _, err := c.sanitizeForm()
 	if err != nil {
 		whenErr(err)
 		return
@@ -102,12 +132,25 @@ func (c *RegistriesController) RegistryStatus() {
 	res.IsAvailable = true
 	c.Data["json"] = &res
 	c.ServeJSON()
-
 }
 
-func (c *RegistriesController) sanitizeForm() (scheme, host string, port int, skipTLS bool, dockerhubIntegration bool, err error) {
+// Refresh refreshes the passed registry
+func (c *RegistriesController) Refresh() {
+	registryName := c.Ctx.Input.Param(":registryName")
+
+	manager.AllRegistries.RLock()
+	if r, ok := manager.AllRegistries.Registries[registryName]; ok {
+		r.Update()
+	}
+	manager.AllRegistries.RLock()
+	// Index template
+	c.CustomAbort(200, "Refreshed registry")
+}
+
+func (c *RegistriesController) sanitizeForm() (scheme, host string, name string, port int, skipTLS bool, dockerhubIntegration bool, err error) {
 	host = c.GetString("host")
 	port, err = c.GetInt("port", 5000)
+	name = c.GetString("name", fmt.Sprintf("%s:%v", host, port))
 	scheme = c.GetString("scheme", "https")
 	skipTLSOn := c.GetString("skip-tls-validation", "off")
 	if skipTLSOn == "on" {
