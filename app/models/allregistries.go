@@ -29,6 +29,7 @@ func init() {
 				}
 			}
 			AllRegistries.Unlock()
+			time.Sleep(1 * time.Second)
 		}
 	}()
 }
