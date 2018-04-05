@@ -85,6 +85,7 @@ func main() {
 		// set http port
 		if enableHTTPS {
 			beego.BConfig.Listen.EnableHTTPS = true
+			beego.BConfig.Listen.EnableHTTP = false
 			beego.BConfig.Listen.HTTPSPort = appPort
 			// make sure we have both key and cert
 			if keyPath == "" {
