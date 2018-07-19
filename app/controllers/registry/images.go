@@ -89,6 +89,11 @@ func (c *ImagesController) GetImages() {
 
 	c.Data["chart"] = chart
 	c.Data["registryName"] = registryName
+	if registry.DisplayName == "" {
+		c.Data["registryDisplayName"] = registryName
+	} else {
+		c.Data["registryDisplayName"] = registry.DisplayName
+	}
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
 	c.Data["repositoryName"] = repositoryName
 

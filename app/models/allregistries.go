@@ -69,6 +69,7 @@ func (rs *Registries) Edit(new, old *Registry) {
 }
 
 type registriesConfig struct {
+	DisplayName          string
 	URL                  string
 	Port                 int
 	Username             string
@@ -125,7 +126,7 @@ func (rs *Registries) LoadConfig(registriesFile string) {
 			if err != nil {
 				logrus.Fatalf("Failed to add registry (%s), invalid duration: %s", r.URL, err)
 			}
-			new, err := NewRegistry(url.Scheme, url.Hostname(), name, r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration)
+			new, err := NewRegistry(url.Scheme, url.Hostname(), name, r.DisplayName, r.Username, r.Password, r.Port, duration, r.SkipTLS, r.DockerhubIntegration)
 			if err != nil {
 				logrus.Fatalf("Failed to create registry (%s): %s", r.URL, err)
 			}
@@ -139,6 +140,7 @@ func (rs *Registries) WriteConfig() error {
 	config := make(map[string]registriesConfig)
 	for name, r := range AllRegistries.Registries {
 		config[name] = registriesConfig{
+			DisplayName:          r.DisplayName,
 			URL:                  r.URL,
 			Port:                 r.Port,
 			Username:             r.Username,
