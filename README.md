@@ -80,6 +80,7 @@ Docker Registry Manager is a golang written, beego driven, web interface for int
 ```yml
 registries:
   localRegistry:
+    displayname: registry.example.com:5000
     url: http://localhost # Example https://localhost, http://remotehost.com
     port: 5000  # Example: 443, 8080, 5000
     username: exampleUser
