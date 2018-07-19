@@ -200,7 +200,7 @@
             <div class="row col-md-12 mt-2">
               <h7 class="pl-0 col-md-12">Pull</h7>
               <ul class="col-md-12 card bg-light p-3">
-                <code class="bash rounded"> docker pull {{.registryName}}/{{.repositoryName}}:{{.tagName}} </code>
+                <code class="bash rounded"> docker pull {{.registryDisplayName}}/{{.repositoryName}}:{{.tagName}} </code>
               </ul>
             </div>
             <div class="row col-md-12">
@@ -209,10 +209,10 @@
                 <code class="bash rounded">
                   docker tag
                   {{.repositoryName}}:{{.tagName}}
-                  {{.registryName}}/{{.repositoryName}}:{{.tagName}}
+                  {{.registryDisplayName}}/{{.repositoryName}}:{{.tagName}}
                   <br>
                   docker push
-                  {{.registryName}}/{{.repositoryName}}:{{.tagName}}
+                  {{.registryDisplayName}}/{{.repositoryName}}:{{.tagName}}
                 </code>
               </ul>
             </div>
@@ -221,7 +221,7 @@
               <ul class="col-md-12 card bg-light p-3">
                 <code class="bash rounded">
                   docker save
-                  {{.registryName}}/{{.repositoryName}}:{{.tagName}}
+                  {{.registryDisplayName}}/{{.repositoryName}}:{{.tagName}}
                   -o registry.tar.gz
                   <br>
                   tar tv -f registry.tar.gz > registry.txt

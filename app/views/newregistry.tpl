@@ -13,6 +13,10 @@
 						<input type="text" class="form-control" id="name-input" name="name" placeholder="registry1">
 					</fieldset>
 					<fieldset class="form-group">
+						<label for="name-input">Display Name (optional)</label>
+						<input type="text" class="form-control" id="displayName-input" name="name" placeholder="full-url:port/path/">
+					</fieldset>
+					<fieldset class="form-group">
 						<label for="host-input">Host</label>
 						<input type="text" class="form-control" id="host-input" name="host" placeholder="ex: 192.168.1.1 or testhost.com">
 					</fieldset>
