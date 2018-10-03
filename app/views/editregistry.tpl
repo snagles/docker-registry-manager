@@ -13,12 +13,16 @@
 						<input type="text" class="form-control" id="name-input" name="name" value="{{.Name}}">
 					</fieldset>
 					<fieldset class="form-group">
+						<label for="name-input">Display Name (optional)</label>
+						<input type="text" class="form-control" id="displayName-input" name="displayName" value="{{.DisplayName}}">
+					</fieldset>
+					<fieldset class="form-group">
 						<label for="host-input">Host</label>
 						<input type="text" class="form-control" id="host-input" name="host" value="{{.Host}}">
 					</fieldset>
 					<fieldset class="form-group">
 						<label for="port-input">Port</label>
-						<input type="text" class="form-control" id="port-input" name="port" placeholder="{{.Port}}">
+						<input type="text" class="form-control" id="port-input" name="port" value="{{.Port}}">
 					</fieldset>
 					<fieldset class="form-group">
 						<div for="scheme-input">Scheme</div>
