@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  docker-registry-manager:
+    build: .
+    hostname: manager
+    networks: 
+      - local
+    ports:
+      - "8080:8080"
+    depends_on:
+      - registry
+    volumes:
+      - ./registries-test.yml:/app/registries.yml
+      #- ./ssl.crt:/app/ssl.crt # https certfile location
+      #- ./ssl.key:/app/ssl.key # https keyfile location
+    environment:
+      - MANAGER_PORT=8080
+      - MANAGER_REGISTRIES=/app/registries.yml
+      - MANAGER_LOG_LEVEL=warn
+      #- MANAGER_ENABLE_HTTPS=true
+      #- MANAGER_KEY=/app/ssl.crt
+      #- MANAGER_CERTIFICATE=/app/ssl.key
+  registry:
+    image: registry:2
+    restart: always
+    hostname: registry
+    ports:
+      - "5000:5000"
+    networks:
+      - local
+
+networks:
+  local:
+    driver: bridge
