@@ -30,6 +30,7 @@ func (c *TagsController) GetTags() {
 	c.Data["registryName"] = registryName
 	c.Data["repositoryNameEncode"] = repositoryNameEncode
 	c.Data["repositoryName"] = repositoryName
+	c.Data["registryReadOnly"] = registry.ReadOnly
 	manager.AllRegistries.RUnlock()
 
 	// Index template
