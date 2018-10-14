@@ -49,8 +49,14 @@
 					</fieldset>
 					<fieldset class="form-group">
 						<div class="form-check form-check-inline" id="http" class="radio-inline">
+							<input class="form-check-input" type="checkbox" name="read-only">
+							<label class="form-check-label" for="read-only">Read Only Mode</label>
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<div class="form-check form-check-inline" id="http" class="radio-inline">
 							<input class="form-check-input" type="checkbox" name="dockerhub-integration">
-							<label class="form-check-label" for="skip-tls-validation">Compare images to hub.docker.com</label>
+							<label class="form-check-label" for="dockerhub-integration">Compare images to hub.docker.com</label>
 						</div>
 						<small class="form-text text-muted">Every image tag is queried using the hub.docker.com API, and then compares layers and sizes</small>
 					</fieldset>
@@ -74,6 +80,10 @@
 			}
 
 			if ({{.SkipTLS}} == true) {
+				$("#interval-input").prop("checked",true);
+			}
+
+       		if ({{.ReadOnly}} == true) {
 				$("#interval-input").prop("checked",true);
 			}
 

@@ -43,7 +43,7 @@ func (c *RegistriesController) GetRegistryCount() {
 // AddRegistry adds a registry to the active registry list from a form
 func (c *RegistriesController) AddRegistry() {
 	// Registry contains all identifying information for communicating with a registry
-	scheme, host, name, displayName, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
+	scheme, host, name, displayName, port, skipTLS, dockerhubIntegration, readOnly, err := c.sanitizeForm()
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -55,7 +55,7 @@ func (c *RegistriesController) AddRegistry() {
 
 	ttl := time.Duration(interval) * time.Second
 
-	r, err := manager.NewRegistry(scheme, host, name, displayName, "", "", port, ttl, skipTLS, dockerhubIntegration)
+	r, err := manager.NewRegistry(scheme, host, name, displayName, "", "", port, ttl, skipTLS, dockerhubIntegration, readOnly)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -66,7 +66,7 @@ func (c *RegistriesController) AddRegistry() {
 
 func (c *RegistriesController) EditRegistry() {
 	// Registry contains all identifying information for communicating with a registry
-	scheme, host, name, displayName, port, skipTLS, dockerhubIntegration, err := c.sanitizeForm()
+	scheme, host, name, displayName, port, skipTLS, dockerhubIntegration, readOnly, err := c.sanitizeForm()
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -76,7 +76,7 @@ func (c *RegistriesController) EditRegistry() {
 		c.CustomAbort(404, err.Error())
 	}
 
-	new, err := manager.NewRegistry(scheme, host, name, displayName, "", "", port, time.Duration(interval)*time.Second, skipTLS, dockerhubIntegration)
+	new, err := manager.NewRegistry(scheme, host, name, displayName, "", "", port, time.Duration(interval)*time.Second, skipTLS, dockerhubIntegration, readOnly)
 	if err != nil {
 		c.CustomAbort(404, err.Error())
 	}
@@ -105,7 +105,7 @@ func (c *RegistriesController) RegistryStatus() {
 		c.ServeJSON()
 	}
 
-	scheme, host, _, _, port, skipTLS, _, err := c.sanitizeForm()
+	scheme, host, _, _, port, skipTLS, _, _, err := c.sanitizeForm()
 	if err != nil {
 		whenErr(err)
 		return
@@ -147,7 +147,7 @@ func (c *RegistriesController) Refresh() {
 	c.CustomAbort(200, "Refreshed registry")
 }
 
-func (c *RegistriesController) sanitizeForm() (scheme, host string, name string, displayName string, port int, skipTLS bool, dockerhubIntegration bool, err error) {
+func (c *RegistriesController) sanitizeForm() (scheme, host string, name string, displayName string, port int, skipTLS bool, dockerhubIntegration bool, readOnly bool, err error) {
 	host = c.GetString("host")
 	port, err = c.GetInt("port", 5000)
 	name = c.GetString("name", fmt.Sprintf("%s:%v", host, port))
@@ -161,6 +161,11 @@ func (c *RegistriesController) sanitizeForm() (scheme, host string, name string,
 	dockerhubIntegrationOn := c.GetString("dockerhub-integration", "off")
 	if dockerhubIntegrationOn == "on" {
 		dockerhubIntegration = true
+	}
+
+	readOnlyOn := c.GetString("read-only", "off")
+	if readOnlyOn == "on" {
+		readOnly = true
 	}
 
 	switch {

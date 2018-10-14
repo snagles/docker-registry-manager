@@ -24,7 +24,7 @@
     </div>
     <div class="content-block white-bg">
       <div class="row">
-        <form id="delete-tags">
+        <form id="delete-tags" style="width:100%">
           <table id="datatable" class="table table-striped display select" cellspacing="0" width="100%">
             <thead>
               <tr>
@@ -49,12 +49,13 @@
               {{end}}
             </tbody>
           </table>
+          {{if not .registryReadOnly}}
           <p class="col">
             <button class="btn btn-danger">Delete
               <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Delete will make the tag inaccessible. To free disk space, run the garbage collection utility."></i>
             </button>
           </p>
-
+          {{end}}
         </form>
       </div>
     </div>
@@ -102,6 +103,9 @@
             'targets': 0,
             'searchable': false,
             'orderable': false,
+            {{if .registryReadOnly}}
+            'visible': false,
+            {{end}}
             'width': '1%',
             'className': 'dt-body-center',
             'render': function (data, type, full, meta) {
