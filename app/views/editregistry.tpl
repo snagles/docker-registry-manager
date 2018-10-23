@@ -13,12 +13,16 @@
 						<input type="text" class="form-control" id="name-input" name="name" value="{{.Name}}">
 					</fieldset>
 					<fieldset class="form-group">
+						<label for="name-input">Display Name (optional)</label>
+						<input type="text" class="form-control" id="displayName-input" name="displayName" value="{{.DisplayName}}">
+					</fieldset>
+					<fieldset class="form-group">
 						<label for="host-input">Host</label>
 						<input type="text" class="form-control" id="host-input" name="host" value="{{.Host}}">
 					</fieldset>
 					<fieldset class="form-group">
 						<label for="port-input">Port</label>
-						<input type="text" class="form-control" id="port-input" name="port" placeholder="{{.Port}}">
+						<input type="text" class="form-control" id="port-input" name="port" value="{{.Port}}">
 					</fieldset>
 					<fieldset class="form-group">
 						<div for="scheme-input">Scheme</div>
@@ -45,8 +49,14 @@
 					</fieldset>
 					<fieldset class="form-group">
 						<div class="form-check form-check-inline" id="http" class="radio-inline">
+							<input class="form-check-input" type="checkbox" name="read-only">
+							<label class="form-check-label" for="read-only">Read Only Mode</label>
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<div class="form-check form-check-inline" id="http" class="radio-inline">
 							<input class="form-check-input" type="checkbox" name="dockerhub-integration">
-							<label class="form-check-label" for="skip-tls-validation">Compare images to hub.docker.com</label>
+							<label class="form-check-label" for="dockerhub-integration">Compare images to hub.docker.com</label>
 						</div>
 						<small class="form-text text-muted">Every image tag is queried using the hub.docker.com API, and then compares layers and sizes</small>
 					</fieldset>
@@ -70,6 +80,10 @@
 			}
 
 			if ({{.SkipTLS}} == true) {
+				$("#interval-input").prop("checked",true);
+			}
+
+       		if ({{.ReadOnly}} == true) {
 				$("#interval-input").prop("checked",true);
 			}
 

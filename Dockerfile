@@ -20,6 +20,7 @@ RUN apk add --no-cache ca-certificates
 # Copy packed beego tar
 WORKDIR /app
 COPY --from=build-env /app /app
+COPY --from=build-env /go/src/github.com/snagles/docker-registry-manager/registries.yml /app/registries.yml
 
 # Set the default registries location and volume
 ENV MANAGER_REGISTRIES=/app/registries.yml

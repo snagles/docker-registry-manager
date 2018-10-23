@@ -25,6 +25,7 @@ type Registry struct {
 	Repositories         map[string]*Repository
 	TTL                  time.Duration
 	Name                 string
+	DisplayName          string
 	Username             string
 	Password             string
 	Host                 string
@@ -33,6 +34,7 @@ type Registry struct {
 	Port                 int
 	DockerhubIntegration bool
 	SkipTLS              bool
+	ReadOnly             bool
 	LastRefresh          time.Time
 	status               string
 	ip                   string
@@ -270,7 +272,7 @@ func (r *Registry) Status() string {
 
 // NewRegistry adds the new registry for viewing in the interface and sets up
 // the go routine for automatic refreshes
-func NewRegistry(scheme, host, name, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration bool) (*Registry, error) {
+func NewRegistry(scheme, host, name, displayName, user, password string, port int, ttl time.Duration, skipTLS, dockerhubIntegration, readOnly bool) (*Registry, error) {
 	switch {
 	case scheme == "":
 		return nil, errors.New("Invalid scheme: " + scheme)
@@ -301,6 +303,7 @@ func NewRegistry(scheme, host, name, user, password string, port int, ttl time.D
 		Registry:             hub,
 		TTL:                  ttl,
 		Host:                 host,
+		DisplayName:          displayName,
 		Scheme:               scheme,
 		Username:             user,
 		Password:             password,
@@ -309,6 +312,7 @@ func NewRegistry(scheme, host, name, user, password string, port int, ttl time.D
 		Name:                 name,
 		SkipTLS:              skipTLS,
 		DockerhubIntegration: dockerhubIntegration,
+		ReadOnly:             readOnly,
 	}
 	return &r, nil
 }

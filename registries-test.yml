@@ -1,10 +1,10 @@
 registries:
-  #exampleRegistry:
-    #displayname: registry.example.com:5000
-    #url: http://localhost
-    #port: 5000 # Example: 443, 8080, 5000
+ exampleRegistry:
+    displayname: localhost
+    url: http://registry
+    port: 5000 # Example: 443, 8080, 5000
     #username: exampleUser
     #password: examplePassword
-    #refresh-rate: "5m" # Example: 60s, 5m, 1h
+    refresh-rate: "5m" # Example: 60s, 5m, 1h
     #skip-tls-validation: true # REQUIRED for self signed certificates
     #dockerhub-integration: true # Optional - compares to dockerhub to determine if image up to date
