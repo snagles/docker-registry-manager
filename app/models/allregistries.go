@@ -16,19 +16,80 @@ import (
 // access granted via mutex locks/unlocks
 var AllRegistries Registries
 
+// avoidUpdateOnRegistries is a 'set' that stores names of registries that would
+// not be updated in the current loop iteration that updates registries
+var avoidUpdateOnRegistries = make(map[string]struct{})
+
 func init() {
 	AllRegistries.Registries = map[string]*Registry{}
 
 	go func() {
 		for {
+			// This function can potentially hang the whole application
+			// because it issues a write lock, that blocks all incomming http
+			// calls until all registries would be updated.
+			// Here is how this problem can be solved with minimum locking time
+			// Step 1 -> lock application, collect names of registries that have
+			// 			 to be updated, unlock application
+			// Step 2 -> collect updated registry objects WITHOUT LOCKING.
+			// 			 it is possible, because registry Update method has
+			//           nonpointer receiver, so original registry object would
+			// 			 not be updated
+			// Step 3 -> lock application, replace old registries with updated
+			//           ones
+
+			// There are the following corner cases:
+			// -> new registry was added between steps 1 and 3. This is not
+			//    critical, because new registry does not have to be updated
+			// -> registry was removed between steps 1 and 3. This can be
+			//    critical, because it can resurrect deleted registries. To
+			//    resolve this problem - additional check has to be performed
+			//    before updating registries at step 3
+			// -> registry was edited between steps 1 and 3. This is critical,
+			//    because it can replace freshly edited registry with the old
+			//    registry. To resolve this problem - module variable named
+			//    avoidUpdateOnRegistries is introduced. This list
+			//    stores names of registries that should not be updated at
+			//    step 3
+			// -> http call to refresh registry was made between steps 1 and 3.
+			//    This can not cause any undefined behavior.
+
+			avoidUpdateOnRegistries = make(map[string]struct{})
+			registriesToUpdate := make(map[string]*Registry)
+
+			// Step 1 -> Build list of names that have to be updated
 			AllRegistries.Lock()
-			for _, r := range AllRegistries.Registries {
-				if time.Now().UTC().Sub(r.LastRefresh) >= r.TTL {
-					ur := r.Update()
-					AllRegistries.Registries[r.Name] = &ur
+			for registryName, registry := range AllRegistries.Registries {
+				if time.Now().UTC().Sub(registry.LastRefresh) >= registry.TTL {
+					registriesToUpdate[registryName] = registry
 				}
 			}
 			AllRegistries.Unlock()
+
+			// Step 2 -> collect updated data in background
+			for registryName, registry := range registriesToUpdate {
+				updatedRegistry := registry.Update()
+				registriesToUpdate[registryName] = &updatedRegistry
+			}
+
+			// Step 3 -> replace old registries with updated registries
+			AllRegistries.Lock()
+			for registryName, updatedRegistry := range registriesToUpdate {
+				// check if registry was removed
+				if _, registryExists := AllRegistries.Registries[registryName]; !registryExists {
+					continue
+				}
+
+				// check if registry was edited
+				if _, registryWasEdited := avoidUpdateOnRegistries[registryName]; registryWasEdited {
+					continue
+				}
+
+				// registry can be safely updated
+				AllRegistries.Registries[registryName] = updatedRegistry
+			}
+			AllRegistries.Unlock()
+
 			time.Sleep(1 * time.Second)
 		}
 	}()
@@ -64,6 +125,11 @@ func (rs *Registries) Edit(new, old *Registry) {
 	// copy the history
 	new.History = old.History
 	AllRegistries.Registries[new.Name] = new
+
+	// make sure that this registry would avoid update loop if it is currently
+	// running in the background
+	avoidUpdateOnRegistries[new.Name] = struct{}{}
+
 	AllRegistries.Unlock()
 	logrus.Infof("Edited registry: %s", old.Name)
 }

@@ -139,10 +139,16 @@ func (c *RegistriesController) Refresh() {
 	registryName := c.Ctx.Input.Param(":registryName")
 
 	manager.AllRegistries.RLock()
-	if r, ok := manager.AllRegistries.Registries[registryName]; ok {
-		r.Update()
+	r, ok := manager.AllRegistries.Registries[registryName]
+	manager.AllRegistries.RUnlock()
+
+	if ok {
+		updatedRegistry := r.Update()
+		// Registry is being updated, so write lock has to be used instead of read
+		manager.AllRegistries.Lock()
+		manager.AllRegistries.Registries[registryName] = &updatedRegistry
+		manager.AllRegistries.Unlock()
 	}
-	manager.AllRegistries.RLock()
 	// Index template
 	c.CustomAbort(200, "Refreshed registry")
 }
