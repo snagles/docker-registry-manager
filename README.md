@@ -45,6 +45,15 @@ Docker Registry Manager is a golang written, beego driven, web interface for int
  - MANAGER_KEY: key file location inside the docker container
  - MANAGER_CERTIFICATE: Certificate location inside the docker container
 
+### Helm (Kubernetes)
+ With a working kubernetes cluster and helm installation, run the following:
+
+ ```bash
+  git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
+  vim helm/values.yaml # configure with your cluster specifics and add registries
+  helm install --name docker-registry-manager helm/
+  ```
+
 ### Go
  ```bash
     git clone https://github.com/snagles/docker-registry-manager.git && cd docker-registry-manager
