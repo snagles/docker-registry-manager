@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: {{ .Values.service.port }}
+    protocol: TCP
+    name: {{ .Values.service.name }}
+  selector:
+    app: {{ .Chart.Name }}
