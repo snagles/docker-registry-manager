@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docker-registry-manager-config
+data:
+  registries.yml: |
+    registries:
+      {{ range .Values.registries }}
+      {{ .name }}:
+        displayname: {{ .displayname }}
+        url: {{ .url }}
+        port: {{ .port }}
+        username: {{ .username }}
+        password: {{ .password }}
+        skip-tls-validation: {{ .skip_tls_validation }}
+        refresh-rate: {{ .refresh_rate }}
+        dockerhub-integration: {{ .dockerhub_integration }}
+        read-only: {{ .read_only }}
+      {{ end }}

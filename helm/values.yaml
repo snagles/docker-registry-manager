@@ -1,0 +1,28 @@
+image:
+  repository: snagles/docker-registry-manager
+  tag: latest
+  pullPolicy: IfNotPresent
+
+ingress:
+  enabled: true
+  hostname: registry-manager.example.com
+
+service:
+  name: web
+  port: 8080
+
+env:
+  manager_registries: /app/config/registries.yml
+  manager_log_level: warn
+
+registries:
+  - name: repo1
+    displayname: repo1
+    url: https://registry.example.com:443
+    port: 443
+    username: ""
+    password: ""
+    skip_tls_validation: false
+    refresh_rate: 1m0s
+    dockerhub_integration: false
+    read_only: false
